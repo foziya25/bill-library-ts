@@ -1,0 +1,23 @@
+{
+  "name": "bill-library",
+  "version": "1.0.1",
+  "description": "billing-library",
+  "main": "dist/index.js",
+  "homepage": "https://github.com/easyeat-ai/bill-library-ts.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/easyeat-ai/bill-library-ts.git"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  },
+  "author": "imrankhan@easyeat.ai",
+  "license": "ISC",
+  "keywords": [
+    "github",
+    "repos",
+    "repositories",
+    "sort",
+    "stars"
+  ]
+}
