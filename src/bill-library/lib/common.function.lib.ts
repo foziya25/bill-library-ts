@@ -54,6 +54,7 @@ function getPriceKeyByOrderType(orderType: number): string {
 export function getCartItemInfo(items, orderType): OrderItemInfo[] {
   const cartItemInfo: OrderItemInfo[] = [];
   const priceKey = getPriceKeyByOrderType(orderType);
+  if(items && items.length)
   items.forEach((item) => {
     const { addons, new_variation } = item;
     const cartItemInfoObj: OrderItemInfo = {
@@ -110,6 +111,7 @@ export function getCartItemInfo(items, orderType): OrderItemInfo[] {
 
 export function getOrderItemInfo(items): OrderItemInfo[] {
   const orderItemInfo: OrderItemInfo[] = [];
+  if(items && items.length)
   items.forEach((item) => {
     const { addons, new_variation } = item;
     const orderItemInfoObj: OrderItemInfo = {
@@ -168,6 +170,7 @@ export function getTransformedRestaurantCharges(
   charges: any[],
 ): ChargesInterface[] {
   const chargesList: ChargesInterface[] = [];
+  if(charges && charges.length)
   charges.forEach((charge) => {
     if (charge.status && charge.id !== 'delivery') {
       const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);

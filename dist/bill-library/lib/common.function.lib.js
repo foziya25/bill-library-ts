@@ -41,127 +41,130 @@ function getPriceKeyByOrderType(orderType) {
 function getCartItemInfo(items, orderType) {
     const cartItemInfo = [];
     const priceKey = getPriceKeyByOrderType(orderType);
-    items.forEach((item) => {
-        const { addons, new_variation } = item;
-        const cartItemInfoObj = {
-            addons: [],
-            variants: [],
-            price: item[priceKey],
-            quantity: item.quantity,
-            subcategoryId: item.subcategory_id,
-            categoryId: item.category_id,
-            itemId: item.item_id,
-            orderItemId: item.cart_item_id,
-        };
-        if (addons && addons.length) {
-            addons.forEach((addon) => {
-                const addonInfo = {
-                    id: addon.id,
-                    price: addon.price,
-                    quantity: addon.qty,
-                };
-                cartItemInfoObj.addons.push(addonInfo);
-            });
-        }
-        if (new_variation && new_variation !== '') {
-            const variantsObj = JSON.parse(new_variation);
-            if (variantsObj) {
-                variantsObj.forEach((group) => {
-                    if (group.status && group.options) {
-                        const variants = {
-                            groupId: group.group_id,
-                            options: [],
-                        };
-                        group.options.forEach((option) => {
-                            if (option.selected === true) {
-                                const optionInfo = {
-                                    optionsId: option.option_id,
-                                    price: option.price,
-                                };
-                                variants.options.push(optionInfo);
-                            }
-                        });
-                        cartItemInfoObj.variants.push(variants);
-                    }
+    if (items && items.length)
+        items.forEach((item) => {
+            const { addons, new_variation } = item;
+            const cartItemInfoObj = {
+                addons: [],
+                variants: [],
+                price: item[priceKey],
+                quantity: item.quantity,
+                subcategoryId: item.subcategory_id,
+                categoryId: item.category_id,
+                itemId: item.item_id,
+                orderItemId: item.cart_item_id,
+            };
+            if (addons && addons.length) {
+                addons.forEach((addon) => {
+                    const addonInfo = {
+                        id: addon.id,
+                        price: addon.price,
+                        quantity: addon.qty,
+                    };
+                    cartItemInfoObj.addons.push(addonInfo);
                 });
             }
-        }
-        cartItemInfo.push(cartItemInfoObj);
-    });
+            if (new_variation && new_variation !== '') {
+                const variantsObj = JSON.parse(new_variation);
+                if (variantsObj) {
+                    variantsObj.forEach((group) => {
+                        if (group.status && group.options) {
+                            const variants = {
+                                groupId: group.group_id,
+                                options: [],
+                            };
+                            group.options.forEach((option) => {
+                                if (option.selected === true) {
+                                    const optionInfo = {
+                                        optionsId: option.option_id,
+                                        price: option.price,
+                                    };
+                                    variants.options.push(optionInfo);
+                                }
+                            });
+                            cartItemInfoObj.variants.push(variants);
+                        }
+                    });
+                }
+            }
+            cartItemInfo.push(cartItemInfoObj);
+        });
     return cartItemInfo;
 }
 exports.getCartItemInfo = getCartItemInfo;
 function getOrderItemInfo(items) {
     const orderItemInfo = [];
-    items.forEach((item) => {
-        const { addons, new_variation } = item;
-        const orderItemInfoObj = {
-            addons: [],
-            variants: [],
-            price: item.item_price,
-            quantity: item.item_quantity,
-            subcategoryId: item.subcategory_id,
-            categoryId: item.category_id,
-            itemId: item.item_id,
-            orderItemId: item.order_item_id,
-        };
-        if (addons && addons.length) {
-            addons.forEach((addon) => {
-                const addonInfo = {
-                    id: addon.id,
-                    price: addon.price,
-                    quantity: addon.qty,
-                };
-                orderItemInfoObj.addons.push(addonInfo);
-            });
-        }
-        if (new_variation && new_variation !== '') {
-            const variantsObj = JSON.parse(new_variation);
-            if (variantsObj) {
-                variantsObj.forEach((group) => {
-                    if (group.status && group.options) {
-                        const variants = {
-                            groupId: group.group_id,
-                            options: [],
-                        };
-                        group.options.forEach((option) => {
-                            if (option.selected === true) {
-                                const optionInfo = {
-                                    optionsId: option.option_id,
-                                    price: option.price,
-                                };
-                                variants.options.push(optionInfo);
-                            }
-                        });
-                        orderItemInfoObj.variants.push(variants);
-                    }
+    if (items && items.length)
+        items.forEach((item) => {
+            const { addons, new_variation } = item;
+            const orderItemInfoObj = {
+                addons: [],
+                variants: [],
+                price: item.item_price,
+                quantity: item.item_quantity,
+                subcategoryId: item.subcategory_id,
+                categoryId: item.category_id,
+                itemId: item.item_id,
+                orderItemId: item.order_item_id,
+            };
+            if (addons && addons.length) {
+                addons.forEach((addon) => {
+                    const addonInfo = {
+                        id: addon.id,
+                        price: addon.price,
+                        quantity: addon.qty,
+                    };
+                    orderItemInfoObj.addons.push(addonInfo);
                 });
             }
-        }
-        orderItemInfo.push(orderItemInfoObj);
-    });
+            if (new_variation && new_variation !== '') {
+                const variantsObj = JSON.parse(new_variation);
+                if (variantsObj) {
+                    variantsObj.forEach((group) => {
+                        if (group.status && group.options) {
+                            const variants = {
+                                groupId: group.group_id,
+                                options: [],
+                            };
+                            group.options.forEach((option) => {
+                                if (option.selected === true) {
+                                    const optionInfo = {
+                                        optionsId: option.option_id,
+                                        price: option.price,
+                                    };
+                                    variants.options.push(optionInfo);
+                                }
+                            });
+                            orderItemInfoObj.variants.push(variants);
+                        }
+                    });
+                }
+            }
+            orderItemInfo.push(orderItemInfoObj);
+        });
     return orderItemInfo;
 }
 exports.getOrderItemInfo = getOrderItemInfo;
 function getTransformedRestaurantCharges(charges) {
     const chargesList = [];
-    charges.forEach((charge) => {
-        if (charge.status && charge.id !== 'delivery') {
-            const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);
-            const applicableInfo = getApplicableOnInfo(charge.applicable_on, charge.applicable_subcat);
-            const restCharge = {
-                chargeType: chargeInfo.type,
-                chargeValue: chargeInfo.value,
-                applicableOn: applicableInfo.applicableList,
-                chargeApplicableType: applicableInfo.chargeApplicableType,
-                id: charge.id,
-                name: charge.name,
-                class: charge.class,
-                subName: charge.sub_name,
-            };
-            chargesList.push(restCharge);
-        }
-    });
+    if (charges && charges.length)
+        charges.forEach((charge) => {
+            if (charge.status && charge.id !== 'delivery') {
+                const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);
+                const applicableInfo = getApplicableOnInfo(charge.applicable_on, charge.applicable_subcat);
+                const restCharge = {
+                    chargeType: chargeInfo.type,
+                    chargeValue: chargeInfo.value,
+                    applicableOn: applicableInfo.applicableList,
+                    chargeApplicableType: applicableInfo.chargeApplicableType,
+                    id: charge.id,
+                    name: charge.name,
+                    class: charge.class,
+                    subName: charge.sub_name,
+                };
+                chargesList.push(restCharge);
+            }
+        });
     return chargesList;
 }
 exports.getTransformedRestaurantCharges = getTransformedRestaurantCharges;
