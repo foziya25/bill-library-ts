@@ -51,67 +51,74 @@ function getPriceKeyByOrderType(orderType: number): string {
   }
 }
 
-export function getCartItemInfo(items, orderType): OrderItemInfo[] {
+export function getCartItemInfo(items : Array<any>, orderType: number): OrderItemInfo[] {
   const cartItemInfo: OrderItemInfo[] = [];
+  /* Getting the price key from the order type. */
   const priceKey = getPriceKeyByOrderType(orderType);
-  if(items && items.length)
-  items.forEach((item) => {
-    const { addons, new_variation } = item;
-    const cartItemInfoObj: OrderItemInfo = {
-      addons: [],
-      variants: [],
-      price: item[priceKey],
-      quantity: item.quantity,
-      subcategoryId: item.subcategory_id,
-      categoryId: item.category_id,
-      itemId: item.item_id,
-      orderItemId: item.cart_item_id,
-    };
+  if(items && items.length){
+    items.forEach((item) => {
+      /* Destructuring the object. */
+      const { addons, new_variation } = item;
+      /* Creating an object of type OrderItemInfo. */
+      const cartItemInfoObj: OrderItemInfo = {
+        addons: [],
+        variants: [],
+        price: item[priceKey],
+        quantity: item.quantity,
+        subcategoryId: item.subcategory_id,
+        categoryId: item.category_id,
+        itemId: item.item_id,
+        orderItemId: item.cart_item_id,
+      };
 
-    // transforming addons
-    if (addons && addons.length) {
-      addons.forEach((addon) => {
-        const addonInfo: Addons = {
-          id: addon.id,
-          price: addon.price,
-          quantity: addon.qty,
-        };
-        cartItemInfoObj.addons.push(addonInfo);
-      });
-    }
-
-    // setting up variations
-    if (new_variation && new_variation !== '') {
-      const variantsObj = JSON.parse(new_variation);
-      if (variantsObj) {
-        variantsObj.forEach((group) => {
-          if (group.status && group.options) {
-            const variants: Variants = {
-              groupId: group.group_id,
-              options: [],
-            };
-            group.options.forEach((option) => {
-              if (option.selected === true) {
-                const optionInfo: Options = {
-                  optionsId: option.option_id,
-                  price: option.price,
-                };
-                variants.options.push(optionInfo);
-              }
-            });
-            cartItemInfoObj.variants.push(variants);
-          }
+      // transforming addons
+      if (addons && addons.length) {
+        /* Iterating over the addons array and pushing the addonInfo object into the
+        cartItemInfoObj.addons array. */
+        addons.forEach((addon) => {
+          const addonInfo: Addons = {
+            id: addon.id,
+            price: addon.price,
+            quantity: addon.qty,
+          };
+          cartItemInfoObj.addons.push(addonInfo);
         });
       }
-    }
-    cartItemInfo.push(cartItemInfoObj);
-  });
+
+      // setting up variations
+      if (new_variation && new_variation !== '') {
+        const variantsObj = JSON.parse(new_variation);
+        /* This is a function that is used to get the cart item info. */
+        if (variantsObj && variantsObj.length) {
+          variantsObj.forEach((group) => {
+            if (group.status && group.options && group.options.length) {
+              const variants: Variants = {
+                groupId: group.group_id,
+                options: [],
+              };
+              group.options.forEach((option) => {
+                if (option.selected === true) {
+                  const optionInfo: Options = {
+                    optionsId: option.option_id,
+                    price: option.price,
+                  };
+                  variants.options.push(optionInfo);
+                }
+              });
+              cartItemInfoObj.variants.push(variants);
+            }
+          });
+        }
+      }
+      cartItemInfo.push(cartItemInfoObj);
+    });
+  }
   return cartItemInfo;
 }
 
 export function getOrderItemInfo(items): OrderItemInfo[] {
   const orderItemInfo: OrderItemInfo[] = [];
-  if(items && items.length)
+  if(items && items.length){
   items.forEach((item) => {
     const { addons, new_variation } = item;
     const orderItemInfoObj: OrderItemInfo = {
@@ -163,6 +170,7 @@ export function getOrderItemInfo(items): OrderItemInfo[] {
     }
     orderItemInfo.push(orderItemInfoObj);
   });
+}
   return orderItemInfo;
 }
 
@@ -170,7 +178,7 @@ export function getTransformedRestaurantCharges(
   charges: any[],
 ): ChargesInterface[] {
   const chargesList: ChargesInterface[] = [];
-  if(charges && charges.length)
+  if(charges && charges.length){
   charges.forEach((charge) => {
     if (charge.status && charge.id !== 'delivery') {
       const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);
@@ -190,7 +198,7 @@ export function getTransformedRestaurantCharges(
       };
       chargesList.push(restCharge);
     }
-  });
+  });}
   return chargesList;
 }
 

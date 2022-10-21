@@ -64,29 +64,29 @@ function getCartItemInfo(items, orderType) {
                     cartItemInfoObj.addons.push(addonInfo);
                 });
             }
-            if (new_variation && new_variation !== '') {
-                const variantsObj = JSON.parse(new_variation);
-                if (variantsObj) {
-                    variantsObj.forEach((group) => {
-                        if (group.status && group.options) {
-                            const variants = {
-                                groupId: group.group_id,
-                                options: [],
-                            };
-                            group.options.forEach((option) => {
-                                if (option.selected === true) {
-                                    const optionInfo = {
-                                        optionsId: option.option_id,
-                                        price: option.price,
-                                    };
-                                    variants.options.push(optionInfo);
-                                }
-                            });
-                            cartItemInfoObj.variants.push(variants);
-                        }
-                    });
-                }
-            }
+            // if (new_variation && new_variation !== '') {
+            //     const variantsObj = JSON.parse(new_variation);
+            //     if (variantsObj) {
+            //         variantsObj.forEach((group) => {
+            //             if (group.status && group.options) {
+            //                 const variants = {
+            //                     groupId: group.group_id,
+            //                     options: [],
+            //                 };
+            //                 group.options.forEach((option) => {
+            //                     if (option.selected === true) {
+            //                         const optionInfo = {
+            //                             optionsId: option.option_id,
+            //                             price: option.price,
+            //                         };
+            //                         variants.options.push(optionInfo);
+            //                     }
+            //                 });
+            //                 cartItemInfoObj.variants.push(variants);
+            //             }
+            //         });
+            //     }
+            // }
             cartItemInfo.push(cartItemInfoObj);
         });
     return cartItemInfo;
@@ -94,7 +94,7 @@ function getCartItemInfo(items, orderType) {
 exports.getCartItemInfo = getCartItemInfo;
 function getOrderItemInfo(items) {
     const orderItemInfo = [];
-    if (items && items.length)
+    if (items && items.length){
         items.forEach((item) => {
             const { addons, new_variation } = item;
             const orderItemInfoObj = {
@@ -117,31 +117,32 @@ function getOrderItemInfo(items) {
                     orderItemInfoObj.addons.push(addonInfo);
                 });
             }
-            if (new_variation && new_variation !== '') {
-                const variantsObj = JSON.parse(new_variation);
-                if (variantsObj) {
-                    variantsObj.forEach((group) => {
-                        if (group.status && group.options) {
-                            const variants = {
-                                groupId: group.group_id,
-                                options: [],
-                            };
-                            group.options.forEach((option) => {
-                                if (option.selected === true) {
-                                    const optionInfo = {
-                                        optionsId: option.option_id,
-                                        price: option.price,
-                                    };
-                                    variants.options.push(optionInfo);
-                                }
-                            });
-                            orderItemInfoObj.variants.push(variants);
-                        }
-                    });
-                }
-            }
+            // if (new_variation && new_variation !== '' && new_variation.length) {
+            //     const variantsObj = JSON.parse(new_variation);
+            //     if (variantsObj) {
+            //         variantsObj.forEach((group) => {
+            //             if (group.status && group.options) {
+            //                 const variants = {
+            //                     groupId: group.group_id,
+            //                     options: [],
+            //                 };
+            //                 group.options.forEach((option) => {
+            //                     if (option.selected === true) {
+            //                         const optionInfo = {
+            //                             optionsId: option.option_id,
+            //                             price: option.price,
+            //                         };
+            //                         variants.options.push(optionInfo);
+            //                     }
+            //                 });
+            //                 orderItemInfoObj.variants.push(variants);
+            //             }
+            //         });
+            //     }
+            // }
             orderItemInfo.push(orderItemInfoObj);
         });
+    }
     return orderItemInfo;
 }
 exports.getOrderItemInfo = getOrderItemInfo;
