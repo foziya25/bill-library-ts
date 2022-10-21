@@ -86,30 +86,30 @@ export function getCartItemInfo(items : Array<any>, orderType: number): OrderIte
       }
 
       // setting up variations
-      if (new_variation && new_variation !== '') {
-        const variantsObj = JSON.parse(new_variation);
-        /* This is a function that is used to get the cart item info. */
-        if (variantsObj && variantsObj.length) {
-          variantsObj.forEach((group) => {
-            if (group.status && group.options && group.options.length) {
-              const variants: Variants = {
-                groupId: group.group_id,
-                options: [],
-              };
-              group.options.forEach((option) => {
-                if (option.selected === true) {
-                  const optionInfo: Options = {
-                    optionsId: option.option_id,
-                    price: option.price,
-                  };
-                  variants.options.push(optionInfo);
-                }
-              });
-              cartItemInfoObj.variants.push(variants);
-            }
-          });
-        }
-      }
+      // if (new_variation && new_variation !== '') {
+      //   const variantsObj = JSON.parse(new_variation);
+      //   /* This is a function that is used to get the cart item info. */
+      //   if (variantsObj && variantsObj.length) {
+      //     variantsObj.forEach((group) => {
+      //       if (group.status && group.options && group.options.length) {
+      //         const variants: Variants = {
+      //           groupId: group.group_id,
+      //           options: [],
+      //         };
+      //         group.options.forEach((option) => {
+      //           if (option.selected === true) {
+      //             const optionInfo: Options = {
+      //               optionsId: option.option_id,
+      //               price: option.price,
+      //             };
+      //             variants.options.push(optionInfo);
+      //           }
+      //         });
+      //         cartItemInfoObj.variants.push(variants);
+      //       }
+      //     });
+      //   }
+      // }
       cartItemInfo.push(cartItemInfoObj);
     });
   }
@@ -145,29 +145,29 @@ export function getOrderItemInfo(items): OrderItemInfo[] {
     }
 
     // setting up variations
-    if (new_variation && new_variation !== '') {
-      const variantsObj = JSON.parse(new_variation);
-      if (variantsObj) {
-        variantsObj.forEach((group) => {
-          if (group.status && group.options) {
-            const variants: Variants = {
-              groupId: group.group_id,
-              options: [],
-            };
-            group.options.forEach((option) => {
-              if (option.selected === true) {
-                const optionInfo: Options = {
-                  optionsId: option.option_id,
-                  price: option.price,
-                };
-                variants.options.push(optionInfo);
-              }
-            });
-            orderItemInfoObj.variants.push(variants);
-          }
-        });
-      }
-    }
+    // if (new_variation && new_variation !== '') {
+    //   const variantsObj = JSON.parse(new_variation);
+    //   if (variantsObj) {
+    //     variantsObj.forEach((group) => {
+    //       if (group.status && group.options) {
+    //         const variants: Variants = {
+    //           groupId: group.group_id,
+    //           options: [],
+    //         };
+    //         group.options.forEach((option) => {
+    //           if (option.selected === true) {
+    //             const optionInfo: Options = {
+    //               optionsId: option.option_id,
+    //               price: option.price,
+    //             };
+    //             variants.options.push(optionInfo);
+    //           }
+    //         });
+    //         orderItemInfoObj.variants.push(variants);
+    //       }
+    //     });
+    //   }
+    // }
     orderItemInfo.push(orderItemInfoObj);
   });
 }
