@@ -41,7 +41,7 @@ function getPriceKeyByOrderType(orderType) {
 function getCartItemInfo(items, orderType) {
     const cartItemInfo = [];
     const priceKey = getPriceKeyByOrderType(orderType);
-    if (items && items.length)
+    if (items && items.length) {
         items.forEach((item) => {
             const { addons, new_variation } = item;
             const cartItemInfoObj = {
@@ -64,37 +64,15 @@ function getCartItemInfo(items, orderType) {
                     cartItemInfoObj.addons.push(addonInfo);
                 });
             }
-            // if (new_variation && new_variation !== '') {
-            //     const variantsObj = JSON.parse(new_variation);
-            //     if (variantsObj) {
-            //         variantsObj.forEach((group) => {
-            //             if (group.status && group.options) {
-            //                 const variants = {
-            //                     groupId: group.group_id,
-            //                     options: [],
-            //                 };
-            //                 group.options.forEach((option) => {
-            //                     if (option.selected === true) {
-            //                         const optionInfo = {
-            //                             optionsId: option.option_id,
-            //                             price: option.price,
-            //                         };
-            //                         variants.options.push(optionInfo);
-            //                     }
-            //                 });
-            //                 cartItemInfoObj.variants.push(variants);
-            //             }
-            //         });
-            //     }
-            // }
             cartItemInfo.push(cartItemInfoObj);
         });
+    }
     return cartItemInfo;
 }
 exports.getCartItemInfo = getCartItemInfo;
 function getOrderItemInfo(items) {
     const orderItemInfo = [];
-    if (items && items.length){
+    if (items && items.length) {
         items.forEach((item) => {
             const { addons, new_variation } = item;
             const orderItemInfoObj = {
@@ -117,29 +95,6 @@ function getOrderItemInfo(items) {
                     orderItemInfoObj.addons.push(addonInfo);
                 });
             }
-            // if (new_variation && new_variation !== '' && new_variation.length) {
-            //     const variantsObj = JSON.parse(new_variation);
-            //     if (variantsObj) {
-            //         variantsObj.forEach((group) => {
-            //             if (group.status && group.options) {
-            //                 const variants = {
-            //                     groupId: group.group_id,
-            //                     options: [],
-            //                 };
-            //                 group.options.forEach((option) => {
-            //                     if (option.selected === true) {
-            //                         const optionInfo = {
-            //                             optionsId: option.option_id,
-            //                             price: option.price,
-            //                         };
-            //                         variants.options.push(optionInfo);
-            //                     }
-            //                 });
-            //                 orderItemInfoObj.variants.push(variants);
-            //             }
-            //         });
-            //     }
-            // }
             orderItemInfo.push(orderItemInfoObj);
         });
     }
@@ -148,7 +103,7 @@ function getOrderItemInfo(items) {
 exports.getOrderItemInfo = getOrderItemInfo;
 function getTransformedRestaurantCharges(charges) {
     const chargesList = [];
-    if (charges && charges.length)
+    if (charges && charges.length) {
         charges.forEach((charge) => {
             if (charge.status && charge.id !== 'delivery') {
                 const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);
@@ -166,6 +121,7 @@ function getTransformedRestaurantCharges(charges) {
                 chargesList.push(restCharge);
             }
         });
+    }
     return chargesList;
 }
 exports.getTransformedRestaurantCharges = getTransformedRestaurantCharges;
