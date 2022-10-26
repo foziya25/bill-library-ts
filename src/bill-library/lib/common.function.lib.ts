@@ -1,12 +1,7 @@
 import { OrderItemInfo } from '../baseClass/orderItemInfo';
 import { ChargeApplicableType, ChargeType } from '../enum/billLib.enum';
 import { ChargesInterface } from '../interfaces/charges.interface';
-import {
-  Addons,
-  ItemInfo,
-  Options,
-  Variants,
-} from '../interfaces/itemInfo.interface';
+import { Addons, ItemInfo, Options, Variants } from '../interfaces/itemInfo.interface';
 
 export const calculateAddonVariantPrice = (itemInfo: ItemInfo): number => {
   let totalPrice = 0;
@@ -51,11 +46,11 @@ function getPriceKeyByOrderType(orderType: number): string {
   }
 }
 
-export function getCartItemInfo(items : Array<any>, orderType: number): OrderItemInfo[] {
+export function getCartItemInfo(items: Array<any>, orderType: number): OrderItemInfo[] {
   const cartItemInfo: OrderItemInfo[] = [];
   /* Getting the price key from the order type. */
   const priceKey = getPriceKeyByOrderType(orderType);
-  if(items && items.length){
+  if (items && items.length) {
     items.forEach((item) => {
       /* Destructuring the object. */
       const { addons, new_variation } = item;
@@ -118,94 +113,95 @@ export function getCartItemInfo(items : Array<any>, orderType: number): OrderIte
 
 export function getOrderItemInfo(items): OrderItemInfo[] {
   const orderItemInfo: OrderItemInfo[] = [];
-  if(items && items.length){
-  items.forEach((item) => {
-    const { addons, new_variation } = item;
-    const orderItemInfoObj: OrderItemInfo = {
-      addons: [],
-      variants: [],
-      price: item.item_price,
-      quantity: item.item_quantity,
-      subcategoryId: item.subcategory_id,
-      categoryId: item.category_id,
-      itemId: item.item_id,
-      orderItemId: item.order_item_id,
-    };
+  if (items && items.length) {
+    items.forEach((item) => {
+      const { addons, new_variation } = item;
+      const orderItemInfoObj: OrderItemInfo = {
+        addons: [],
+        variants: [],
+        price: item.item_price,
+        quantity: item.item_quantity,
+        subcategoryId: item.subcategory_id,
+        categoryId: item.category_id,
+        itemId: item.item_id,
+        orderItemId: item.order_item_id,
+      };
 
-    // transforming addons
-    if (addons && addons.length) {
-      addons.forEach((addon) => {
-        const addonInfo: Addons = {
-          id: addon.id,
-          price: addon.price,
-          quantity: addon.qty,
-        };
-        orderItemInfoObj.addons.push(addonInfo);
-      });
-    }
+      // transforming addons
+      if (addons && addons.length) {
+        addons.forEach((addon) => {
+          const addonInfo: Addons = {
+            id: addon.id,
+            price: addon.price,
+            quantity: addon.qty,
+          };
+          orderItemInfoObj.addons.push(addonInfo);
+        });
+      }
 
-    // setting up variations
-    // if (new_variation && new_variation !== '') {
-    //   const variantsObj = JSON.parse(new_variation);
-    //   if (variantsObj) {
-    //     variantsObj.forEach((group) => {
-    //       if (group.status && group.options) {
-    //         const variants: Variants = {
-    //           groupId: group.group_id,
-    //           options: [],
-    //         };
-    //         group.options.forEach((option) => {
-    //           if (option.selected === true) {
-    //             const optionInfo: Options = {
-    //               optionsId: option.option_id,
-    //               price: option.price,
-    //             };
-    //             variants.options.push(optionInfo);
-    //           }
-    //         });
-    //         orderItemInfoObj.variants.push(variants);
-    //       }
-    //     });
-    //   }
-    // }
-    orderItemInfo.push(orderItemInfoObj);
-  });
-}
+      // setting up variations
+      // if (new_variation && new_variation !== '') {
+      //   const variantsObj = JSON.parse(new_variation);
+      //   if (variantsObj) {
+      //     variantsObj.forEach((group) => {
+      //       if (group.status && group.options) {
+      //         const variants: Variants = {
+      //           groupId: group.group_id,
+      //           options: [],
+      //         };
+      //         group.options.forEach((option) => {
+      //           if (option.selected === true) {
+      //             const optionInfo: Options = {
+      //               optionsId: option.option_id,
+      //               price: option.price,
+      //             };
+      //             variants.options.push(optionInfo);
+      //           }
+      //         });
+      //         orderItemInfoObj.variants.push(variants);
+      //       }
+      //     });
+      //   }
+      // }
+      orderItemInfo.push(orderItemInfoObj);
+    });
+  }
   return orderItemInfo;
 }
 
-export function getTransformedRestaurantCharges(
-  charges: any[],
-): ChargesInterface[] {
+export function getTransformedRestaurantCharges(charges: any[], ordeer_type: number): ChargesInterface[] {
   const chargesList: ChargesInterface[] = [];
-  if(charges && charges.length){
-  charges.forEach((charge) => {
-    if (charge.status && charge.id !== 'delivery') {
-      const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);
-      const applicableInfo = getApplicableOnInfo(
-        charge.applicable_on,
-        charge.applicable_subcat,
-      );
-      const restCharge: ChargesInterface = {
-        chargeType: chargeInfo.type,
-        chargeValue: chargeInfo.value,
-        applicableOn: applicableInfo.applicableList,
-        chargeApplicableType: applicableInfo.chargeApplicableType,
-        id: charge.id,
-        name: charge.name,
-        class: charge.class,
-        subName: charge.sub_name,
-      };
-      chargesList.push(restCharge);
-    }
-  });}
+  if (charges && charges.length) {
+    charges.forEach((charge) => {
+      const { order_type: applicableOrderType } = charge;
+      if (charge.status && charge.id !== 'delivery') {
+        const applicable = applicableOrderType.forEach((ot) => {
+          if (ot === ordeer_type) {
+            return true;
+          }
+        });
+        if (applicable) {
+          const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);
+          const applicableInfo = getApplicableOnInfo(charge.applicable_on, charge.applicable_subcat);
+          const restCharge: ChargesInterface = {
+            chargeType: chargeInfo.type,
+            chargeValue: chargeInfo.value,
+            applicableOn: applicableInfo.applicableList,
+            chargeApplicableType: applicableInfo.chargeApplicableType,
+            id: charge.id,
+            name: charge.name,
+            class: charge.class,
+            subName: charge.sub_name,
+          };
+          chargesList.push(restCharge);
+        }
+      }
+    });
+  }
   return chargesList;
 }
 
-function getChargesTypeAndValue(
-  chargeType: string,
-  data: any,
-): { type: ChargeType; value: number } {
+function getChargesTypeAndValue(chargeType: string, data: any): { type: ChargeType; value: number } {
   switch (chargeType) {
     case 'fixed':
       return { type: ChargeType.FIXED, value: data.fixed_amount };
@@ -214,10 +210,7 @@ function getChargesTypeAndValue(
   }
 }
 
-function getApplicableOnInfo(
-  applicableOn,
-  applicableSubcat,
-): { chargeApplicableType: ChargeApplicableType; applicableList: [] } {
+function getApplicableOnInfo(applicableOn, applicableSubcat): { chargeApplicableType: ChargeApplicableType; applicableList: [] } {
   if (applicableOn[0] === 'category') {
     return {
       chargeApplicableType: ChargeApplicableType.SUB_CATEGORY,
