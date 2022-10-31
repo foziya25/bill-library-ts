@@ -517,6 +517,9 @@ class BillLibraryService {
                 if (response.itemTotalWithDiscount + totalDiscount > 0) {
                     response.itemTotalWithDiscount += totalDiscount;
                 }
+                else {
+                    response.itemTotalWithDiscount = 0;
+                }
                 break;
             case "subCategory":
                 orderItemInfo.forEach((item) => {
@@ -531,6 +534,9 @@ class BillLibraryService {
                 });
                 if (response.itemTotalWithDiscount + totalDiscount > 0) {
                     response.itemTotalWithDiscount += totalDiscount;
+                }
+                else {
+                    response.itemTotalWithDiscount = 0;
                 }
                 break;
             case "overAll":
@@ -549,6 +555,9 @@ class BillLibraryService {
                 });
                 if (response.itemTotalWithDiscount + totalDiscount > 0) {
                     response.itemTotalWithDiscount += totalDiscount;
+                }
+                else {
+                    response.itemTotalWithDiscount = 0;
                 }
                 break;
             default:
