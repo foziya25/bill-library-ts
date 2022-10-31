@@ -568,6 +568,8 @@ export class BillLibraryService {
         });
         if (response.itemTotalWithDiscount + totalDiscount > 0) {
           response.itemTotalWithDiscount += totalDiscount;
+        } else {
+          response.itemTotalWithDiscount = 0;
         }
         break;
       case ChargeApplicableType.SUB_CATEGORY:
@@ -583,6 +585,8 @@ export class BillLibraryService {
         });
         if (response.itemTotalWithDiscount + totalDiscount > 0) {
           response.itemTotalWithDiscount += totalDiscount;
+        } else {
+          response.itemTotalWithDiscount = 0;
         }
         break;
       case ChargeApplicableType.OVER_ALL:
@@ -600,6 +604,8 @@ export class BillLibraryService {
         });
         if (response.itemTotalWithDiscount + totalDiscount > 0) {
           response.itemTotalWithDiscount += totalDiscount;
+        } else {
+          response.itemTotalWithDiscount = 0;
         }
         break;
       default:
