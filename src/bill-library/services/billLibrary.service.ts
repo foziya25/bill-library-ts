@@ -644,7 +644,7 @@ export class BillLibraryService {
       name: '',
       value: 0,
       value_text: '',
-      id: 'by_restaurant',
+      id: 'coupon_discount',
     };
     let flag = 0;
     if (itemLevel.status) {
@@ -654,6 +654,7 @@ export class BillLibraryService {
     }
     discountFeesArray.forEach((discount) => {
       if (discount.discountCategory === DiscountCategory.MERCHANT) {
+        discount.name = 'By Restaurant';
         discountItemMerchant.value += discount.value;
         if (flag) {
           discountItemMerchant.name = discountItemMerchant.name + ',' + discount.name;
@@ -662,6 +663,7 @@ export class BillLibraryService {
           flag = 1;
         }
       } else if (discount.discountCategory === DiscountCategory.TOP_UP) {
+        discount.name = 'By Restaurant';
         discountItemMerchant.value += discount.value;
         if (flag) {
           discountItemMerchant.name = discountItemMerchant.name + ',' + discount.name;
