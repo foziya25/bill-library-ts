@@ -592,7 +592,7 @@ class BillLibraryService {
             name: '',
             value: 0,
             value_text: '',
-            id: 'by_restaurant',
+            id: 'coupon_discount',
         };
         let flag = 0;
         if (itemLevel.status) {
@@ -602,6 +602,7 @@ class BillLibraryService {
         }
         discountFeesArray.forEach((discount) => {
             if (discount.discountCategory === "merchant") {
+                discount.name = 'By Restaurant';
                 discountItemMerchant.value += discount.value;
                 if (flag) {
                     discountItemMerchant.name = discountItemMerchant.name + ',' + discount.name;
@@ -612,6 +613,7 @@ class BillLibraryService {
                 }
             }
             else if (discount.discountCategory === "topUp") {
+                discount.name = 'By Restaurant';
                 discountItemMerchant.value += discount.value;
                 if (flag) {
                     discountItemMerchant.name = discountItemMerchant.name + ',' + discount.name;
