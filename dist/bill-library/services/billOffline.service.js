@@ -29,16 +29,12 @@ class BillOfflineCalculationService {
         let message = '';
         for (const ele in discountInfo) {
             if (discountInfo[ele].discountCategory === "coupon") {
-                if (!discountMap['merchant'] &&
-                    !discountMap['topUp'] &&
-                    !discountMap['coupon']) {
+                if (!discountMap['merchant'] && !discountMap['topUp'] && !discountMap['coupon']) {
                     discountMap['coupon'] = 1;
                 }
-                else if (!discountMap['coupon'] &&
-                    (discountMap['merchant'] || discountMap['topUp'])) {
+                else if (!discountMap['coupon'] && (discountMap['merchant'] || discountMap['topUp'])) {
                     flag = 0;
-                    message =
-                        'Cannot add coupon ,merchant and top up discounts on same order';
+                    message = 'Cannot add coupon ,merchant and top up discounts on same order';
                     break;
                 }
                 else {
@@ -48,16 +44,12 @@ class BillOfflineCalculationService {
                 }
             }
             else if (discountInfo[ele].discountCategory === "merchant") {
-                if (!discountMap['merchant'] &&
-                    !discountMap['topUp'] &&
-                    !discountMap['coupon']) {
+                if (!discountMap['merchant'] && !discountMap['topUp'] && !discountMap['coupon']) {
                     discountMap['merchant'] = 1;
                 }
-                else if (!discountMap['merchant'] &&
-                    (discountMap['topUp'] || discountMap['coupon'])) {
+                else if (!discountMap['merchant'] && (discountMap['topUp'] || discountMap['coupon'])) {
                     flag = 0;
-                    message =
-                        'Cannot add coupon ,merchant and top up discounts on same order';
+                    message = 'Cannot add coupon ,merchant and top up discounts on same order';
                     break;
                 }
                 else {
@@ -67,16 +59,12 @@ class BillOfflineCalculationService {
                 }
             }
             else if (discountInfo[ele].discountCategory === "topUp") {
-                if (!discountMap['topUp'] &&
-                    !discountMap['merchant'] &&
-                    !discountMap['coupon']) {
+                if (!discountMap['topUp'] && !discountMap['merchant'] && !discountMap['coupon']) {
                     discountMap['topUp'] = 1;
                 }
-                else if (!discountMap['topUp'] &&
-                    (discountMap['merchant'] || discountMap['coupon'])) {
+                else if (!discountMap['topUp'] && (discountMap['merchant'] || discountMap['coupon'])) {
                     flag = 0;
-                    message =
-                        'Cannot add coupon ,merchant and top up discounts on same order';
+                    message = 'Cannot add coupon ,merchant and top up discounts on same order';
                     break;
                 }
                 else {
@@ -89,14 +77,12 @@ class BillOfflineCalculationService {
         return { status: flag, message: message };
     }
     getOfflineCartBill(cart, restFee, rest_round_off) {
-        const { cart_items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, } = cart;
+        const { cart_items, order_type, skip_service_charge_operation, skip_packaging_charge_operation } = cart;
         const itemInfo = (0, common_function_lib_1.getCartItemInfo)(cart_items, order_type);
-        let restCharges = (0, common_function_lib_1.getTransformedRestaurantCharges)(restFee);
+        let restCharges = (0, common_function_lib_1.getTransformedRestaurantCharges)(restFee, order_type);
         const discountInfo = this.discountCalculationService.getDiscountFromCart(cart, itemInfo);
         restCharges = restCharges.filter((charges) => {
-            if ((skip_packaging_charge_operation &&
-                charges.class === 'packaging_charge') ||
-                (skip_service_charge_operation && charges.class === 'service_tax')) {
+            if ((skip_packaging_charge_operation && charges.class === 'packaging_charge') || (skip_service_charge_operation && charges.class === 'service_tax')) {
                 return false;
             }
             else {
@@ -106,15 +92,13 @@ class BillOfflineCalculationService {
         return this.getOrderBill(itemInfo, discountInfo, restCharges, rest_round_off);
     }
     getOfflineOrderBill(order, restFee, couponInfo, orderBill, rest_round_off) {
-        const { items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, } = order;
+        const { items, order_type, skip_service_charge_operation, skip_packaging_charge_operation } = order;
         const { fees } = orderBill;
         const itemInfo = (0, common_function_lib_1.getOrderItemInfo)(items);
-        let restCharges = (0, common_function_lib_1.getTransformedRestaurantCharges)(restFee);
+        let restCharges = (0, common_function_lib_1.getTransformedRestaurantCharges)(restFee, order_type);
         const discountInfo = this.discountCalculationService.getDiscountOnOrder(order, couponInfo, itemInfo);
         restCharges = restCharges.filter((charges) => {
-            if ((skip_packaging_charge_operation &&
-                charges.class === 'packaging_charge') ||
-                (skip_service_charge_operation && charges.class === 'service_tax')) {
+            if ((skip_packaging_charge_operation && charges.class === 'packaging_charge') || (skip_service_charge_operation && charges.class === 'service_tax')) {
                 return false;
             }
             else {

@@ -5,5 +5,5 @@ export declare const calculateAddonVariantPrice: (itemInfo: ItemInfo) => number;
 export declare const getRoundOffValue: (value: number, base: number) => any;
 export declare function getCartItemInfo(items: Array<any>, orderType: number): OrderItemInfo[];
 export declare function getOrderItemInfo(items: any): OrderItemInfo[];
-export declare function getTransformedRestaurantCharges(charges: any[]): ChargesInterface[];
+export declare function getTransformedRestaurantCharges(charges: any[], order_type: number): ChargesInterface[];
 export declare function getCartItemTotal(itemInfo: OrderItemInfo[]): number;

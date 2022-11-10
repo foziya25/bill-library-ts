@@ -1,36 +1,18 @@
 import { OrderItemInfo } from '../baseClass/orderItemInfo';
 import { ChargeApplicableType, ChargeType } from '../enum/billLib.enum';
-import {
-  DiscountAction,
-  DiscountApplicableType,
-  DiscountCategory,
-  DiscountType,
-} from '../enum/discountLib.enum';
+import { DiscountAction, DiscountApplicableType, DiscountCategory, DiscountType } from '../enum/discountLib.enum';
 import { BillResponseInterface } from '../interfaces/billResponse.interface';
 import { ChargesInterface } from '../interfaces/charges.interface';
 import { DiscountInterface } from '../interfaces/discount.interface';
-import {
-  getCartItemInfo,
-  getOrderItemInfo,
-  getTransformedRestaurantCharges,
-} from '../lib/common.function.lib';
+import { getCartItemInfo, getOrderItemInfo, getTransformedRestaurantCharges } from '../lib/common.function.lib';
 import { BillLibraryService } from './billLibrary.service';
 import { DiscountLibService } from './discount-lib.service';
 import { DiscountCalculationService } from './discountCalculation.service';
 
 export class BillOfflineCalculationService {
-  constructor(
-    private discountLibrary: DiscountLibService,
-    private billLibrary: BillLibraryService,
-    private discountCalculationService: DiscountCalculationService,
-  ) {}
+  constructor(private discountLibrary: DiscountLibService, private billLibrary: BillLibraryService, private discountCalculationService: DiscountCalculationService) {}
 
-  getOrderBill(
-    orderItemInfo: OrderItemInfo[],
-    discountInfo: DiscountInterface[],
-    chargesInfo: ChargesInterface[],
-    rest_round_off = 0.05,
-  ): BillResponseInterface {
+  getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[], chargesInfo: ChargesInterface[], rest_round_off = 0.05): BillResponseInterface {
     const validationResponse = this.validateDiscount(discountInfo);
     if (!validationResponse.status) {
       const bill: BillResponseInterface = {
@@ -42,16 +24,8 @@ export class BillOfflineCalculationService {
       };
       return bill;
     }
-    const discountDto = this.discountLibrary.applyDiscountOnOrder(
-      orderItemInfo,
-      discountInfo,
-    );
-    return this.billLibrary.getOrderBill(
-      orderItemInfo,
-      discountDto,
-      chargesInfo,
-      rest_round_off,
-    );
+    const discountDto = this.discountLibrary.applyDiscountOnOrder(orderItemInfo, discountInfo);
+    return this.billLibrary.getOrderBill(orderItemInfo, discountDto, chargesInfo, rest_round_off);
   }
 
   validateDiscount(discountInfo: DiscountInterface[]) {
@@ -60,63 +34,35 @@ export class BillOfflineCalculationService {
     let message = '';
     for (const ele in discountInfo) {
       if (discountInfo[ele].discountCategory === DiscountCategory.COUPON) {
-        if (
-          !discountMap['merchant'] &&
-          !discountMap['topUp'] &&
-          !discountMap['coupon']
-        ) {
+        if (!discountMap['merchant'] && !discountMap['topUp'] && !discountMap['coupon']) {
           discountMap['coupon'] = 1;
-        } else if (
-          !discountMap['coupon'] &&
-          (discountMap['merchant'] || discountMap['topUp'])
-        ) {
+        } else if (!discountMap['coupon'] && (discountMap['merchant'] || discountMap['topUp'])) {
           flag = 0;
-          message =
-            'Cannot add coupon ,merchant and top up discounts on same order';
+          message = 'Cannot add coupon ,merchant and top up discounts on same order';
           break;
         } else {
           flag = 0;
           message = 'Duplicate coupon discount';
           break;
         }
-      } else if (
-        discountInfo[ele].discountCategory === DiscountCategory.MERCHANT
-      ) {
-        if (
-          !discountMap['merchant'] &&
-          !discountMap['topUp'] &&
-          !discountMap['coupon']
-        ) {
+      } else if (discountInfo[ele].discountCategory === DiscountCategory.MERCHANT) {
+        if (!discountMap['merchant'] && !discountMap['topUp'] && !discountMap['coupon']) {
           discountMap['merchant'] = 1;
-        } else if (
-          !discountMap['merchant'] &&
-          (discountMap['topUp'] || discountMap['coupon'])
-        ) {
+        } else if (!discountMap['merchant'] && (discountMap['topUp'] || discountMap['coupon'])) {
           flag = 0;
-          message =
-            'Cannot add coupon ,merchant and top up discounts on same order';
+          message = 'Cannot add coupon ,merchant and top up discounts on same order';
           break;
         } else {
           flag = 0;
           message = 'Duplicate merchant discount';
           break;
         }
-      } else if (
-        discountInfo[ele].discountCategory === DiscountCategory.TOP_UP
-      ) {
-        if (
-          !discountMap['topUp'] &&
-          !discountMap['merchant'] &&
-          !discountMap['coupon']
-        ) {
+      } else if (discountInfo[ele].discountCategory === DiscountCategory.TOP_UP) {
+        if (!discountMap['topUp'] && !discountMap['merchant'] && !discountMap['coupon']) {
           discountMap['topUp'] = 1;
-        } else if (
-          !discountMap['topUp'] &&
-          (discountMap['merchant'] || discountMap['coupon'])
-        ) {
+        } else if (!discountMap['topUp'] && (discountMap['merchant'] || discountMap['coupon'])) {
           flag = 0;
-          message =
-            'Cannot add coupon ,merchant and top up discounts on same order';
+          message = 'Cannot add coupon ,merchant and top up discounts on same order';
           break;
         } else {
           flag = 0;
@@ -128,71 +74,31 @@ export class BillOfflineCalculationService {
     return { status: flag, message: message };
   }
 
-  getOfflineCartBill(
-    cart: any,
-    restFee: any,
-    rest_round_off,
-  ): BillResponseInterface {
-    const {
-      cart_items,
-      order_type,
-      skip_service_charge_operation,
-      skip_packaging_charge_operation,
-    } = cart;
+  getOfflineCartBill(cart: any, restFee: any, rest_round_off): BillResponseInterface {
+    const { cart_items, order_type, skip_service_charge_operation, skip_packaging_charge_operation } = cart;
     const itemInfo = getCartItemInfo(cart_items, order_type);
-    let restCharges = getTransformedRestaurantCharges(restFee);
-    const discountInfo = this.discountCalculationService.getDiscountFromCart(
-      cart,
-      itemInfo,
-    );
+    let restCharges = getTransformedRestaurantCharges(restFee, order_type);
+    const discountInfo = this.discountCalculationService.getDiscountFromCart(cart, itemInfo);
     restCharges = restCharges.filter((charges) => {
-      if (
-        (skip_packaging_charge_operation &&
-          charges.class === 'packaging_charge') ||
-        (skip_service_charge_operation && charges.class === 'service_tax')
-      ) {
+      if ((skip_packaging_charge_operation && charges.class === 'packaging_charge') || (skip_service_charge_operation && charges.class === 'service_tax')) {
         return false;
       } else {
         return true;
       }
     });
 
-    return this.getOrderBill(
-      itemInfo,
-      discountInfo,
-      restCharges,
-      rest_round_off,
-    );
+    return this.getOrderBill(itemInfo, discountInfo, restCharges, rest_round_off);
   }
 
-  getOfflineOrderBill(
-    order: any,
-    restFee: any,
-    couponInfo: any,
-    orderBill: any,
-    rest_round_off,
-  ): BillResponseInterface {
-    const {
-      items,
-      order_type,
-      skip_service_charge_operation,
-      skip_packaging_charge_operation,
-    } = order;
+  getOfflineOrderBill(order: any, restFee: any, couponInfo: any, orderBill: any, rest_round_off): BillResponseInterface {
+    const { items, order_type, skip_service_charge_operation, skip_packaging_charge_operation } = order;
     const { fees } = orderBill;
     const itemInfo = getOrderItemInfo(items);
-    let restCharges = getTransformedRestaurantCharges(restFee);
-    const discountInfo = this.discountCalculationService.getDiscountOnOrder(
-      order,
-      couponInfo,
-      itemInfo,
-    );
+    let restCharges = getTransformedRestaurantCharges(restFee, order_type);
+    const discountInfo = this.discountCalculationService.getDiscountOnOrder(order, couponInfo, itemInfo);
 
     restCharges = restCharges.filter((charges) => {
-      if (
-        (skip_packaging_charge_operation &&
-          charges.class === 'packaging_charge') ||
-        (skip_service_charge_operation && charges.class === 'service_tax')
-      ) {
+      if ((skip_packaging_charge_operation && charges.class === 'packaging_charge') || (skip_service_charge_operation && charges.class === 'service_tax')) {
         return false;
       } else {
         return true;
@@ -229,11 +135,6 @@ export class BillOfflineCalculationService {
         }
       });
     }
-    return this.getOrderBill(
-      itemInfo,
-      discountInfo,
-      restCharges,
-      rest_round_off,
-    );
+    return this.getOrderBill(itemInfo, discountInfo, restCharges, rest_round_off);
   }
 }

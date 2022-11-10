@@ -169,27 +169,35 @@ export function getOrderItemInfo(items): OrderItemInfo[] {
   return orderItemInfo;
 }
 
-export function getTransformedRestaurantCharges(charges: any[]): ChargesInterface[] {
+export function getTransformedRestaurantCharges(charges: any[], order_type: number): ChargesInterface[] {
   const chargesList: ChargesInterface[] = [];
   if (charges && charges.length) {
     charges.forEach((charge) => {
+      const { order_type: applicableOrderType } = charge;
       if (charge.status && charge.id !== 'delivery') {
-        const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);
-        const applicableInfo = getApplicableOnInfo(charge.applicable_on, charge.applicable_subcat);
-        const restCharge: ChargesInterface = {
-          chargeType: chargeInfo.type,
-          chargeValue: chargeInfo.value,
-          applicableOn: applicableInfo.applicableList,
-          chargeApplicableType: applicableInfo.chargeApplicableType,
-          id: charge.id,
-          name: charge.name,
-          class: charge.class,
-          subName: charge.sub_name,
-        };
-        if (restCharge.chargeType == ChargeType.PERCENTAGE) {
-          restCharge.name = restCharge.name + '@' + restCharge.chargeValue + '%';
+        const applicable = applicableOrderType.forEach((ot) => {
+          if (ot === order_type) {
+            return true;
+          }
+        });
+        if (applicable) {
+          const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);
+          const applicableInfo = getApplicableOnInfo(charge.applicable_on, charge.applicable_subcat);
+          const restCharge: ChargesInterface = {
+            chargeType: chargeInfo.type,
+            chargeValue: chargeInfo.value,
+            applicableOn: applicableInfo.applicableList,
+            chargeApplicableType: applicableInfo.chargeApplicableType,
+            id: charge.id,
+            name: charge.name,
+            class: charge.class,
+            subName: charge.sub_name,
+          };
+          if (restCharge.chargeType == ChargeType.PERCENTAGE) {
+            restCharge.name = restCharge.name + '@' + restCharge.chargeValue + '%';
+          }
+          chargesList.push(restCharge);
         }
-        chargesList.push(restCharge);
       }
     });
   }
