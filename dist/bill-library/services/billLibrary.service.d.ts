@@ -11,7 +11,7 @@ export declare class BillLibraryService {
     calculateCartChargeAmount(charge: ChargesInterface, applicableResponse: ApplicableCartResponseDto): CalculateCartChargeDto;
     calculateOrderChargeAmount(charge: ChargesInterface, applicableResponse: ApplicableOrderResponseDto): CalculateOrderChargeDto;
     findApplicableCartItemTotal(charge: ChargesInterface, cartItemInfo: CartCalculationInfo[]): ApplicableCartResponseDto;
-    findApplicableOrderItemTotal(charge: ChargesInterface, orderItemInfo: OrderCalculationInfo[]): ApplicableOrderResponseDto;
+    findApplicableOrderItemTotal(charge: ChargesInterface, orderItemInfo: OrderCalculationInfo[], discountInfo: OrderDiscountDto[]): ApplicableOrderResponseDto;
     calculateBillTotal(billInfo: BillResponseInterface): number;
     mergeItemAndMerchantDiscount(discountFeesArray: DiscountFeeObj[]): FeeObj[];
 }

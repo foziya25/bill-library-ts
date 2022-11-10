@@ -101,24 +101,35 @@ function getOrderItemInfo(items) {
     return orderItemInfo;
 }
 exports.getOrderItemInfo = getOrderItemInfo;
-function getTransformedRestaurantCharges(charges) {
+function getTransformedRestaurantCharges(charges, order_type) {
     const chargesList = [];
     if (charges && charges.length) {
         charges.forEach((charge) => {
+            const { order_type: applicableOrderType } = charge;
             if (charge.status && charge.id !== 'delivery') {
-                const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);
-                const applicableInfo = getApplicableOnInfo(charge.applicable_on, charge.applicable_subcat);
-                const restCharge = {
-                    chargeType: chargeInfo.type,
-                    chargeValue: chargeInfo.value,
-                    applicableOn: applicableInfo.applicableList,
-                    chargeApplicableType: applicableInfo.chargeApplicableType,
-                    id: charge.id,
-                    name: charge.name,
-                    class: charge.class,
-                    subName: charge.sub_name,
-                };
-                chargesList.push(restCharge);
+                const applicable = applicableOrderType.forEach((ot) => {
+                    if (ot === order_type) {
+                        return true;
+                    }
+                });
+                if (applicable) {
+                    const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);
+                    const applicableInfo = getApplicableOnInfo(charge.applicable_on, charge.applicable_subcat);
+                    const restCharge = {
+                        chargeType: chargeInfo.type,
+                        chargeValue: chargeInfo.value,
+                        applicableOn: applicableInfo.applicableList,
+                        chargeApplicableType: applicableInfo.chargeApplicableType,
+                        id: charge.id,
+                        name: charge.name,
+                        class: charge.class,
+                        subName: charge.sub_name,
+                    };
+                    if (restCharge.chargeType == "percentage") {
+                        restCharge.name = restCharge.name + '@' + restCharge.chargeValue + '%';
+                    }
+                    chargesList.push(restCharge);
+                }
             }
         });
     }

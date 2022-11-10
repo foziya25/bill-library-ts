@@ -169,14 +169,14 @@ export function getOrderItemInfo(items): OrderItemInfo[] {
   return orderItemInfo;
 }
 
-export function getTransformedRestaurantCharges(charges: any[], ordeer_type: number): ChargesInterface[] {
+export function getTransformedRestaurantCharges(charges: any[], order_type: number): ChargesInterface[] {
   const chargesList: ChargesInterface[] = [];
   if (charges && charges.length) {
     charges.forEach((charge) => {
       const { order_type: applicableOrderType } = charge;
       if (charge.status && charge.id !== 'delivery') {
         const applicable = applicableOrderType.forEach((ot) => {
-          if (ot === ordeer_type) {
+          if (ot === order_type) {
             return true;
           }
         });
@@ -193,6 +193,9 @@ export function getTransformedRestaurantCharges(charges: any[], ordeer_type: num
             class: charge.class,
             subName: charge.sub_name,
           };
+          if (restCharge.chargeType == ChargeType.PERCENTAGE) {
+            restCharge.name = restCharge.name + '@' + restCharge.chargeValue + '%';
+          }
           chargesList.push(restCharge);
         }
       }
