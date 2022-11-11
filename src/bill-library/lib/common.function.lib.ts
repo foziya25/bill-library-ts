@@ -175,12 +175,12 @@ export function getTransformedRestaurantCharges(charges: any[], order_type: numb
     charges.forEach((charge) => {
       const { order_type: applicableOrderType } = charge;
       if (charge.status && charge.id !== 'delivery') {
-        const applicable = applicableOrderType.forEach((ot) => {
+        const applicable = applicableOrderType.find((ot) => {
           if (ot === order_type) {
             return true;
           }
         });
-        if (applicable) {
+        if (applicable != undefined) {
           const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);
           const applicableInfo = getApplicableOnInfo(charge.applicable_on, charge.applicable_subcat);
           const restCharge: ChargesInterface = {
