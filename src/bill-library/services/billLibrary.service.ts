@@ -1,31 +1,48 @@
-import { CartCalculationInfo, CartItemInfo } from '../baseClass/cartItemInfo';
-import { OrderCalculationInfo, OrderItemInfo } from '../baseClass/orderItemInfo';
-import { ApplicableCartResponseDto, ApplicableOrderResponseDto, CalculateCartChargeDto, CalculateOrderChargeDto } from '../baseClass/responseDto';
-import { CartDiscountDto } from '../discountClasses/cartDiscountDto';
-import { OrderDiscountDto } from '../discountClasses/orderDiscountDto';
-import { ChargeApplicableType, ChargeType } from '../enum/billLib.enum';
-import { DiscountAction, DiscountCategory } from '../enum/discountLib.enum';
-import { BillResponseInterface, DiscountFeeObj, FeeObj } from '../interfaces/billResponse.interface';
-import { ChargesInterface } from '../interfaces/charges.interface';
-import { getRoundOffValue } from '../lib/common.function.lib';
+import { CartCalculationInfo, CartItemInfo } from "../baseClass/cartItemInfo";
+import {
+  OrderCalculationInfo,
+  OrderItemInfo,
+} from "../baseClass/orderItemInfo";
+import {
+  ApplicableCartResponseDto,
+  ApplicableOrderResponseDto,
+  CalculateCartChargeDto,
+  CalculateOrderChargeDto,
+} from "../baseClass/responseDto";
+import { CartDiscountDto } from "../discountClasses/cartDiscountDto";
+import { OrderDiscountDto } from "../discountClasses/orderDiscountDto";
+import { ChargeApplicableType, ChargeType } from "../enum/billLib.enum";
+import { DiscountAction, DiscountCategory } from "../enum/discountLib.enum";
+import {
+  BillResponseInterface,
+  DiscountFeeObj,
+  FeeObj,
+} from "../interfaces/billResponse.interface";
+import { ChargesInterface } from "../interfaces/charges.interface";
+import { getRoundOffValue } from "../lib/common.function.lib";
 
 export class BillLibraryService {
-  getCartBill(cartItemInfo: CartItemInfo[], discountInfo: CartDiscountDto[], chargesInfo: ChargesInterface[], rest_round_off = 0.05): BillResponseInterface {
+  getCartBill(
+    cartItemInfo: CartItemInfo[],
+    discountInfo: CartDiscountDto[],
+    chargesInfo: ChargesInterface[],
+    rest_round_off = 0.05
+  ): BillResponseInterface {
     const response: BillResponseInterface = {
       fees: [],
       bill_total: 0,
-      message: 'Bill generated',
+      message: "Bill generated",
       status: 1,
-      bill_total_text: '0',
+      bill_total_text: "0",
     };
 
     const cartCalculationInfo: CartCalculationInfo[] = [];
     // Item total fee object calculation
     const itemTotalFeeObj: FeeObj = {
-      name: 'Item Total',
+      name: "Item Total",
       value: 0,
-      value_text: '0',
-      id: 'item_total',
+      value_text: "0",
+      id: "item_total",
     };
 
     cartItemInfo.forEach((item) => {
@@ -55,7 +72,9 @@ export class BillLibraryService {
         effectiveTotal += discount.discountValue;
         if (effectiveTotal > 0) {
           discount.itemDiscountInfo.forEach((itemDiscount) => {
-            const discountItem = cartCalculationInfo.find((item) => item.cartItemId === itemDiscount.cartItemId);
+            const discountItem = cartCalculationInfo.find(
+              (item) => item.cartItemId === itemDiscount.cartItemId
+            );
             if (discountItem) {
               discountItem.appliedDiscount += itemDiscount.itemDiscountValue;
             }
@@ -78,9 +97,14 @@ export class BillLibraryService {
         if (discount.discountCategory === DiscountCategory.ITEM_LEVEL) {
           effectiveTotal += discount.discountValue;
           discount.itemDiscountInfo.forEach((itemDiscount) => {
-            const discountItem = cartCalculationInfo.find((item) => item.cartItemId === itemDiscount.cartItemId);
+            const discountItem = cartCalculationInfo.find(
+              (item) => item.cartItemId === itemDiscount.cartItemId
+            );
             if (discountItem) {
-              if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
+              if (
+                discountItem.effectivePrice + discountItem.appliedDiscount >
+                0
+              ) {
                 discountItem.appliedDiscount += itemDiscount.itemDiscountValue;
               }
             }
@@ -100,24 +124,41 @@ export class BillLibraryService {
           id: discount.id,
           discountCategory: discount.discountCategory,
         };
-        if (discount.discountCategory !== DiscountCategory.ITEM_LEVEL && discount.discountCategory !== DiscountCategory.TOP_UP && discount.discountAction !== DiscountAction.FREE_DELIVERY) {
+        if (
+          discount.discountCategory !== DiscountCategory.ITEM_LEVEL &&
+          discount.discountCategory !== DiscountCategory.TOP_UP &&
+          discount.discountAction !== DiscountAction.FREE_DELIVERY
+        ) {
           if (effectiveTotal >= -1 * discount.discountValue) {
             effectiveTotal += discount.discountValue;
             let tempTotal = 0;
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = cartCalculationInfo.find((item) => item.cartItemId === itemDiscount.cartItemId);
+              const discountItem = cartCalculationInfo.find(
+                (item) => item.cartItemId === itemDiscount.cartItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
-                  tempTotal += discountItem.effectivePrice + discountItem.appliedDiscount;
+                if (
+                  discountItem.effectivePrice + discountItem.appliedDiscount >
+                  0
+                ) {
+                  tempTotal +=
+                    discountItem.effectivePrice + discountItem.appliedDiscount;
                 }
               }
             });
 
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = cartCalculationInfo.find((item) => item.cartItemId === itemDiscount.cartItemId);
+              const discountItem = cartCalculationInfo.find(
+                (item) => item.cartItemId === itemDiscount.cartItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
-                  const propDiscount = (discountItem.effectivePrice * discount.discountValue) / tempTotal;
+                if (
+                  discountItem.effectivePrice + discountItem.appliedDiscount >
+                  0
+                ) {
+                  const propDiscount =
+                    (discountItem.effectivePrice * discount.discountValue) /
+                    tempTotal;
                   discountItem.appliedDiscount += propDiscount;
                 }
               }
@@ -127,19 +168,31 @@ export class BillLibraryService {
           } else {
             let tempTotal = 0;
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = cartCalculationInfo.find((item) => item.cartItemId === itemDiscount.cartItemId);
+              const discountItem = cartCalculationInfo.find(
+                (item) => item.cartItemId === itemDiscount.cartItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
-                  tempTotal += discountItem.effectivePrice + discountItem.appliedDiscount;
+                if (
+                  discountItem.effectivePrice + discountItem.appliedDiscount >
+                  0
+                ) {
+                  tempTotal +=
+                    discountItem.effectivePrice + discountItem.appliedDiscount;
                 }
               }
             });
 
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = cartCalculationInfo.find((item) => item.cartItemId === itemDiscount.cartItemId);
+              const discountItem = cartCalculationInfo.find(
+                (item) => item.cartItemId === itemDiscount.cartItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
-                  const propDiscount = (discountItem.effectivePrice * effectiveTotal) / tempTotal;
+                if (
+                  discountItem.effectivePrice + discountItem.appliedDiscount >
+                  0
+                ) {
+                  const propDiscount =
+                    (discountItem.effectivePrice * effectiveTotal) / tempTotal;
                   discountItem.appliedDiscount -= propDiscount;
                 }
               }
@@ -159,12 +212,18 @@ export class BillLibraryService {
     let deliveryCharge = 0;
     const chargesList: FeeObj[] = [];
     chargesInfo.forEach((charge) => {
-      const applicableResponse = this.findApplicableCartItemTotal(charge, cartCalculationInfo);
+      const applicableResponse = this.findApplicableCartItemTotal(
+        charge,
+        cartCalculationInfo
+      );
 
       if (applicableResponse.status) {
-        const chargeResponse = this.calculateCartChargeAmount(charge, applicableResponse);
+        const chargeResponse = this.calculateCartChargeAmount(
+          charge,
+          applicableResponse
+        );
         if (chargeResponse.status) {
-          if (charge.class === 'DeliveryFee') {
+          if (charge.class === "DeliveryFee") {
             deliveryCharge = 1;
           }
           chargesList.push(chargeResponse.chargeFee);
@@ -174,7 +233,10 @@ export class BillLibraryService {
     // add Free Delivery discount
     if (deliveryCharge) {
       const freeDeliveryDiscount = discountInfo.find((disc) => {
-        if (disc.discountCategory === DiscountCategory.COUPON && disc.discountAction === DiscountAction.FREE_DELIVERY) {
+        if (
+          disc.discountCategory === DiscountCategory.COUPON &&
+          disc.discountAction === DiscountAction.FREE_DELIVERY
+        ) {
           return true;
         }
       });
@@ -203,10 +265,10 @@ export class BillLibraryService {
 
     if (round_off_diff && Number(round_off_diff.toFixed(2))) {
       response.fees.push({
-        name: 'Round Off',
+        name: "Round Off",
         value: Number(round_off_diff.toFixed(2)),
         value_text: Number(round_off_diff).toFixed(2),
-        id: 'round_off',
+        id: "round_off",
       });
       response.bill_total = this.calculateBillTotal(response);
     } else {
@@ -216,22 +278,27 @@ export class BillLibraryService {
     return response;
   }
 
-  getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: OrderDiscountDto[], chargesInfo: ChargesInterface[], rest_round_off = 0.05): BillResponseInterface {
+  getOrderBill(
+    orderItemInfo: OrderItemInfo[],
+    discountInfo: OrderDiscountDto[],
+    chargesInfo: ChargesInterface[],
+    rest_round_off = 0.05
+  ): BillResponseInterface {
     const response: BillResponseInterface = {
       fees: [],
       bill_total: 0,
-      message: 'Bill generated',
+      message: "Bill generated",
       status: 1,
-      bill_total_text: '0',
+      bill_total_text: "0",
     };
     const orderCalculationInfo: OrderCalculationInfo[] = [];
 
     // Item total fee object calculation
     const itemTotalFeeObj: FeeObj = {
-      name: 'Item Total',
+      name: "Item Total",
       value: 0,
-      value_text: '0',
-      id: 'item_total',
+      value_text: "0",
+      id: "item_total",
     };
     orderItemInfo.forEach((item) => {
       const orderCalculationObj = new OrderCalculationInfo();
@@ -260,7 +327,9 @@ export class BillLibraryService {
         effectiveTotal += discount.discountValue;
         if (effectiveTotal > 0) {
           discount.itemDiscountInfo.forEach((itemDiscount) => {
-            const discountItem = orderCalculationInfo.find((item) => item.orderItemId === itemDiscount.orderItemId);
+            const discountItem = orderCalculationInfo.find(
+              (item) => item.orderItemId === itemDiscount.orderItemId
+            );
             if (discountItem) {
               discountItem.appliedDiscount += itemDiscount.itemDiscountValue;
             }
@@ -283,9 +352,14 @@ export class BillLibraryService {
         if (discount.discountCategory === DiscountCategory.ITEM_LEVEL) {
           effectiveTotal += discount.discountValue;
           discount.itemDiscountInfo.forEach((itemDiscount) => {
-            const discountItem = orderCalculationInfo.find((item) => item.orderItemId === itemDiscount.orderItemId);
+            const discountItem = orderCalculationInfo.find(
+              (item) => item.orderItemId === itemDiscount.orderItemId
+            );
             if (discountItem) {
-              if (discountItem.effectivePrice + itemDiscount.itemDiscountValue >= 0) {
+              if (
+                discountItem.effectivePrice + itemDiscount.itemDiscountValue >=
+                0
+              ) {
                 discountItem.appliedDiscount += itemDiscount.itemDiscountValue;
               }
             }
@@ -305,24 +379,45 @@ export class BillLibraryService {
           id: discount.id,
           discountCategory: discount.discountCategory,
         };
-        if (discount.discountCategory !== DiscountCategory.ITEM_LEVEL && discount.discountCategory !== DiscountCategory.TOP_UP && discount.discountAction !== DiscountAction.FREE_DELIVERY) {
+        if (
+          discount.discountCategory !== DiscountCategory.ITEM_LEVEL &&
+          discount.discountCategory !== DiscountCategory.TOP_UP &&
+          discount.discountAction !== DiscountAction.FREE_DELIVERY
+        ) {
           if (effectiveTotal >= -1 * discount.discountValue) {
             effectiveTotal += discount.discountValue;
             let tempTotal = 0;
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = orderCalculationInfo.find((item) => item.orderItemId === itemDiscount.orderItemId);
+              const discountItem = orderCalculationInfo.find(
+                (item) => item.orderItemId === itemDiscount.orderItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + itemDiscount.itemDiscountValue >= 0) {
-                  tempTotal += discountItem.effectivePrice + discountItem.appliedDiscount;
+                if (
+                  discountItem.effectivePrice +
+                    itemDiscount.itemDiscountValue >=
+                  0
+                ) {
+                  tempTotal +=
+                    discountItem.effectivePrice + discountItem.appliedDiscount;
                 }
               }
             });
 
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = orderCalculationInfo.find((item) => item.orderItemId === itemDiscount.orderItemId);
+              const discountItem = orderCalculationInfo.find(
+                (item) => item.orderItemId === itemDiscount.orderItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + itemDiscount.itemDiscountValue >= 0) {
-                  const propDiscount = ((discountItem.effectivePrice + discountItem.appliedDiscount) * discount.discountValue) / tempTotal;
+                if (
+                  discountItem.effectivePrice +
+                    itemDiscount.itemDiscountValue >=
+                  0
+                ) {
+                  const propDiscount =
+                    ((discountItem.effectivePrice +
+                      discountItem.appliedDiscount) *
+                      discount.discountValue) /
+                    tempTotal;
                   discountItem.appliedDiscount += propDiscount;
                 }
               }
@@ -331,19 +426,34 @@ export class BillLibraryService {
           } else {
             let tempTotal = 0;
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = orderCalculationInfo.find((item) => item.orderItemId === itemDiscount.orderItemId);
+              const discountItem = orderCalculationInfo.find(
+                (item) => item.orderItemId === itemDiscount.orderItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
-                  tempTotal += discountItem.effectivePrice + discountItem.appliedDiscount;
+                if (
+                  discountItem.effectivePrice + discountItem.appliedDiscount >
+                  0
+                ) {
+                  tempTotal +=
+                    discountItem.effectivePrice + discountItem.appliedDiscount;
                 }
               }
             });
 
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = orderCalculationInfo.find((item) => item.orderItemId === itemDiscount.orderItemId);
+              const discountItem = orderCalculationInfo.find(
+                (item) => item.orderItemId === itemDiscount.orderItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
-                  const propDiscount = ((discountItem.effectivePrice + discountItem.appliedDiscount) * effectiveTotal) / tempTotal;
+                if (
+                  discountItem.effectivePrice + discountItem.appliedDiscount >
+                  0
+                ) {
+                  const propDiscount =
+                    ((discountItem.effectivePrice +
+                      discountItem.appliedDiscount) *
+                      effectiveTotal) /
+                    tempTotal;
                   discountItem.appliedDiscount -= propDiscount;
                 }
               }
@@ -363,12 +473,19 @@ export class BillLibraryService {
     let deliveryCharge = 0;
     const chargesList: FeeObj[] = [];
     chargesInfo.forEach((charge) => {
-      const applicableResponse = this.findApplicableOrderItemTotal(charge, orderCalculationInfo, discountInfo);
+      const applicableResponse = this.findApplicableOrderItemTotal(
+        charge,
+        orderCalculationInfo,
+        discountInfo
+      );
 
       if (applicableResponse.status) {
-        const chargeResponse = this.calculateOrderChargeAmount(charge, applicableResponse);
+        const chargeResponse = this.calculateOrderChargeAmount(
+          charge,
+          applicableResponse
+        );
         if (chargeResponse.status) {
-          if (charge.class === 'DeliveryFee') {
+          if (charge.class === "DeliveryFee") {
             deliveryCharge = charge.chargeValue;
           }
           if (chargeResponse.chargeFee.value > 0) {
@@ -381,7 +498,10 @@ export class BillLibraryService {
     // add Free Delivery discount
     if (deliveryCharge) {
       const freeDeliveryDiscount = discountInfo.find((disc) => {
-        if (disc.discountCategory === DiscountCategory.COUPON && disc.discountAction === DiscountAction.FREE_DELIVERY) {
+        if (
+          disc.discountCategory === DiscountCategory.COUPON &&
+          disc.discountAction === DiscountAction.FREE_DELIVERY
+        ) {
           return true;
         }
       });
@@ -410,10 +530,10 @@ export class BillLibraryService {
 
     if (round_off_diff && Number(round_off_diff.toFixed(2))) {
       response.fees.push({
-        name: 'Round Off',
+        name: "Round Off",
         value: Number(round_off_diff.toFixed(2)),
         value_text: Number(round_off_diff).toFixed(2),
-        id: 'round_off',
+        id: "round_off",
       });
       response.bill_total = this.calculateBillTotal(response);
     } else {
@@ -423,7 +543,10 @@ export class BillLibraryService {
     return response;
   }
 
-  calculateCartChargeAmount(charge: ChargesInterface, applicableResponse: ApplicableCartResponseDto): CalculateCartChargeDto {
+  calculateCartChargeAmount(
+    charge: ChargesInterface,
+    applicableResponse: ApplicableCartResponseDto
+  ): CalculateCartChargeDto {
     const response: CalculateCartChargeDto = {
       status: 0,
       chargeFee: null,
@@ -431,7 +554,7 @@ export class BillLibraryService {
     const chargeFee: FeeObj = {
       name: charge.name,
       value: 0,
-      value_text: '',
+      value_text: "",
       id: charge.id,
     };
     const { chargeType, chargeValue } = charge;
@@ -442,7 +565,9 @@ export class BillLibraryService {
         response.status = 1;
         break;
       case ChargeType.PERCENTAGE:
-        chargeFee.value = Number(((itemTotalWithDiscount * chargeValue) / 100).toFixed(2));
+        chargeFee.value = Number(
+          ((itemTotalWithDiscount * chargeValue) / 100).toFixed(2)
+        );
         response.status = 1;
         break;
       default:
@@ -454,7 +579,10 @@ export class BillLibraryService {
     return response;
   }
 
-  calculateOrderChargeAmount(charge: ChargesInterface, applicableResponse: ApplicableOrderResponseDto): CalculateOrderChargeDto {
+  calculateOrderChargeAmount(
+    charge: ChargesInterface,
+    applicableResponse: ApplicableOrderResponseDto
+  ): CalculateOrderChargeDto {
     const response: CalculateOrderChargeDto = {
       status: 0,
       chargeFee: null,
@@ -462,7 +590,7 @@ export class BillLibraryService {
     const chargeFee: FeeObj = {
       name: charge.name,
       value: 0,
-      value_text: '',
+      value_text: "",
       id: charge.id,
     };
     const { chargeType, chargeValue } = charge;
@@ -486,7 +614,10 @@ export class BillLibraryService {
     return response;
   }
 
-  findApplicableCartItemTotal(charge: ChargesInterface, cartItemInfo: CartCalculationInfo[]): ApplicableCartResponseDto {
+  findApplicableCartItemTotal(
+    charge: ChargesInterface,
+    cartItemInfo: CartCalculationInfo[]
+  ): ApplicableCartResponseDto {
     const response: ApplicableCartResponseDto = {
       itemTotalWithDiscount: 0,
       cartItemList: [],
@@ -510,7 +641,9 @@ export class BillLibraryService {
         break;
       case ChargeApplicableType.SUB_CATEGORY:
         cartItemInfo.forEach((item) => {
-          const subCatId = applicableOn.find((subCatId) => subCatId === item.subcategoryId);
+          const subCatId = applicableOn.find(
+            (subCatId) => subCatId === item.subcategoryId
+          );
           if (subCatId) {
             const effectivePrice = item.effectivePrice + item.appliedDiscount;
             if (effectivePrice > 0) {
@@ -522,7 +655,7 @@ export class BillLibraryService {
         break;
       case ChargeApplicableType.OVER_ALL:
         cartItemInfo.forEach((item) => {
-          if (className === 'DeliveryCharge') {
+          if (className === "DeliveryCharge") {
             response.itemTotalWithDiscount += item.effectivePrice;
             response.cartItemList.push(item.cartItemId);
           } else {
@@ -543,7 +676,11 @@ export class BillLibraryService {
     return response;
   }
 
-  findApplicableOrderItemTotal(charge: ChargesInterface, orderItemInfo: OrderCalculationInfo[], discountInfo: OrderDiscountDto[]): ApplicableOrderResponseDto {
+  findApplicableOrderItemTotal(
+    charge: ChargesInterface,
+    orderItemInfo: OrderCalculationInfo[],
+    discountInfo: OrderDiscountDto[]
+  ): ApplicableOrderResponseDto {
     const response: ApplicableOrderResponseDto = {
       itemTotalWithDiscount: 0,
       orderItemList: [],
@@ -574,7 +711,9 @@ export class BillLibraryService {
         break;
       case ChargeApplicableType.SUB_CATEGORY:
         orderItemInfo.forEach((item) => {
-          const subCatId = applicableOn.find((subCatId) => subCatId === item.subcategoryId);
+          const subCatId = applicableOn.find(
+            (subCatId) => subCatId === item.subcategoryId
+          );
           if (subCatId) {
             const effectivePrice = item.effectivePrice;
             if (effectivePrice > 0) {
@@ -591,7 +730,7 @@ export class BillLibraryService {
         break;
       case ChargeApplicableType.OVER_ALL:
         orderItemInfo.forEach((item) => {
-          if (className === 'DeliveryCharge') {
+          if (className === "DeliveryCharge") {
             response.itemTotalWithDiscount += item.effectivePrice;
             response.orderItemList.push(item.orderItemId);
           } else {
@@ -631,7 +770,7 @@ export class BillLibraryService {
     const itemLevel = {
       status: 0,
       value: 0,
-      name: 'ITEM LEVEL',
+      name: "ITEM LEVEL",
     };
     discountFeesArray.forEach((discount) => {
       if (discount.discountCategory === DiscountCategory.ITEM_LEVEL) {
@@ -641,34 +780,36 @@ export class BillLibraryService {
     });
 
     const discountItemMerchant: FeeObj = {
-      name: '',
+      name: "",
       value: 0,
-      value_text: '',
-      id: 'coupon_discount',
+      value_text: "",
+      id: "coupon_discount",
     };
     let flag = 0;
     if (itemLevel.status) {
       discountItemMerchant.value = itemLevel.value;
-      discountItemMerchant.name = '(' + itemLevel.name;
+      discountItemMerchant.name = "(" + itemLevel.name;
       flag = 1;
     }
     discountFeesArray.forEach((discount) => {
       if (discount.discountCategory === DiscountCategory.MERCHANT) {
-        discount.name = 'By Restaurant';
+        discount.name = "By Restaurant";
         discountItemMerchant.value += discount.value;
         if (flag) {
-          discountItemMerchant.name = discountItemMerchant.name + ',' + discount.name;
+          discountItemMerchant.name =
+            discountItemMerchant.name + "," + discount.name;
         } else {
-          discountItemMerchant.name = '(' + discount.name;
+          discountItemMerchant.name = "(" + discount.name;
           flag = 1;
         }
       } else if (discount.discountCategory === DiscountCategory.TOP_UP) {
-        discount.name = 'By Restaurant';
+        discount.name = "By Restaurant";
         discountItemMerchant.value += discount.value;
         if (flag) {
-          discountItemMerchant.name = discountItemMerchant.name + ',' + discount.name;
+          discountItemMerchant.name =
+            discountItemMerchant.name + "," + discount.name;
         } else {
-          discountItemMerchant.name = '(' + discount.name;
+          discountItemMerchant.name = "(" + discount.name;
           flag = 1;
         }
       } else if (discount.discountCategory != DiscountCategory.ITEM_LEVEL) {
@@ -680,7 +821,7 @@ export class BillLibraryService {
     });
 
     if (flag) {
-      discountItemMerchant.name = discountItemMerchant.name + ')';
+      discountItemMerchant.name = discountItemMerchant.name + ")";
       discountItemMerchant.value_text = discountItemMerchant.value.toFixed(2);
       if (discountItemMerchant.value != 0) {
         response.push(discountItemMerchant);

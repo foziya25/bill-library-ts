@@ -1,4 +1,4 @@
-import { Addons, ItemInfo, Variants } from '../interfaces/itemInfo.interface';
+import { Addons, ItemInfo, Variants } from "../interfaces/itemInfo.interface";
 export declare class CartItemInfo implements ItemInfo {
     addons: Addons[];
     variants: Variants[];

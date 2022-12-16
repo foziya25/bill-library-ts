@@ -1,4 +1,4 @@
-import { Addons, ItemInfo, Variants } from '../interfaces/itemInfo.interface';
+import { Addons, ItemInfo, Variants } from "../interfaces/itemInfo.interface";
 export declare class OrderItemInfo implements ItemInfo {
     addons: Addons[];
     variants: Variants[];

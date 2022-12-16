@@ -1,8 +1,8 @@
-import { CartItemInfo } from '../baseClass/cartItemInfo';
-import { OrderItemInfo } from '../baseClass/orderItemInfo';
-import { CartDiscountDto } from '../discountClasses/cartDiscountDto';
-import { OrderDiscountDto } from '../discountClasses/orderDiscountDto';
-import { DiscountInterface } from '../interfaces/discount.interface';
+import { CartItemInfo } from "../baseClass/cartItemInfo";
+import { OrderItemInfo } from "../baseClass/orderItemInfo";
+import { CartDiscountDto } from "../discountClasses/cartDiscountDto";
+import { OrderDiscountDto } from "../discountClasses/orderDiscountDto";
+import { DiscountInterface } from "../interfaces/discount.interface";
 export declare class DiscountLibService {
     applyDiscountOnCart(cartItemInfo: CartItemInfo[], discountInfo: DiscountInterface[]): any[];
     applyDiscountOnOrder(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[]): any[];

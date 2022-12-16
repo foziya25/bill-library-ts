@@ -1,10 +1,10 @@
-import { OrderItemInfo } from '../baseClass/orderItemInfo';
-import { BillResponseInterface } from '../interfaces/billResponse.interface';
-import { ChargesInterface } from '../interfaces/charges.interface';
-import { DiscountInterface } from '../interfaces/discount.interface';
-import { BillLibraryService } from './billLibrary.service';
-import { DiscountLibService } from './discount-lib.service';
-import { DiscountCalculationService } from './discountCalculation.service';
+import { OrderItemInfo } from "../baseClass/orderItemInfo";
+import { BillResponseInterface } from "../interfaces/billResponse.interface";
+import { ChargesInterface } from "../interfaces/charges.interface";
+import { DiscountInterface } from "../interfaces/discount.interface";
+import { BillLibraryService } from "./billLibrary.service";
+import { DiscountLibService } from "./discount-lib.service";
+import { DiscountCalculationService } from "./discountCalculation.service";
 export declare class BillOfflineCalculationService {
     private discountLibrary;
     private billLibrary;

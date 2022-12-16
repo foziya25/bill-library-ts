@@ -1,4 +1,4 @@
-import { ChargeApplicableType, ChargeType } from '../enum/billLib.enum';
+import { ChargeApplicableType, ChargeType } from "../enum/billLib.enum";
 
 export interface ChargesInterface {
   chargeType: ChargeType;

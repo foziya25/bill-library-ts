@@ -29,13 +29,13 @@ const getRoundOffValue = (value, base) => {
 exports.getRoundOffValue = getRoundOffValue;
 function getPriceKeyByOrderType(orderType) {
     if (orderType == 1) {
-        return 'delivery_price';
+        return "delivery_price";
     }
     else if (orderType == 2) {
-        return 'takeaway_price';
+        return "takeaway_price";
     }
     else {
-        return 'price';
+        return "price";
     }
 }
 function getCartItemInfo(items, orderType) {
@@ -106,7 +106,7 @@ function getTransformedRestaurantCharges(charges, order_type) {
     if (charges && charges.length) {
         charges.forEach((charge) => {
             const { order_type: applicableOrderType } = charge;
-            if (charge.status && charge.id !== 'delivery') {
+            if (charge.status && charge.id !== "delivery") {
                 const applicable = applicableOrderType.find((ot) => {
                     if (ot === order_type) {
                         return true;
@@ -126,7 +126,8 @@ function getTransformedRestaurantCharges(charges, order_type) {
                         subName: charge.sub_name,
                     };
                     if (restCharge.chargeType == "percentage") {
-                        restCharge.name = restCharge.name + '@' + restCharge.chargeValue + '%';
+                        restCharge.name =
+                            restCharge.name + " @" + restCharge.chargeValue + "%";
                     }
                     chargesList.push(restCharge);
                 }
@@ -138,20 +139,20 @@ function getTransformedRestaurantCharges(charges, order_type) {
 exports.getTransformedRestaurantCharges = getTransformedRestaurantCharges;
 function getChargesTypeAndValue(chargeType, data) {
     switch (chargeType) {
-        case 'fixed':
+        case "fixed":
             return { type: "fixed", value: data.fixed_amount };
-        case 'percentage':
+        case "percentage":
             return { type: "percentage", value: data.percentage_amount };
     }
 }
 function getApplicableOnInfo(applicableOn, applicableSubcat) {
-    if (applicableOn[0] === 'category') {
+    if (applicableOn[0] === "category") {
         return {
             chargeApplicableType: "subCategory",
             applicableList: applicableSubcat,
         };
     }
-    else if (applicableOn[0] === 'order') {
+    else if (applicableOn[0] === "order") {
         return {
             chargeApplicableType: "overAll",
             applicableList: [],

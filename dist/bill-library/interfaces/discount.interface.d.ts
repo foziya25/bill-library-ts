@@ -1,4 +1,4 @@
-import { DiscountAction, DiscountApplicableType, DiscountCategory, DiscountType } from '../enum/discountLib.enum';
+import { DiscountAction, DiscountApplicableType, DiscountCategory, DiscountType } from "../enum/discountLib.enum";
 export interface DiscountInterface {
     name: string;
     discountType: DiscountType;

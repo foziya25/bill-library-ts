@@ -1,5 +1,5 @@
-import { OrderItemInfo } from '../baseClass/orderItemInfo';
-import { DiscountAction, DiscountCategory, DiscountType } from '../enum/discountLib.enum';
+import { OrderItemInfo } from "../baseClass/orderItemInfo";
+import { DiscountAction, DiscountCategory, DiscountType } from "../enum/discountLib.enum";
 export declare class SaveDiscountObjDto {
     type: DiscountCategory;
     info: DiscountInfo;

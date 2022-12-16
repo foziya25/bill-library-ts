@@ -1,4 +1,4 @@
-import { DiscountAction, DiscountCategory } from '../enum/discountLib.enum';
+import { DiscountAction, DiscountCategory } from "../enum/discountLib.enum";
 export declare class CartDiscountDto {
     itemDiscountInfo: CartItemDiscountInfo[];
     discountValue: number;

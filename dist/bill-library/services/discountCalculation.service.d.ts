@@ -1,7 +1,7 @@
-import { OrderItemInfo } from '../baseClass/orderItemInfo';
-import { CouponInfoDto, GetCouponInfoDto, GetItemLevelDiscountInterfaceDto, GetMerchantDiscountInterfaceDto } from '../dto/discount.dto';
-import { DiscountApplicableType } from '../enum/discountLib.enum';
-import { DiscountInterface } from '../interfaces/discount.interface';
+import { OrderItemInfo } from "../baseClass/orderItemInfo";
+import { CouponInfoDto, GetCouponInfoDto, GetItemLevelDiscountInterfaceDto, GetMerchantDiscountInterfaceDto } from "../dto/discount.dto";
+import { DiscountApplicableType } from "../enum/discountLib.enum";
+import { DiscountInterface } from "../interfaces/discount.interface";
 export declare class DiscountCalculationService {
     getDiscountFromCart(cart: any, itemInfo: OrderItemInfo[]): DiscountInterface[];
     getDiscountInfoFromCart(cart: any): any;
