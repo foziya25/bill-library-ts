@@ -3,6 +3,9 @@
   "version": "1.0.1",
   "description": "billing-library",
   "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --module commonjs"
+  },
   "homepage": "https://github.com/easyeat-ai/bill-library-ts.git",
   "repository": {
     "type": "git",

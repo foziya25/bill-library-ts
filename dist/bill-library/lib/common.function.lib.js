@@ -126,7 +126,7 @@ function getTransformedRestaurantCharges(charges, order_type) {
                         subName: charge.sub_name,
                     };
                     if (restCharge.chargeType == "percentage") {
-                        restCharge.name = restCharge.name + '@' + restCharge.chargeValue + '%';
+                        restCharge.name = restCharge.name + ' @' + restCharge.chargeValue + '%';
                     }
                     chargesList.push(restCharge);
                 }
