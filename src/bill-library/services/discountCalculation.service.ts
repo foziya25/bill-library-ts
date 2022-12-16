@@ -1,19 +1,8 @@
-import { OrderItemInfo } from "../baseClass/orderItemInfo";
-import {
-  CouponInfoDto,
-  GetCouponInfoDto,
-  GetItemLevelDiscountInterfaceDto,
-  GetMerchantDiscountInterfaceDto,
-  SaveDiscountObjDto,
-} from "../dto/discount.dto";
-import {
-  DiscountAction,
-  DiscountApplicableType,
-  DiscountCategory,
-  DiscountType,
-} from "../enum/discountLib.enum";
-import { DiscountInterface } from "../interfaces/discount.interface";
-import { getCartItemTotal } from "../lib/common.function.lib";
+import { OrderItemInfo } from '../baseClass/orderItemInfo';
+import { CouponInfoDto, GetCouponInfoDto, GetItemLevelDiscountInterfaceDto, GetMerchantDiscountInterfaceDto, SaveDiscountObjDto } from '../dto/discount.dto';
+import { DiscountAction, DiscountApplicableType, DiscountCategory, DiscountType } from '../enum/discountLib.enum';
+import { DiscountInterface } from '../interfaces/discount.interface';
+import { getCartItemTotal } from '../lib/common.function.lib';
 
 export class DiscountCalculationService {
   getDiscountFromCart(cart: any, itemInfo: OrderItemInfo[]) {
@@ -28,16 +17,13 @@ export class DiscountCalculationService {
           case DiscountCategory.MERCHANT:
             const discountMData = discount.info.discountData;
             const discountMid = discount.info.id;
-            const getMerchantDiscountInterfaceDto: GetMerchantDiscountInterfaceDto =
-              {
-                id: discountMid,
-                type: discountMData.type,
-                value: discountMData.value,
-                discountType: discountMData.discountType,
-              };
-            const merchantInterface = this.getMerchantDiscountInterface(
-              getMerchantDiscountInterfaceDto
-            );
+            const getMerchantDiscountInterfaceDto: GetMerchantDiscountInterfaceDto = {
+              id: discountMid,
+              type: discountMData.type,
+              value: discountMData.value,
+              discountType: discountMData.discountType,
+            };
+            const merchantInterface = this.getMerchantDiscountInterface(getMerchantDiscountInterfaceDto);
             if (merchantInterface) {
               discountInterfaceList.push(merchantInterface);
             }
@@ -45,18 +31,15 @@ export class DiscountCalculationService {
           case DiscountCategory.ITEM_LEVEL:
             const discountILData = discount.info.discountData;
             const discountILid = discount.info.id;
-            const getItemLevelDiscountInterfaceDto: GetItemLevelDiscountInterfaceDto =
-              {
-                id: discountILid,
-                value: discountILData.value,
-                discountType: discountILData.discountType,
-                itemInfo: itemInfo,
-                quantity: discountILData.quantity,
-                orderItemId: discountILData.orderItemId,
-              };
-            const itemLevelInterface = this.getItemLevelDiscountInterface(
-              getItemLevelDiscountInterfaceDto
-            );
+            const getItemLevelDiscountInterfaceDto: GetItemLevelDiscountInterfaceDto = {
+              id: discountILid,
+              value: discountILData.value,
+              discountType: discountILData.discountType,
+              itemInfo: itemInfo,
+              quantity: discountILData.quantity,
+              orderItemId: discountILData.orderItemId,
+            };
+            const itemLevelInterface = this.getItemLevelDiscountInterface(getItemLevelDiscountInterfaceDto);
             if (itemLevelInterface) {
               discountInterfaceList.push(itemLevelInterface);
             }
@@ -70,7 +53,7 @@ export class DiscountCalculationService {
   getDiscountInfoFromCart(cart: any): any {
     const discountInfo: any[] = [];
     const { coupon_id, reason, coupon_name, dvalue, dtype, cart_items } = cart;
-    if (coupon_id === "mm_discount" || coupon_id === "mm_topup") {
+    if (coupon_id === 'mm_discount' || coupon_id === 'mm_topup') {
       const mDiscountObj: SaveDiscountObjDto = {
         type: DiscountCategory.MERCHANT,
         info: {
@@ -82,15 +65,15 @@ export class DiscountCalculationService {
           },
         },
       };
-      if (coupon_id === "mm_discount") {
+      if (coupon_id === 'mm_discount') {
         mDiscountObj.info.discountData.type = DiscountAction.NORMAL;
-      } else if (coupon_id === "mm_topup") {
+      } else if (coupon_id === 'mm_topup') {
         mDiscountObj.info.discountData.type = DiscountAction.TOP_UP;
       }
 
-      if (dtype === "fixed") {
+      if (dtype === 'fixed') {
         mDiscountObj.info.discountData.discountType = DiscountType.FIXED;
-      } else if (dtype === "per") {
+      } else if (dtype === 'per') {
         mDiscountObj.info.discountData.discountType = DiscountType.PERCENTAGE;
       }
       discountInfo.push(mDiscountObj);
@@ -103,7 +86,7 @@ export class DiscountCalculationService {
         const itemLevelDiscountObj: SaveDiscountObjDto = {
           type: DiscountCategory.ITEM_LEVEL,
           info: {
-            id: "IL_" + item.cart_item_id,
+            id: 'IL_' + item.cart_item_id,
             discountData: {
               orderItemId: item.cart_item_id,
               value,
@@ -112,12 +95,10 @@ export class DiscountCalculationService {
             },
           },
         };
-        if (type === "percent") {
-          itemLevelDiscountObj.info.discountData.discountType =
-            DiscountType.PERCENTAGE;
-        } else if (type === "fixed") {
-          itemLevelDiscountObj.info.discountData.discountType =
-            DiscountType.FIXED;
+        if (type === 'percent') {
+          itemLevelDiscountObj.info.discountData.discountType = DiscountType.PERCENTAGE;
+        } else if (type === 'fixed') {
+          itemLevelDiscountObj.info.discountData.discountType = DiscountType.FIXED;
         }
         discountInfo.push(itemLevelDiscountObj);
       }
@@ -125,11 +106,7 @@ export class DiscountCalculationService {
     return discountInfo;
   }
 
-  getDiscountOnOrder(
-    order: any,
-    couponInfo: any,
-    itemInfo: OrderItemInfo[]
-  ): DiscountInterface[] {
+  getDiscountOnOrder(order: any, couponInfo: any, itemInfo: OrderItemInfo[]): DiscountInterface[] {
     const discountInterfaceList: DiscountInterface[] = [];
     const discountInfo = this.getDiscountInfoFromOrder(order, couponInfo);
 
@@ -145,8 +122,7 @@ export class DiscountCalculationService {
               itemInfo: itemInfo,
               coupon_id: couponId,
             };
-            const couponInterface =
-              this.getOrderCouponDiscountInterface(getCouponInfoDto);
+            const couponInterface = this.getOrderCouponDiscountInterface(getCouponInfoDto);
             if (couponInterface) {
               discountInterfaceList.push(couponInterface);
             } else {
@@ -156,16 +132,13 @@ export class DiscountCalculationService {
           case DiscountCategory.MERCHANT:
             const discountMData = discount.info.discountData;
             const discountMid = discount.info.id;
-            const getMerchantDiscountInterfaceDto: GetMerchantDiscountInterfaceDto =
-              {
-                id: discountMid,
-                type: discountMData.type,
-                value: discountMData.value,
-                discountType: discountMData.discountType,
-              };
-            const merchantInterface = this.getMerchantDiscountInterface(
-              getMerchantDiscountInterfaceDto
-            );
+            const getMerchantDiscountInterfaceDto: GetMerchantDiscountInterfaceDto = {
+              id: discountMid,
+              type: discountMData.type,
+              value: discountMData.value,
+              discountType: discountMData.discountType,
+            };
+            const merchantInterface = this.getMerchantDiscountInterface(getMerchantDiscountInterfaceDto);
             if (merchantInterface) {
               discountInterfaceList.push(merchantInterface);
             }
@@ -173,18 +146,15 @@ export class DiscountCalculationService {
           case DiscountCategory.ITEM_LEVEL:
             const discountILData = discount.info.discountData;
             const discountILid = discount.info.id;
-            const getItemLevelDiscountInterfaceDto: GetItemLevelDiscountInterfaceDto =
-              {
-                id: discountILid,
-                value: discountILData.value,
-                discountType: discountILData.discountType,
-                itemInfo: itemInfo,
-                quantity: discountILData.quantity,
-                orderItemId: discountILData.orderItemId,
-              };
-            const itemLevelInterface = this.getItemLevelDiscountInterface(
-              getItemLevelDiscountInterfaceDto
-            );
+            const getItemLevelDiscountInterfaceDto: GetItemLevelDiscountInterfaceDto = {
+              id: discountILid,
+              value: discountILData.value,
+              discountType: discountILData.discountType,
+              itemInfo: itemInfo,
+              quantity: discountILData.quantity,
+              orderItemId: discountILData.orderItemId,
+            };
+            const itemLevelInterface = this.getItemLevelDiscountInterface(getItemLevelDiscountInterfaceDto);
             if (itemLevelInterface) {
               discountInterfaceList.push(itemLevelInterface);
             }
@@ -214,9 +184,9 @@ export class DiscountCalculationService {
         code: coupon_info.coupon_name,
         reason: reason,
       };
-      if (coupon_info.applicable_dtype === "flat") {
+      if (coupon_info.applicable_dtype === 'flat') {
         couponInfoData.applicableDType = DiscountType.FIXED;
-      } else if (coupon_info.applicable_dtype === "percent") {
+      } else if (coupon_info.applicable_dtype === 'percent') {
         couponInfoData.applicableDType = DiscountType.PERCENTAGE;
       }
       const discountInfoObj: SaveDiscountObjDto = {
@@ -226,7 +196,7 @@ export class DiscountCalculationService {
       discountInfo.push(discountInfoObj);
     }
 
-    if (coupon_id === "mm_discount" || coupon_id === "mm_topup") {
+    if (coupon_id === 'mm_discount' || coupon_id === 'mm_topup') {
       const mDiscountObj: SaveDiscountObjDto = {
         type: DiscountCategory.MERCHANT,
         info: {
@@ -238,15 +208,15 @@ export class DiscountCalculationService {
           },
         },
       };
-      if (coupon_id === "mm_discount") {
+      if (coupon_id === 'mm_discount') {
         mDiscountObj.info.discountData.type = DiscountAction.NORMAL;
-      } else if (coupon_id === "mm_topup") {
+      } else if (coupon_id === 'mm_topup') {
         mDiscountObj.info.discountData.type = DiscountAction.TOP_UP;
       }
 
-      if (dtype === "fixed") {
+      if (dtype === 'fixed') {
         mDiscountObj.info.discountData.discountType = DiscountType.FIXED;
-      } else if (dtype === "per") {
+      } else if (dtype === 'per') {
         mDiscountObj.info.discountData.discountType = DiscountType.PERCENTAGE;
       }
       discountInfo.push(mDiscountObj);
@@ -258,7 +228,7 @@ export class DiscountCalculationService {
         const itemLevelDiscountObj: SaveDiscountObjDto = {
           type: DiscountCategory.ITEM_LEVEL,
           info: {
-            id: "IL_" + item.order_item_id,
+            id: 'IL_' + item.order_item_id,
             discountData: {
               orderItemId: item.order_item_id,
               value,
@@ -267,12 +237,10 @@ export class DiscountCalculationService {
             },
           },
         };
-        if (type === "percentage") {
-          itemLevelDiscountObj.info.discountData.discountType =
-            DiscountType.PERCENTAGE;
-        } else if (type === "fixed") {
-          itemLevelDiscountObj.info.discountData.discountType =
-            DiscountType.FIXED;
+        if (type === 'percentage') {
+          itemLevelDiscountObj.info.discountData.discountType = DiscountType.PERCENTAGE;
+        } else if (type === 'fixed') {
+          itemLevelDiscountObj.info.discountData.discountType = DiscountType.FIXED;
         }
         discountInfo.push(itemLevelDiscountObj);
       }
@@ -280,43 +248,29 @@ export class DiscountCalculationService {
     return discountInfo;
   }
 
-  getOrderCouponDiscountInterface(
-    getCouponInfoDto: GetCouponInfoDto
-  ): DiscountInterface {
+  getOrderCouponDiscountInterface(getCouponInfoDto: GetCouponInfoDto): DiscountInterface {
     const { discountType } = getCouponInfoDto.couponInfoDto;
     switch (discountType) {
-      case "bxgy":
-      case "bxgyoz":
+      case 'bxgy':
+      case 'bxgyoz':
         return this.getBxGyDiscountFromOrder(getCouponInfoDto);
-      case "sxgdo":
-      case "percentage":
-      case "fixed":
+      case 'sxgdo':
+      case 'percentage':
+      case 'fixed':
         return this.getFPOFdDiscountFromOrder(getCouponInfoDto);
     }
   }
 
-  getFPOFdDiscountFromOrder(
-    getCouponInfoDto: GetCouponInfoDto
-  ): DiscountInterface {
+  getFPOFdDiscountFromOrder(getCouponInfoDto: GetCouponInfoDto): DiscountInterface {
     const { couponInfoDto, coupon_id, itemInfo } = getCouponInfoDto;
-    const {
-      applicableOn,
-      applicableType,
-      maxValue,
-      minAmount,
-      name,
-      discountType,
-    } = couponInfoDto;
+    const { applicableOn, applicableType, maxValue, minAmount, name, discountType } = couponInfoDto;
     let { value } = couponInfoDto;
     const itemTotal = getCartItemTotal(itemInfo);
     if (itemTotal <= minAmount) {
       return null;
     }
 
-    const isApplicableOnItems = this.verifyAppliedOnItems(
-      { applicableType, applicableOn },
-      itemInfo
-    );
+    const isApplicableOnItems = this.verifyAppliedOnItems({ applicableType, applicableOn }, itemInfo);
     if (!isApplicableOnItems) {
       return null;
     }
@@ -324,18 +278,18 @@ export class DiscountCalculationService {
     let discountTypeEnum = null;
     let discountAction = null;
     switch (discountType) {
-      case "fixed":
+      case 'fixed':
         discountTypeEnum = DiscountType.FIXED;
         discountAction = DiscountAction.NORMAL;
         break;
-      case "percentage":
+      case 'percentage':
         if (value > 100) {
           value = 100;
         }
         discountTypeEnum = DiscountType.PERCENTAGE;
         discountAction = DiscountAction.NORMAL;
         break;
-      case "sxgdo":
+      case 'sxgdo':
         discountTypeEnum = DiscountType.FIXED;
         discountAction = DiscountAction.FREE_DELIVERY;
         break;
@@ -347,7 +301,7 @@ export class DiscountCalculationService {
       value: value,
       applicableOn: applicableOn,
       discountApplicableType: this.getDiscountApplicableType(applicableType),
-      id: "coupon_discount",
+      id: 'coupon_discount',
       discountAction: discountAction,
       discountCategory: DiscountCategory.COUPON,
       maxValue: maxValue,
@@ -355,28 +309,16 @@ export class DiscountCalculationService {
     return discountInterfaceObj;
   }
 
-  getBxGyDiscountFromOrder(
-    getCouponInfoDto: GetCouponInfoDto
-  ): DiscountInterface {
+  getBxGyDiscountFromOrder(getCouponInfoDto: GetCouponInfoDto): DiscountInterface {
     const { couponInfoDto, coupon_id, itemInfo } = getCouponInfoDto;
-    const {
-      applicableOn,
-      applicableType,
-      applicableDType,
-      maxValue,
-      minAmount,
-      name,
-    } = couponInfoDto;
+    const { applicableOn, applicableType, applicableDType, maxValue, minAmount, name } = couponInfoDto;
 
     const itemTotal = getCartItemTotal(itemInfo);
     if (itemTotal <= minAmount) {
       return null;
     }
 
-    const discountCal = this.calculateAppliedOnBxGyItems(
-      couponInfoDto,
-      itemInfo
-    );
+    const discountCal = this.calculateAppliedOnBxGyItems(couponInfoDto, itemInfo);
 
     if (discountCal && discountCal.status) {
       const discountInterfaceObj: DiscountInterface = {
@@ -385,7 +327,7 @@ export class DiscountCalculationService {
         value: discountCal.discountValue,
         applicableOn: applicableOn,
         discountApplicableType: this.getDiscountApplicableType(applicableType),
-        id: "coupon_discount",
+        id: 'coupon_discount',
         discountAction: DiscountAction.NORMAL,
         discountCategory: DiscountCategory.COUPON,
         maxValue: maxValue,
@@ -394,10 +336,7 @@ export class DiscountCalculationService {
     }
   }
 
-  verifyAppliedOnItems(
-    applicableInfo: { applicableType: number; applicableOn: any[] },
-    itemInfo: OrderItemInfo[]
-  ): boolean {
+  verifyAppliedOnItems(applicableInfo: { applicableType: number; applicableOn: any[] }, itemInfo: OrderItemInfo[]): boolean {
     const { applicableType, applicableOn } = applicableInfo;
     if (applicableType === 0) {
       return true;
@@ -417,15 +356,15 @@ export class DiscountCalculationService {
   getAppliedOnKey(applicableType: number): string {
     switch (applicableType) {
       case 0:
-        return "order";
+        return 'order';
       case 1:
-        return "categoryId";
+        return 'categoryId';
       case 2:
-        return "subcategoryId";
+        return 'subcategoryId';
       case 3:
-        return "itemId";
+        return 'itemId';
       default:
-        return "";
+        return '';
     }
   }
 
@@ -444,23 +383,12 @@ export class DiscountCalculationService {
     }
   }
 
-  calculateAppliedOnBxGyItems(
-    coupon_info: CouponInfoDto,
-    itemInfo: OrderItemInfo[]
-  ): any {
+  calculateAppliedOnBxGyItems(coupon_info: CouponInfoDto, itemInfo: OrderItemInfo[]): any {
     const response = {
       status: false,
       discountValue: 0,
     };
-    const {
-      requiredList,
-      applicableOn,
-      applicableQuantity,
-      applicableType,
-      discountType,
-      applicableDType,
-      maxValue,
-    } = coupon_info;
+    const { requiredList, applicableOn, applicableQuantity, applicableType, discountType, applicableDType, maxValue } = coupon_info;
     let applicableDValue = coupon_info.applicableDValue;
     if (applicableType === 0) {
       return response;
@@ -494,11 +422,11 @@ export class DiscountCalculationService {
             return response;
           }
         }
-        if (discountType === "bxgy") {
+        if (discountType === 'bxgy') {
           response.status = true;
           response.discountValue = appliedItem.price * applicableQuantity;
           return response;
-        } else if (discountType === "bxgyoz") {
+        } else if (discountType === 'bxgyoz') {
           switch (applicableDType) {
             case DiscountType.FIXED:
               let useValue = applicableDValue;
@@ -515,9 +443,7 @@ export class DiscountCalculationService {
               if (applicableDValue > 100) {
                 applicableDValue = 100;
               }
-              let percentageValue =
-                (applicableDValue * appliedItem.price * applicableQuantity) /
-                100;
+              let percentageValue = (applicableDValue * appliedItem.price * applicableQuantity) / 100;
               if (percentageValue > maxValue) {
                 percentageValue = maxValue;
               }
@@ -533,12 +459,10 @@ export class DiscountCalculationService {
     }
   }
 
-  getMerchantDiscountInterface(
-    getMerchantDiscountInterfaceDto: GetMerchantDiscountInterfaceDto
-  ): DiscountInterface {
+  getMerchantDiscountInterface(getMerchantDiscountInterfaceDto: GetMerchantDiscountInterfaceDto): DiscountInterface {
     const { type, value, discountType, id } = getMerchantDiscountInterfaceDto;
     const discountInterfaceObj: DiscountInterface = {
-      name: "Merchant",
+      name: 'Merchant',
       discountType: discountType,
       value: value,
       applicableOn: [],
@@ -558,11 +482,8 @@ export class DiscountCalculationService {
     return discountInterfaceObj;
   }
 
-  getItemLevelDiscountInterface(
-    getItemLevelDiscountInterfaceDto: GetItemLevelDiscountInterfaceDto
-  ): DiscountInterface {
-    const { value, discountType, id, orderItemId, itemInfo } =
-      getItemLevelDiscountInterfaceDto;
+  getItemLevelDiscountInterface(getItemLevelDiscountInterfaceDto: GetItemLevelDiscountInterfaceDto): DiscountInterface {
+    const { value, discountType, id, orderItemId, itemInfo } = getItemLevelDiscountInterfaceDto;
     let { quantity } = getItemLevelDiscountInterfaceDto;
     const itemData = itemInfo.find((item) => {
       if (item.orderItemId === orderItemId) {
@@ -582,7 +503,7 @@ export class DiscountCalculationService {
         useValue = 0;
       }
       const discountInterfaceObj: DiscountInterface = {
-        name: "Item Level",
+        name: 'Item Level',
         discountType: discountType,
         value: useValue,
         applicableOn: [orderItemId],

@@ -1,12 +1,7 @@
-import { OrderItemInfo } from "../baseClass/orderItemInfo";
-import { ChargeApplicableType, ChargeType } from "../enum/billLib.enum";
-import { ChargesInterface } from "../interfaces/charges.interface";
-import {
-  Addons,
-  ItemInfo,
-  Options,
-  Variants,
-} from "../interfaces/itemInfo.interface";
+import { OrderItemInfo } from '../baseClass/orderItemInfo';
+import { ChargeApplicableType, ChargeType } from '../enum/billLib.enum';
+import { ChargesInterface } from '../interfaces/charges.interface';
+import { Addons, ItemInfo, Options, Variants } from '../interfaces/itemInfo.interface';
 
 export const calculateAddonVariantPrice = (itemInfo: ItemInfo): number => {
   let totalPrice = 0;
@@ -43,18 +38,15 @@ export const getRoundOffValue = (value: number, base: number): any => {
 
 function getPriceKeyByOrderType(orderType: number): string {
   if (orderType == 1) {
-    return "delivery_price";
+    return 'delivery_price';
   } else if (orderType == 2) {
-    return "takeaway_price";
+    return 'takeaway_price';
   } else {
-    return "price";
+    return 'price';
   }
 }
 
-export function getCartItemInfo(
-  items: Array<any>,
-  orderType: number
-): OrderItemInfo[] {
+export function getCartItemInfo(items: Array<any>, orderType: number): OrderItemInfo[] {
   const cartItemInfo: OrderItemInfo[] = [];
   /* Getting the price key from the order type. */
   const priceKey = getPriceKeyByOrderType(orderType);
@@ -177,15 +169,12 @@ export function getOrderItemInfo(items): OrderItemInfo[] {
   return orderItemInfo;
 }
 
-export function getTransformedRestaurantCharges(
-  charges: any[],
-  order_type: number
-): ChargesInterface[] {
+export function getTransformedRestaurantCharges(charges: any[], order_type: number): ChargesInterface[] {
   const chargesList: ChargesInterface[] = [];
   if (charges && charges.length) {
     charges.forEach((charge) => {
       const { order_type: applicableOrderType } = charge;
-      if (charge.status && charge.id !== "delivery") {
+      if (charge.status && charge.id !== 'delivery') {
         const applicable = applicableOrderType.find((ot) => {
           if (ot === order_type) {
             return true;
@@ -193,10 +182,7 @@ export function getTransformedRestaurantCharges(
         });
         if (applicable != undefined) {
           const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);
-          const applicableInfo = getApplicableOnInfo(
-            charge.applicable_on,
-            charge.applicable_subcat
-          );
+          const applicableInfo = getApplicableOnInfo(charge.applicable_on, charge.applicable_subcat);
           const restCharge: ChargesInterface = {
             chargeType: chargeInfo.type,
             chargeValue: chargeInfo.value,
@@ -208,8 +194,7 @@ export function getTransformedRestaurantCharges(
             subName: charge.sub_name,
           };
           if (restCharge.chargeType == ChargeType.PERCENTAGE) {
-            restCharge.name =
-              restCharge.name + " @" + restCharge.chargeValue + "%";
+            restCharge.name = restCharge.name + '@' + restCharge.chargeValue + '%';
           }
           chargesList.push(restCharge);
         }
@@ -219,28 +204,22 @@ export function getTransformedRestaurantCharges(
   return chargesList;
 }
 
-function getChargesTypeAndValue(
-  chargeType: string,
-  data: any
-): { type: ChargeType; value: number } {
+function getChargesTypeAndValue(chargeType: string, data: any): { type: ChargeType; value: number } {
   switch (chargeType) {
-    case "fixed":
+    case 'fixed':
       return { type: ChargeType.FIXED, value: data.fixed_amount };
-    case "percentage":
+    case 'percentage':
       return { type: ChargeType.PERCENTAGE, value: data.percentage_amount };
   }
 }
 
-function getApplicableOnInfo(
-  applicableOn,
-  applicableSubcat
-): { chargeApplicableType: ChargeApplicableType; applicableList: [] } {
-  if (applicableOn[0] === "category") {
+function getApplicableOnInfo(applicableOn, applicableSubcat): { chargeApplicableType: ChargeApplicableType; applicableList: [] } {
+  if (applicableOn[0] === 'category') {
     return {
       chargeApplicableType: ChargeApplicableType.SUB_CATEGORY,
       applicableList: applicableSubcat,
     };
-  } else if (applicableOn[0] === "order") {
+  } else if (applicableOn[0] === 'order') {
     return {
       chargeApplicableType: ChargeApplicableType.OVER_ALL,
       applicableList: [],

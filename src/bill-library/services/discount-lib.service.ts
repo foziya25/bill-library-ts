@@ -1,25 +1,25 @@
-import { CartItemInfo } from "../baseClass/cartItemInfo";
-import { OrderItemInfo } from "../baseClass/orderItemInfo";
+import { CartItemInfo } from '../baseClass/cartItemInfo';
+import { OrderItemInfo } from '../baseClass/orderItemInfo';
 import {
   CartDiscountDto,
   CartItemDiscountInfo,
-} from "../discountClasses/cartDiscountDto";
+} from '../discountClasses/cartDiscountDto';
 import {
   OrderDiscountDto,
   OrderItemDiscountInfo,
-} from "../discountClasses/orderDiscountDto";
+} from '../discountClasses/orderDiscountDto';
 import {
   DiscountAction,
   DiscountApplicableType,
   DiscountType,
-} from "../enum/discountLib.enum";
-import { DiscountInterface } from "../interfaces/discount.interface";
-import { calculateAddonVariantPrice } from "../lib/common.function.lib";
+} from '../enum/discountLib.enum';
+import { DiscountInterface } from '../interfaces/discount.interface';
+import { calculateAddonVariantPrice } from '../lib/common.function.lib';
 
 export class DiscountLibService {
   applyDiscountOnCart(
     cartItemInfo: CartItemInfo[],
-    discountInfo: DiscountInterface[]
+    discountInfo: DiscountInterface[],
   ) {
     const appliedDiscountResponse = [];
     if (discountInfo) {
@@ -35,7 +35,7 @@ export class DiscountLibService {
         cartItemInfo.forEach((item) => {
           const isApplicable = this.isDiscountApplicableOnCartItem(
             discount,
-            item
+            item,
           );
           if (isApplicable.status == 1) {
             const additionalPrice = calculateAddonVariantPrice(item);
@@ -50,7 +50,7 @@ export class DiscountLibService {
           case DiscountAction.NORMAL:
             discountDto = this.calculateCartProportionalDiscount(
               discount,
-              discountDto
+              discountDto,
             );
             if (discountDto.discountValue < 0) {
               appliedDiscountResponse.push(discountDto);
@@ -59,7 +59,7 @@ export class DiscountLibService {
           case DiscountAction.TOP_UP:
             discountDto = this.calculateCartTopUpProportionalDiscount(
               discount,
-              discountDto
+              discountDto,
             );
             if (discountDto.discountValue > 0) {
               appliedDiscountResponse.push(discountDto);
@@ -68,7 +68,7 @@ export class DiscountLibService {
           case DiscountAction.FREE_DELIVERY:
             discountDto = this.calculateCartFreeDeliveryDiscount(
               discount,
-              discountDto
+              discountDto,
             );
             if (discountDto.discountValue < 0) {
               appliedDiscountResponse.push(discountDto);
@@ -85,7 +85,7 @@ export class DiscountLibService {
 
   applyDiscountOnOrder(
     orderItemInfo: OrderItemInfo[],
-    discountInfo: DiscountInterface[]
+    discountInfo: DiscountInterface[],
   ) {
     const appliedDiscountResponse = [];
     if (discountInfo) {
@@ -101,7 +101,7 @@ export class DiscountLibService {
         orderItemInfo.forEach((item) => {
           const isApplicable = this.isDiscountApplicableOnOrderItem(
             discount,
-            item
+            item,
           );
           if (isApplicable.status == 1) {
             const itemDiscountInfo: OrderItemDiscountInfo = {
@@ -116,7 +116,7 @@ export class DiscountLibService {
           case DiscountAction.NORMAL:
             discountDto = this.calculateOrderProportionalDiscount(
               discount,
-              discountDto
+              discountDto,
             );
             if (discountDto.discountValue < 0) {
               appliedDiscountResponse.push(discountDto);
@@ -125,7 +125,7 @@ export class DiscountLibService {
           case DiscountAction.TOP_UP:
             discountDto = this.calculateOrderTopUpProportionalDiscount(
               discount,
-              discountDto
+              discountDto,
             );
             if (discountDto.discountValue > 0) {
               appliedDiscountResponse.push(discountDto);
@@ -134,7 +134,7 @@ export class DiscountLibService {
           case DiscountAction.FREE_DELIVERY:
             discountDto = this.calculateOrderFreeDeliveryDiscount(
               discount,
-              discountDto
+              discountDto,
             );
             if (discountDto.discountValue < 0) {
               appliedDiscountResponse.push(discountDto);
@@ -152,7 +152,7 @@ export class DiscountLibService {
 
   calculateCartProportionalDiscount(
     discount: DiscountInterface,
-    discountDto: CartDiscountDto
+    discountDto: CartDiscountDto,
   ) {
     const { discountType, value, maxValue } = discount;
     let itemTotal = 0;
@@ -201,7 +201,7 @@ export class DiscountLibService {
 
   calculateCartTopUpProportionalDiscount(
     discount: DiscountInterface,
-    discountDto: CartDiscountDto
+    discountDto: CartDiscountDto,
   ) {
     const { discountType, value, maxValue } = discount;
     let itemTotal = 0;
@@ -232,7 +232,7 @@ export class DiscountLibService {
 
   calculateOrderProportionalDiscount(
     discount: DiscountInterface,
-    discountDto: OrderDiscountDto
+    discountDto: OrderDiscountDto,
   ) {
     const { discountType, value, maxValue } = discount;
     let itemTotal = 0;
@@ -281,7 +281,7 @@ export class DiscountLibService {
 
   calculateOrderTopUpProportionalDiscount(
     discount: DiscountInterface,
-    discountDto: OrderDiscountDto
+    discountDto: OrderDiscountDto,
   ) {
     const { discountType, value, maxValue } = discount;
     let itemTotal = 0;
@@ -312,7 +312,7 @@ export class DiscountLibService {
 
   calculateOrderFreeDeliveryDiscount(
     discount: DiscountInterface,
-    discountDto: OrderDiscountDto
+    discountDto: OrderDiscountDto,
   ) {
     const { discountType, value, maxValue } = discount;
 
@@ -338,7 +338,7 @@ export class DiscountLibService {
 
   calculateCartFreeDeliveryDiscount(
     discount: DiscountInterface,
-    discountDto: CartDiscountDto
+    discountDto: CartDiscountDto,
   ) {
     const { discountType, value, maxValue } = discount;
 
@@ -364,7 +364,7 @@ export class DiscountLibService {
 
   isDiscountApplicableOnCartItem(
     discount: DiscountInterface,
-    cartItemInfo: CartItemInfo
+    cartItemInfo: CartItemInfo,
   ) {
     const response = { status: 0 };
     const { applicableOn, discountApplicableType } = discount;
@@ -377,7 +377,7 @@ export class DiscountLibService {
         break;
       case DiscountApplicableType.CATEGORY:
         const categoryId = applicableOn.find(
-          (ids) => ids === cartItemInfo.categoryId
+          (ids) => ids === cartItemInfo.categoryId,
         );
         if (categoryId) {
           response.status = 1;
@@ -385,7 +385,7 @@ export class DiscountLibService {
         break;
       case DiscountApplicableType.SUB_CATEGORY:
         const subCategoryId = applicableOn.find(
-          (ids) => ids === cartItemInfo.subcategoryId
+          (ids) => ids === cartItemInfo.subcategoryId,
         );
         if (subCategoryId) {
           response.status = 1;
@@ -393,7 +393,7 @@ export class DiscountLibService {
         break;
       case DiscountApplicableType.CART_ITEM_ID:
         const cartItemId = applicableOn.find(
-          (ids) => ids === cartItemInfo.cartItemId
+          (ids) => ids === cartItemInfo.cartItemId,
         );
         if (cartItemId) {
           response.status = 1;
@@ -410,7 +410,7 @@ export class DiscountLibService {
 
   isDiscountApplicableOnOrderItem(
     discount: DiscountInterface,
-    orderItemInfo: OrderItemInfo
+    orderItemInfo: OrderItemInfo,
   ) {
     const response = { status: 0 };
     const { applicableOn, discountApplicableType } = discount;
@@ -423,7 +423,7 @@ export class DiscountLibService {
         break;
       case DiscountApplicableType.CATEGORY:
         const categoryId = applicableOn.find(
-          (ids) => ids === orderItemInfo.categoryId
+          (ids) => ids === orderItemInfo.categoryId,
         );
         if (categoryId) {
           response.status = 1;
@@ -431,7 +431,7 @@ export class DiscountLibService {
         break;
       case DiscountApplicableType.SUB_CATEGORY:
         const subCategoryId = applicableOn.find(
-          (ids) => ids === orderItemInfo.subcategoryId
+          (ids) => ids === orderItemInfo.subcategoryId,
         );
         if (subCategoryId) {
           response.status = 1;
@@ -439,7 +439,7 @@ export class DiscountLibService {
         break;
       case DiscountApplicableType.ORDER_ITEM_ID:
         const orderItemId = applicableOn.find(
-          (ids) => ids === orderItemInfo.orderItemId
+          (ids) => ids === orderItemInfo.orderItemId,
         );
         if (orderItemId) {
           response.status = 1;

@@ -48,7 +48,7 @@ class DiscountCalculationService {
     getDiscountInfoFromCart(cart) {
         const discountInfo = [];
         const { coupon_id, reason, coupon_name, dvalue, dtype, cart_items } = cart;
-        if (coupon_id === "mm_discount" || coupon_id === "mm_topup") {
+        if (coupon_id === 'mm_discount' || coupon_id === 'mm_topup') {
             const mDiscountObj = {
                 type: "merchant",
                 info: {
@@ -60,16 +60,16 @@ class DiscountCalculationService {
                     },
                 },
             };
-            if (coupon_id === "mm_discount") {
+            if (coupon_id === 'mm_discount') {
                 mDiscountObj.info.discountData.type = "normal";
             }
-            else if (coupon_id === "mm_topup") {
+            else if (coupon_id === 'mm_topup') {
                 mDiscountObj.info.discountData.type = "topUp";
             }
-            if (dtype === "fixed") {
+            if (dtype === 'fixed') {
                 mDiscountObj.info.discountData.discountType = "fixed";
             }
-            else if (dtype === "per") {
+            else if (dtype === 'per') {
                 mDiscountObj.info.discountData.discountType = "percentage";
             }
             discountInfo.push(mDiscountObj);
@@ -81,7 +81,7 @@ class DiscountCalculationService {
                 const itemLevelDiscountObj = {
                     type: "itemLevel",
                     info: {
-                        id: "IL_" + item.cart_item_id,
+                        id: 'IL_' + item.cart_item_id,
                         discountData: {
                             orderItemId: item.cart_item_id,
                             value,
@@ -90,13 +90,11 @@ class DiscountCalculationService {
                         },
                     },
                 };
-                if (type === "percent") {
-                    itemLevelDiscountObj.info.discountData.discountType =
-                        "percentage";
+                if (type === 'percent') {
+                    itemLevelDiscountObj.info.discountData.discountType = "percentage";
                 }
-                else if (type === "fixed") {
-                    itemLevelDiscountObj.info.discountData.discountType =
-                        "fixed";
+                else if (type === 'fixed') {
+                    itemLevelDiscountObj.info.discountData.discountType = "fixed";
                 }
                 discountInfo.push(itemLevelDiscountObj);
             }
@@ -179,10 +177,10 @@ class DiscountCalculationService {
                 code: coupon_info.coupon_name,
                 reason: reason,
             };
-            if (coupon_info.applicable_dtype === "flat") {
+            if (coupon_info.applicable_dtype === 'flat') {
                 couponInfoData.applicableDType = "fixed";
             }
-            else if (coupon_info.applicable_dtype === "percent") {
+            else if (coupon_info.applicable_dtype === 'percent') {
                 couponInfoData.applicableDType = "percentage";
             }
             const discountInfoObj = {
@@ -191,7 +189,7 @@ class DiscountCalculationService {
             };
             discountInfo.push(discountInfoObj);
         }
-        if (coupon_id === "mm_discount" || coupon_id === "mm_topup") {
+        if (coupon_id === 'mm_discount' || coupon_id === 'mm_topup') {
             const mDiscountObj = {
                 type: "merchant",
                 info: {
@@ -203,16 +201,16 @@ class DiscountCalculationService {
                     },
                 },
             };
-            if (coupon_id === "mm_discount") {
+            if (coupon_id === 'mm_discount') {
                 mDiscountObj.info.discountData.type = "normal";
             }
-            else if (coupon_id === "mm_topup") {
+            else if (coupon_id === 'mm_topup') {
                 mDiscountObj.info.discountData.type = "topUp";
             }
-            if (dtype === "fixed") {
+            if (dtype === 'fixed') {
                 mDiscountObj.info.discountData.discountType = "fixed";
             }
-            else if (dtype === "per") {
+            else if (dtype === 'per') {
                 mDiscountObj.info.discountData.discountType = "percentage";
             }
             discountInfo.push(mDiscountObj);
@@ -224,7 +222,7 @@ class DiscountCalculationService {
                 const itemLevelDiscountObj = {
                     type: "itemLevel",
                     info: {
-                        id: "IL_" + item.order_item_id,
+                        id: 'IL_' + item.order_item_id,
                         discountData: {
                             orderItemId: item.order_item_id,
                             value,
@@ -233,13 +231,11 @@ class DiscountCalculationService {
                         },
                     },
                 };
-                if (type === "percentage") {
-                    itemLevelDiscountObj.info.discountData.discountType =
-                        "percentage";
+                if (type === 'percentage') {
+                    itemLevelDiscountObj.info.discountData.discountType = "percentage";
                 }
-                else if (type === "fixed") {
-                    itemLevelDiscountObj.info.discountData.discountType =
-                        "fixed";
+                else if (type === 'fixed') {
+                    itemLevelDiscountObj.info.discountData.discountType = "fixed";
                 }
                 discountInfo.push(itemLevelDiscountObj);
             }
@@ -249,18 +245,18 @@ class DiscountCalculationService {
     getOrderCouponDiscountInterface(getCouponInfoDto) {
         const { discountType } = getCouponInfoDto.couponInfoDto;
         switch (discountType) {
-            case "bxgy":
-            case "bxgyoz":
+            case 'bxgy':
+            case 'bxgyoz':
                 return this.getBxGyDiscountFromOrder(getCouponInfoDto);
-            case "sxgdo":
-            case "percentage":
-            case "fixed":
+            case 'sxgdo':
+            case 'percentage':
+            case 'fixed':
                 return this.getFPOFdDiscountFromOrder(getCouponInfoDto);
         }
     }
     getFPOFdDiscountFromOrder(getCouponInfoDto) {
         const { couponInfoDto, coupon_id, itemInfo } = getCouponInfoDto;
-        const { applicableOn, applicableType, maxValue, minAmount, name, discountType, } = couponInfoDto;
+        const { applicableOn, applicableType, maxValue, minAmount, name, discountType } = couponInfoDto;
         let { value } = couponInfoDto;
         const itemTotal = (0, common_function_lib_1.getCartItemTotal)(itemInfo);
         if (itemTotal <= minAmount) {
@@ -273,18 +269,18 @@ class DiscountCalculationService {
         let discountTypeEnum = null;
         let discountAction = null;
         switch (discountType) {
-            case "fixed":
+            case 'fixed':
                 discountTypeEnum = "fixed";
                 discountAction = "normal";
                 break;
-            case "percentage":
+            case 'percentage':
                 if (value > 100) {
                     value = 100;
                 }
                 discountTypeEnum = "percentage";
                 discountAction = "normal";
                 break;
-            case "sxgdo":
+            case 'sxgdo':
                 discountTypeEnum = "fixed";
                 discountAction = "freeDelivery";
                 break;
@@ -295,7 +291,7 @@ class DiscountCalculationService {
             value: value,
             applicableOn: applicableOn,
             discountApplicableType: this.getDiscountApplicableType(applicableType),
-            id: "coupon_discount",
+            id: 'coupon_discount',
             discountAction: discountAction,
             discountCategory: "coupon",
             maxValue: maxValue,
@@ -304,7 +300,7 @@ class DiscountCalculationService {
     }
     getBxGyDiscountFromOrder(getCouponInfoDto) {
         const { couponInfoDto, coupon_id, itemInfo } = getCouponInfoDto;
-        const { applicableOn, applicableType, applicableDType, maxValue, minAmount, name, } = couponInfoDto;
+        const { applicableOn, applicableType, applicableDType, maxValue, minAmount, name } = couponInfoDto;
         const itemTotal = (0, common_function_lib_1.getCartItemTotal)(itemInfo);
         if (itemTotal <= minAmount) {
             return null;
@@ -317,7 +313,7 @@ class DiscountCalculationService {
                 value: discountCal.discountValue,
                 applicableOn: applicableOn,
                 discountApplicableType: this.getDiscountApplicableType(applicableType),
-                id: "coupon_discount",
+                id: 'coupon_discount',
                 discountAction: "normal",
                 discountCategory: "coupon",
                 maxValue: maxValue,
@@ -345,15 +341,15 @@ class DiscountCalculationService {
     getAppliedOnKey(applicableType) {
         switch (applicableType) {
             case 0:
-                return "order";
+                return 'order';
             case 1:
-                return "categoryId";
+                return 'categoryId';
             case 2:
-                return "subcategoryId";
+                return 'subcategoryId';
             case 3:
-                return "itemId";
+                return 'itemId';
             default:
-                return "";
+                return '';
         }
     }
     getDiscountApplicableType(applicableType) {
@@ -375,7 +371,7 @@ class DiscountCalculationService {
             status: false,
             discountValue: 0,
         };
-        const { requiredList, applicableOn, applicableQuantity, applicableType, discountType, applicableDType, maxValue, } = coupon_info;
+        const { requiredList, applicableOn, applicableQuantity, applicableType, discountType, applicableDType, maxValue } = coupon_info;
         let applicableDValue = coupon_info.applicableDValue;
         if (applicableType === 0) {
             return response;
@@ -410,12 +406,12 @@ class DiscountCalculationService {
                         return response;
                     }
                 }
-                if (discountType === "bxgy") {
+                if (discountType === 'bxgy') {
                     response.status = true;
                     response.discountValue = appliedItem.price * applicableQuantity;
                     return response;
                 }
-                else if (discountType === "bxgyoz") {
+                else if (discountType === 'bxgyoz') {
                     switch (applicableDType) {
                         case "fixed":
                             let useValue = applicableDValue;
@@ -432,8 +428,7 @@ class DiscountCalculationService {
                             if (applicableDValue > 100) {
                                 applicableDValue = 100;
                             }
-                            let percentageValue = (applicableDValue * appliedItem.price * applicableQuantity) /
-                                100;
+                            let percentageValue = (applicableDValue * appliedItem.price * applicableQuantity) / 100;
                             if (percentageValue > maxValue) {
                                 percentageValue = maxValue;
                             }
@@ -452,7 +447,7 @@ class DiscountCalculationService {
     getMerchantDiscountInterface(getMerchantDiscountInterfaceDto) {
         const { type, value, discountType, id } = getMerchantDiscountInterfaceDto;
         const discountInterfaceObj = {
-            name: "Merchant",
+            name: 'Merchant',
             discountType: discountType,
             value: value,
             applicableOn: [],
@@ -493,7 +488,7 @@ class DiscountCalculationService {
                 useValue = 0;
             }
             const discountInterfaceObj = {
-                name: "Item Level",
+                name: 'Item Level',
                 discountType: discountType,
                 value: useValue,
                 applicableOn: [orderItemId],

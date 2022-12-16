@@ -1,4 +1,4 @@
-import { DiscountCategory } from "../enum/discountLib.enum";
+import { DiscountCategory } from '../enum/discountLib.enum';
 
 export interface BillResponseInterface {
   fees: FeeObj[];
