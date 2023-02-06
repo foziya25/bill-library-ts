@@ -223,7 +223,7 @@ export class DiscountCalculationService {
     }
     items.forEach((item) => {
       const { item_discount } = item;
-      if (item_discount && item_discount.length) {
+      if (item_discount) {
         const { value, type, reason, qty } = item_discount;
         const itemLevelDiscountObj: SaveDiscountObjDto = {
           type: DiscountCategory.ITEM_LEVEL,
