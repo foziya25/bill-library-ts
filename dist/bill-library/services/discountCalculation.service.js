@@ -231,7 +231,7 @@ class DiscountCalculationService {
                         },
                     },
                 };
-                if (type === 'percentage') {
+                if (type === 'percent') {
                     itemLevelDiscountObj.info.discountData.discountType = "percentage";
                 }
                 else if (type === 'fixed') {
