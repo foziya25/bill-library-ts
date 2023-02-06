@@ -10,11 +10,11 @@ export declare class BillOfflineCalculationService {
     private billLibrary;
     private discountCalculationService;
     constructor(discountLibrary: DiscountLibService, billLibrary: BillLibraryService, discountCalculationService: DiscountCalculationService);
-    getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[], chargesInfo: ChargesInterface[], rest_round_off?: number): BillResponseInterface;
+    getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[], chargesInfo: ChargesInterface[], rest_round_off?: number, country_code?: string): BillResponseInterface;
     validateDiscount(discountInfo: DiscountInterface[]): {
         status: number;
         message: string;
     };
-    getOfflineCartBill(cart: any, restFee: any, rest_round_off: any): BillResponseInterface;
-    getOfflineOrderBill(order: any, restFee: any, couponInfo: any, orderBill: any, rest_round_off: any): BillResponseInterface;
+    getOfflineCartBill(cart: any, restFee: any, rest_round_off: any, country_code?: string): BillResponseInterface;
+    getOfflineOrderBill(order: any, restFee: any, couponInfo: any, orderBill: any, rest_round_off: any, country_code?: string): BillResponseInterface;
 }

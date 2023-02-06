@@ -4,18 +4,15 @@ export interface BillResponseInterface {
     bill_total: number;
     message: string;
     status: number;
-    bill_total_text: string;
 }
 export interface FeeObj {
     name: string;
     value: number;
-    value_text: string;
     id: string;
 }
 export declare class DiscountFeeObj implements FeeObj {
     name: string;
     value: number;
-    value_text: string;
     id: string;
     discountCategory: DiscountCategory;
 }

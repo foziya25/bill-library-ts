@@ -8,7 +8,7 @@ class BillOfflineCalculationService {
         this.billLibrary = billLibrary;
         this.discountCalculationService = discountCalculationService;
     }
-    getOrderBill(orderItemInfo, discountInfo, chargesInfo, rest_round_off = 0.05) {
+    getOrderBill(orderItemInfo, discountInfo, chargesInfo, rest_round_off = 0.05, country_code = 'MY') {
         const validationResponse = this.validateDiscount(discountInfo);
         if (!validationResponse.status) {
             const bill = {
@@ -16,12 +16,11 @@ class BillOfflineCalculationService {
                 bill_total: 0,
                 status: 0,
                 message: validationResponse.message,
-                bill_total_text: '0',
             };
             return bill;
         }
         const discountDto = this.discountLibrary.applyDiscountOnOrder(orderItemInfo, discountInfo);
-        return this.billLibrary.getOrderBill(orderItemInfo, discountDto, chargesInfo, rest_round_off);
+        return this.billLibrary.getOrderBill(orderItemInfo, discountDto, chargesInfo, rest_round_off, country_code);
     }
     validateDiscount(discountInfo) {
         const discountMap = [];
@@ -76,7 +75,7 @@ class BillOfflineCalculationService {
         }
         return { status: flag, message: message };
     }
-    getOfflineCartBill(cart, restFee, rest_round_off) {
+    getOfflineCartBill(cart, restFee, rest_round_off, country_code = 'MY') {
         const { cart_items, order_type, skip_service_charge_operation, skip_packaging_charge_operation } = cart;
         const itemInfo = (0, common_function_lib_1.getCartItemInfo)(cart_items, order_type);
         let restCharges = (0, common_function_lib_1.getTransformedRestaurantCharges)(restFee, order_type);
@@ -89,9 +88,9 @@ class BillOfflineCalculationService {
                 return true;
             }
         });
-        return this.getOrderBill(itemInfo, discountInfo, restCharges, rest_round_off);
+        return this.getOrderBill(itemInfo, discountInfo, restCharges, rest_round_off, country_code);
     }
-    getOfflineOrderBill(order, restFee, couponInfo, orderBill, rest_round_off) {
+    getOfflineOrderBill(order, restFee, couponInfo, orderBill, rest_round_off, country_code = 'MY') {
         const { items, order_type, skip_service_charge_operation, skip_packaging_charge_operation } = order;
         const { fees } = orderBill;
         const itemInfo = (0, common_function_lib_1.getOrderItemInfo)(items);
@@ -136,7 +135,7 @@ class BillOfflineCalculationService {
                 }
             });
         }
-        return this.getOrderBill(itemInfo, discountInfo, restCharges, rest_round_off);
+        return this.getOrderBill(itemInfo, discountInfo, restCharges, rest_round_off, country_code);
     }
 }
 exports.BillOfflineCalculationService = BillOfflineCalculationService;

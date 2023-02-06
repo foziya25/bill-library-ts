@@ -1,23 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BillLibraryService = void 0;
+const country_enum_1 = require("../../enums/country.enum");
+const i18n_1 = require("../../locale/i18n");
+const number_format_1 = require("../../utils/number-format");
 const cartItemInfo_1 = require("../baseClass/cartItemInfo");
 const orderItemInfo_1 = require("../baseClass/orderItemInfo");
 const common_function_lib_1 = require("../lib/common.function.lib");
 class BillLibraryService {
-    getCartBill(cartItemInfo, discountInfo, chargesInfo, rest_round_off = 0.05) {
+    getCartBill(cartItemInfo, discountInfo, chargesInfo, rest_round_off = 0.05, country_code) {
         const response = {
             fees: [],
             bill_total: 0,
             message: 'Bill generated',
             status: 1,
-            bill_total_text: '0',
         };
         const cartCalculationInfo = [];
         const itemTotalFeeObj = {
             name: 'Item Total',
             value: 0,
-            value_text: '0',
             id: 'item_total',
         };
         cartItemInfo.forEach((item) => {
@@ -27,7 +28,6 @@ class BillLibraryService {
             itemTotalFeeObj.value += cartCalculationObj.effectivePrice;
         });
         itemTotalFeeObj.value = Number(itemTotalFeeObj.value.toFixed(2));
-        itemTotalFeeObj.value_text = itemTotalFeeObj.value.toFixed(2);
         response.fees.push(itemTotalFeeObj);
         let effectiveTotal = itemTotalFeeObj.value;
         const discountFeesArray = [];
@@ -35,7 +35,6 @@ class BillLibraryService {
             const discountFee = {
                 name: discount.name,
                 value: Number(discount.discountValue.toFixed(2)),
-                value_text: discount.discountValue.toFixed(2),
                 id: discount.id,
                 discountCategory: discount.discountCategory,
             };
@@ -57,7 +56,6 @@ class BillLibraryService {
                 const discountFee = {
                     name: discount.name,
                     value: Number(discount.discountValue.toFixed(2)),
-                    value_text: discount.discountValue.toFixed(2),
                     id: discount.id,
                     discountCategory: discount.discountCategory,
                 };
@@ -80,7 +78,6 @@ class BillLibraryService {
                 const discountFee = {
                     name: discount.name,
                     value: Number(discount.discountValue.toFixed(2)),
-                    value_text: discount.discountValue.toFixed(2),
                     id: discount.id,
                     discountCategory: discount.discountCategory,
                 };
@@ -129,7 +126,6 @@ class BillLibraryService {
                         discount.discountValue = -1 * effectiveTotal;
                         effectiveTotal = 0;
                         discountFee.value = Number(discount.discountValue.toFixed(2));
-                        discountFee.value_text = discountFee.value.toFixed(2);
                         discountFeesArray.push(discountFee);
                     }
                 }
@@ -162,14 +158,13 @@ class BillLibraryService {
                 const discountFee = {
                     name: freeDeliveryDiscount.name,
                     value: Number(freeDeliveryDiscount.discountValue.toFixed(2)),
-                    value_text: freeDeliveryDiscount.discountValue.toFixed(2),
                     id: freeDeliveryDiscount.id,
                     discountCategory: freeDeliveryDiscount.discountCategory,
                 };
                 discountFeesArray.push(discountFee);
             }
         }
-        response.fees.push(...this.mergeItemAndMerchantDiscount(discountFeesArray));
+        response.fees.push(...this.mergeItemAndMerchantDiscount(discountFeesArray, country_code));
         response.fees.push(...chargesList);
         const sub_total = this.calculateBillTotal(response);
         const round_off_bill_total = (0, common_function_lib_1.getRoundOffValue)(sub_total, rest_round_off);
@@ -178,7 +173,6 @@ class BillLibraryService {
             response.fees.push({
                 name: 'Round Off',
                 value: Number(round_off_diff.toFixed(2)),
-                value_text: Number(round_off_diff).toFixed(2),
                 id: 'round_off',
             });
             response.bill_total = this.calculateBillTotal(response);
@@ -186,22 +180,20 @@ class BillLibraryService {
         else {
             response.bill_total = sub_total;
         }
-        response.bill_total_text = response.bill_total.toFixed(2);
         return response;
     }
-    getOrderBill(orderItemInfo, discountInfo, chargesInfo, rest_round_off = 0.05) {
-        const response = {
+    getOrderBill(orderItemInfo, discountInfo, chargesInfo, rest_round_off = 0.05, country_code = 'MY') {
+        let response = {
             fees: [],
             bill_total: 0,
             message: 'Bill generated',
             status: 1,
-            bill_total_text: '0',
         };
+        const language = (0, country_enum_1.getCountryLanguage)(country_code);
         const orderCalculationInfo = [];
         const itemTotalFeeObj = {
-            name: 'Item Total',
+            name: (0, i18n_1.localize)('itemTotal', language),
             value: 0,
-            value_text: '0',
             id: 'item_total',
         };
         orderItemInfo.forEach((item) => {
@@ -211,7 +203,6 @@ class BillLibraryService {
             itemTotalFeeObj.value += orderCalculationObj.effectivePrice;
         });
         itemTotalFeeObj.value = Number(itemTotalFeeObj.value.toFixed(2));
-        itemTotalFeeObj.value_text = itemTotalFeeObj.value.toFixed(2);
         response.fees.push(itemTotalFeeObj);
         let effectiveTotal = itemTotalFeeObj.value;
         const discountFeesArray = [];
@@ -219,7 +210,6 @@ class BillLibraryService {
             const discountFee = {
                 name: discount.name,
                 value: Number(discount.discountValue.toFixed(2)),
-                value_text: discount.discountValue.toFixed(2),
                 id: discount.id,
                 discountCategory: discount.discountCategory,
             };
@@ -241,7 +231,6 @@ class BillLibraryService {
                 const discountFee = {
                     name: discount.name,
                     value: Number(discount.discountValue.toFixed(2)),
-                    value_text: discount.discountValue.toFixed(2),
                     id: discount.id,
                     discountCategory: discount.discountCategory,
                 };
@@ -264,7 +253,6 @@ class BillLibraryService {
                 const discountFee = {
                     name: discount.name,
                     value: Number(discount.discountValue.toFixed(2)),
-                    value_text: discount.discountValue.toFixed(2),
                     id: discount.id,
                     discountCategory: discount.discountCategory,
                 };
@@ -313,7 +301,6 @@ class BillLibraryService {
                         discount.discountValue = -1 * effectiveTotal;
                         effectiveTotal = 0;
                         discountFee.value = Number(discount.discountValue.toFixed(2));
-                        discountFee.value_text = discountFee.value.toFixed(2);
                         discountFeesArray.push(discountFee);
                     }
                 }
@@ -348,23 +335,21 @@ class BillLibraryService {
                 const discountFee = {
                     name: freeDeliveryDiscount.name,
                     value: Number(freeDeliveryDiscount.discountValue.toFixed(2)),
-                    value_text: freeDeliveryDiscount.discountValue.toFixed(2),
                     id: freeDeliveryDiscount.id,
                     discountCategory: freeDeliveryDiscount.discountCategory,
                 };
                 discountFeesArray.push(discountFee);
             }
         }
-        response.fees.push(...this.mergeItemAndMerchantDiscount(discountFeesArray));
+        response.fees.push(...this.mergeItemAndMerchantDiscount(discountFeesArray, country_code));
         response.fees.push(...chargesList);
         const sub_total = this.calculateBillTotal(response);
         const round_off_bill_total = (0, common_function_lib_1.getRoundOffValue)(sub_total, rest_round_off);
         const round_off_diff = round_off_bill_total - sub_total;
         if (round_off_diff && Number(round_off_diff.toFixed(2))) {
             response.fees.push({
-                name: 'Round Off',
+                name: (0, i18n_1.localize)('roundOff', language),
                 value: Number(round_off_diff.toFixed(2)),
-                value_text: Number(round_off_diff).toFixed(2),
                 id: 'round_off',
             });
             response.bill_total = this.calculateBillTotal(response);
@@ -372,7 +357,8 @@ class BillLibraryService {
         else {
             response.bill_total = sub_total;
         }
-        response.bill_total_text = response.bill_total.toFixed(2);
+        const quantity_keys_to_format = ['value', 'bill_total'];
+        response = (0, number_format_1.getLocalizedData)(response, '', country_code, [], quantity_keys_to_format);
         return response;
     }
     calculateCartChargeAmount(charge, applicableResponse) {
@@ -383,7 +369,6 @@ class BillLibraryService {
         const chargeFee = {
             name: charge.name,
             value: 0,
-            value_text: '',
             id: charge.id,
         };
         const { chargeType, chargeValue } = charge;
@@ -401,7 +386,6 @@ class BillLibraryService {
                 response.status = 0;
                 break;
         }
-        chargeFee.value_text = chargeFee.value.toFixed(2);
         response.chargeFee = chargeFee;
         return response;
     }
@@ -413,7 +397,6 @@ class BillLibraryService {
         const chargeFee = {
             name: charge.name,
             value: 0,
-            value_text: '',
             id: charge.id,
         };
         const { chargeType, chargeValue } = charge;
@@ -432,7 +415,6 @@ class BillLibraryService {
                 break;
         }
         chargeFee.value = Number(chargeFee.value.toFixed(2));
-        chargeFee.value_text = chargeFee.value.toFixed(2);
         response.chargeFee = chargeFee;
         return response;
     }
@@ -575,12 +557,13 @@ class BillLibraryService {
         });
         return total;
     }
-    mergeItemAndMerchantDiscount(discountFeesArray) {
+    mergeItemAndMerchantDiscount(discountFeesArray, country_code) {
         const response = [];
+        const language = (0, country_enum_1.getCountryLanguage)(country_code);
         const itemLevel = {
             status: 0,
             value: 0,
-            name: 'ITEM LEVEL',
+            name: (0, i18n_1.localize)('itemLevel', language),
         };
         discountFeesArray.forEach((discount) => {
             if (discount.discountCategory === "itemLevel") {
@@ -591,7 +574,6 @@ class BillLibraryService {
         const discountItemMerchant = {
             name: '',
             value: 0,
-            value_text: '',
             id: 'coupon_discount',
         };
         let flag = 0;
@@ -602,7 +584,7 @@ class BillLibraryService {
         }
         discountFeesArray.forEach((discount) => {
             if (discount.discountCategory === "merchant") {
-                discount.name = 'By Restaurant';
+                discount.name = (0, i18n_1.localize)('byRestaurant', language);
                 discountItemMerchant.value += discount.value;
                 if (flag) {
                     discountItemMerchant.name = discountItemMerchant.name + ',' + discount.name;
@@ -613,7 +595,7 @@ class BillLibraryService {
                 }
             }
             else if (discount.discountCategory === "topUp") {
-                discount.name = 'By Restaurant';
+                discount.name = (0, i18n_1.localize)('byRestaurant', language);
                 discountItemMerchant.value += discount.value;
                 if (flag) {
                     discountItemMerchant.name = discountItemMerchant.name + ',' + discount.name;
@@ -632,7 +614,6 @@ class BillLibraryService {
         });
         if (flag) {
             discountItemMerchant.name = discountItemMerchant.name + ')';
-            discountItemMerchant.value_text = discountItemMerchant.value.toFixed(2);
             if (discountItemMerchant.value != 0) {
                 response.push(discountItemMerchant);
             }

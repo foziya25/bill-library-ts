@@ -121,7 +121,7 @@ function getTransformedRestaurantCharges(charges, order_type) {
                         applicableOn: applicableInfo.applicableList,
                         chargeApplicableType: applicableInfo.chargeApplicableType,
                         id: charge.id,
-                        name: charge.name,
+                        name: charge.sub_name,
                         class: charge.class,
                         subName: charge.sub_name,
                     };

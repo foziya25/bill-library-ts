@@ -12,7 +12,7 @@ import { DiscountCalculationService } from './discountCalculation.service';
 export class BillOfflineCalculationService {
   constructor(private discountLibrary: DiscountLibService, private billLibrary: BillLibraryService, private discountCalculationService: DiscountCalculationService) {}
 
-  getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[], chargesInfo: ChargesInterface[], rest_round_off = 0.05): BillResponseInterface {
+  getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[], chargesInfo: ChargesInterface[], rest_round_off = 0.05, country_code = 'MY'): BillResponseInterface {
     const validationResponse = this.validateDiscount(discountInfo);
     if (!validationResponse.status) {
       const bill: BillResponseInterface = {
@@ -20,12 +20,12 @@ export class BillOfflineCalculationService {
         bill_total: 0,
         status: 0,
         message: validationResponse.message,
-        bill_total_text: '0',
+        // bill_total_text: '0',
       };
       return bill;
     }
     const discountDto = this.discountLibrary.applyDiscountOnOrder(orderItemInfo, discountInfo);
-    return this.billLibrary.getOrderBill(orderItemInfo, discountDto, chargesInfo, rest_round_off);
+    return this.billLibrary.getOrderBill(orderItemInfo, discountDto, chargesInfo, rest_round_off, country_code);
   }
 
   validateDiscount(discountInfo: DiscountInterface[]) {
@@ -74,7 +74,7 @@ export class BillOfflineCalculationService {
     return { status: flag, message: message };
   }
 
-  getOfflineCartBill(cart: any, restFee: any, rest_round_off): BillResponseInterface {
+  getOfflineCartBill(cart: any, restFee: any, rest_round_off, country_code = 'MY'): BillResponseInterface {
     const { cart_items, order_type, skip_service_charge_operation, skip_packaging_charge_operation } = cart;
     const itemInfo = getCartItemInfo(cart_items, order_type);
     let restCharges = getTransformedRestaurantCharges(restFee, order_type);
@@ -87,10 +87,10 @@ export class BillOfflineCalculationService {
       }
     });
 
-    return this.getOrderBill(itemInfo, discountInfo, restCharges, rest_round_off);
+    return this.getOrderBill(itemInfo, discountInfo, restCharges, rest_round_off, country_code);
   }
 
-  getOfflineOrderBill(order: any, restFee: any, couponInfo: any, orderBill: any, rest_round_off): BillResponseInterface {
+  getOfflineOrderBill(order: any, restFee: any, couponInfo: any, orderBill: any, rest_round_off, country_code = 'MY'): BillResponseInterface {
     const { items, order_type, skip_service_charge_operation, skip_packaging_charge_operation } = order;
     const { fees } = orderBill;
     const itemInfo = getOrderItemInfo(items);
@@ -135,6 +135,6 @@ export class BillOfflineCalculationService {
         }
       });
     }
-    return this.getOrderBill(itemInfo, discountInfo, restCharges, rest_round_off);
+    return this.getOrderBill(itemInfo, discountInfo, restCharges, rest_round_off, country_code);
   }
 }

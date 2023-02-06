@@ -8,6 +8,7 @@ export function calculateBill(
   discountInfo,
   chargesInfo,
   rest_round_off = 0.05,
+  country_code = 'MY' 
 ) {
   const discountLibrary = new DiscountLibService();
   const billLibrary = new BillLibraryService();
@@ -23,10 +24,11 @@ export function calculateBill(
     discountInfo,
     chargesInfo,
     rest_round_off,
+    country_code
   );
 }
 
-export function calculateOfflineCartBill(cart:any, restFee:any, rest_round_off:any) {
+export function calculateOfflineCartBill(cart:any, restFee:any, rest_round_off:any, country_code = 'MY' ) {
   const discountLibrary = new DiscountLibService();
   const billLibrary = new BillLibraryService();
   const discountCalculation = new DiscountCalculationService();
@@ -40,6 +42,7 @@ export function calculateOfflineCartBill(cart:any, restFee:any, rest_round_off:a
     cart,
     restFee,
     rest_round_off,
+    country_code
   );
 }
 
@@ -49,6 +52,7 @@ export function calculateOfflineOrderBill(
   coupon_info,
   order_bill,
   rest_round_off,
+  country_code = 'MY'
 ) {
   const discountLibrary = new DiscountLibService();
   const billLibrary = new BillLibraryService();
@@ -65,5 +69,6 @@ export function calculateOfflineOrderBill(
     coupon_info,
     order_bill,
     rest_round_off,
+    country_code
   );
 }

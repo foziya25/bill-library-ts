@@ -1,7 +1,7 @@
 import { OrderItemInfo } from '../baseClass/orderItemInfo';
 import { ChargeApplicableType, ChargeType } from '../enum/billLib.enum';
 import { ChargesInterface } from '../interfaces/charges.interface';
-import { Addons, ItemInfo, Options, Variants } from '../interfaces/itemInfo.interface';
+import { Addons, ItemInfo } from '../interfaces/itemInfo.interface';
 
 export const calculateAddonVariantPrice = (itemInfo: ItemInfo): number => {
   let totalPrice = 0;
@@ -189,7 +189,7 @@ export function getTransformedRestaurantCharges(charges: any[], order_type: numb
             applicableOn: applicableInfo.applicableList,
             chargeApplicableType: applicableInfo.chargeApplicableType,
             id: charge.id,
-            name: charge.name,
+            name: charge.sub_name,
             class: charge.class,
             subName: charge.sub_name,
           };
