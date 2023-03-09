@@ -3,72 +3,29 @@ import { BillOfflineCalculationService } from './bill-library/services/billOffli
 import { DiscountLibService } from './bill-library/services/discount-lib.service';
 import { DiscountCalculationService } from './bill-library/services/discountCalculation.service';
 
-export function calculateBill(
-  cartItemInfo,
-  discountInfo,
-  chargesInfo,
-  rest_round_off = 0.05,
-  country_code = 'MY' 
-) {
+export function calculateBill(cartItemInfo, discountInfo, chargesInfo, rest_round_off = 0.05, country_code = 'MY') {
   const discountLibrary = new DiscountLibService();
   const billLibrary = new BillLibraryService();
   const discountCalculation = new DiscountCalculationService();
-  const billOfflineCalculationService = new BillOfflineCalculationService(
-    discountLibrary,
-    billLibrary,
-    discountCalculation,
-  );
+  const billOfflineCalculationService = new BillOfflineCalculationService(discountLibrary, billLibrary, discountCalculation);
 
-  return billOfflineCalculationService.getOrderBill(
-    cartItemInfo,
-    discountInfo,
-    chargesInfo,
-    rest_round_off,
-    country_code
-  );
+  return billOfflineCalculationService.getOrderBill(cartItemInfo, discountInfo, chargesInfo, rest_round_off, country_code);
 }
 
-export function calculateOfflineCartBill(cart:any, restFee:any, rest_round_off:any, country_code = 'MY' ) {
+export function calculateOfflineCartBill(cart: any, restFee: any, offlinePlatform: any, rest_round_off: any, country_code = 'MY') {
   const discountLibrary = new DiscountLibService();
   const billLibrary = new BillLibraryService();
   const discountCalculation = new DiscountCalculationService();
-  const billOfflineCalculationService = new BillOfflineCalculationService(
-    discountLibrary,
-    billLibrary,
-    discountCalculation,
-  );
+  const billOfflineCalculationService = new BillOfflineCalculationService(discountLibrary, billLibrary, discountCalculation);
 
-  return billOfflineCalculationService.getOfflineCartBill(
-    cart,
-    restFee,
-    rest_round_off,
-    country_code
-  );
+  return billOfflineCalculationService.getOfflineCartBill(cart, restFee, offlinePlatform, rest_round_off, country_code);
 }
 
-export function calculateOfflineOrderBill(
-  order,
-  restFee,
-  coupon_info,
-  order_bill,
-  rest_round_off,
-  country_code = 'MY'
-) {
+export function calculateOfflineOrderBill(order, restFee, coupon_info, order_bill, offlinePlatform: any, rest_round_off, country_code = 'MY') {
   const discountLibrary = new DiscountLibService();
   const billLibrary = new BillLibraryService();
   const discountCalculation = new DiscountCalculationService();
-  const billOfflineCalculationService = new BillOfflineCalculationService(
-    discountLibrary,
-    billLibrary,
-    discountCalculation,
-  );
+  const billOfflineCalculationService = new BillOfflineCalculationService(discountLibrary, billLibrary, discountCalculation);
 
-  return billOfflineCalculationService.getOfflineOrderBill(
-    order,
-    restFee,
-    coupon_info,
-    order_bill,
-    rest_round_off,
-    country_code
-  );
+  return billOfflineCalculationService.getOfflineOrderBill(order, restFee, coupon_info, order_bill, offlinePlatform, rest_round_off, country_code);
 }

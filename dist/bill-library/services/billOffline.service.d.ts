@@ -15,6 +15,6 @@ export declare class BillOfflineCalculationService {
         status: number;
         message: string;
     };
-    getOfflineCartBill(cart: any, restFee: any, rest_round_off: any, country_code?: string): BillResponseInterface;
-    getOfflineOrderBill(order: any, restFee: any, couponInfo: any, orderBill: any, rest_round_off: any, country_code?: string): BillResponseInterface;
+    getOfflineCartBill(cart: any, restFee: any, offlinePlatform: any, platform: string, rest_round_off: any, country_code?: string): BillResponseInterface;
+    getOfflineOrderBill(order: any, restFee: any, couponInfo: any, orderBill: any, offlinePlatform: any, rest_round_off: any, country_code?: string): BillResponseInterface;
 }

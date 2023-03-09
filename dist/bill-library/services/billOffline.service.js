@@ -75,13 +75,23 @@ class BillOfflineCalculationService {
         }
         return { status: flag, message: message };
     }
-    getOfflineCartBill(cart, restFee, rest_round_off, country_code = 'MY') {
+    getOfflineCartBill(cart, restFee, offlinePlatform, platform = 'easyeat', rest_round_off, country_code = 'MY') {
         const { cart_items, order_type, skip_service_charge_operation, skip_packaging_charge_operation } = cart;
         const itemInfo = (0, common_function_lib_1.getCartItemInfo)(cart_items, order_type);
         let restCharges = (0, common_function_lib_1.getTransformedRestaurantCharges)(restFee, order_type);
         const discountInfo = this.discountCalculationService.getDiscountFromCart(cart, itemInfo);
+        let packagingChargeDisabled = false;
+        if (platform && platform != 'easyeat' && offlinePlatform && Array.isArray(offlinePlatform) && offlinePlatform.length) {
+            packagingChargeDisabled = true;
+            for (const i in offlinePlatform) {
+                const platformSettings = offlinePlatform[i];
+                if (platformSettings['id'] == platform && platformSettings['pkg_applicable']) {
+                    packagingChargeDisabled = false;
+                }
+            }
+        }
         restCharges = restCharges.filter((charges) => {
-            if ((skip_packaging_charge_operation && charges.class === 'packaging_charge') || (skip_service_charge_operation && charges.class === 'service_tax')) {
+            if (((skip_packaging_charge_operation || packagingChargeDisabled) && charges.class === 'packaging_charge') || (skip_service_charge_operation && charges.class === 'service_tax')) {
                 return false;
             }
             else {
@@ -90,14 +100,24 @@ class BillOfflineCalculationService {
         });
         return this.getOrderBill(itemInfo, discountInfo, restCharges, rest_round_off, country_code);
     }
-    getOfflineOrderBill(order, restFee, couponInfo, orderBill, rest_round_off, country_code = 'MY') {
-        const { items, order_type, skip_service_charge_operation, skip_packaging_charge_operation } = order;
+    getOfflineOrderBill(order, restFee, couponInfo, orderBill, offlinePlatform, rest_round_off, country_code = 'MY') {
+        const { items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, platform } = order;
         const { fees } = orderBill;
         const itemInfo = (0, common_function_lib_1.getOrderItemInfo)(items);
         let restCharges = (0, common_function_lib_1.getTransformedRestaurantCharges)(restFee, order_type);
         const discountInfo = this.discountCalculationService.getDiscountOnOrder(order, couponInfo, itemInfo);
+        let packagingChargeDisabled = false;
+        if (platform && platform != 'easyeat' && offlinePlatform && Array.isArray(offlinePlatform) && offlinePlatform.length) {
+            packagingChargeDisabled = true;
+            for (const i in offlinePlatform) {
+                const platformSettings = offlinePlatform[i];
+                if (platformSettings['id'] == platform && platformSettings['pkg_applicable']) {
+                    packagingChargeDisabled = false;
+                }
+            }
+        }
         restCharges = restCharges.filter((charges) => {
-            if ((skip_packaging_charge_operation && charges.class === 'packaging_charge') || (skip_service_charge_operation && charges.class === 'service_tax')) {
+            if (((skip_packaging_charge_operation || packagingChargeDisabled) && charges.class === 'packaging_charge') || (skip_service_charge_operation && charges.class === 'service_tax')) {
                 return false;
             }
             else {

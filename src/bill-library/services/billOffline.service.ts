@@ -74,13 +74,25 @@ export class BillOfflineCalculationService {
     return { status: flag, message: message };
   }
 
-  getOfflineCartBill(cart: any, restFee: any, rest_round_off, country_code = 'MY'): BillResponseInterface {
+  getOfflineCartBill(cart: any, restFee: any, offlinePlatform: any, platform = 'easyeat', rest_round_off, country_code = 'MY'): BillResponseInterface {
     const { cart_items, order_type, skip_service_charge_operation, skip_packaging_charge_operation } = cart;
     const itemInfo = getCartItemInfo(cart_items, order_type);
     let restCharges = getTransformedRestaurantCharges(restFee, order_type);
     const discountInfo = this.discountCalculationService.getDiscountFromCart(cart, itemInfo);
+
+    let packagingChargeDisabled = false;
+    if (platform && platform != 'easyeat' && offlinePlatform && Array.isArray(offlinePlatform) && offlinePlatform.length) {
+      packagingChargeDisabled = true;
+      for (const i in offlinePlatform) {
+        const platformSettings = offlinePlatform[i];
+        if (platformSettings['id'] == platform && platformSettings['pkg_applicable']) {
+          packagingChargeDisabled = false;
+        }
+      }
+    }
+
     restCharges = restCharges.filter((charges) => {
-      if ((skip_packaging_charge_operation && charges.class === 'packaging_charge') || (skip_service_charge_operation && charges.class === 'service_tax')) {
+      if (((skip_packaging_charge_operation || packagingChargeDisabled) && charges.class === 'packaging_charge') || (skip_service_charge_operation && charges.class === 'service_tax')) {
         return false;
       } else {
         return true;
@@ -90,15 +102,26 @@ export class BillOfflineCalculationService {
     return this.getOrderBill(itemInfo, discountInfo, restCharges, rest_round_off, country_code);
   }
 
-  getOfflineOrderBill(order: any, restFee: any, couponInfo: any, orderBill: any, rest_round_off, country_code = 'MY'): BillResponseInterface {
-    const { items, order_type, skip_service_charge_operation, skip_packaging_charge_operation } = order;
+  getOfflineOrderBill(order: any, restFee: any, couponInfo: any, orderBill: any, offlinePlatform: any, rest_round_off, country_code = 'MY'): BillResponseInterface {
+    const { items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, platform } = order;
     const { fees } = orderBill;
     const itemInfo = getOrderItemInfo(items);
     let restCharges = getTransformedRestaurantCharges(restFee, order_type);
     const discountInfo = this.discountCalculationService.getDiscountOnOrder(order, couponInfo, itemInfo);
 
+    let packagingChargeDisabled = false;
+    if (platform && platform != 'easyeat' && offlinePlatform && Array.isArray(offlinePlatform) && offlinePlatform.length) {
+      packagingChargeDisabled = true;
+      for (const i in offlinePlatform) {
+        const platformSettings = offlinePlatform[i];
+        if (platformSettings['id'] == platform && platformSettings['pkg_applicable']) {
+          packagingChargeDisabled = false;
+        }
+      }
+    }
+
     restCharges = restCharges.filter((charges) => {
-      if ((skip_packaging_charge_operation && charges.class === 'packaging_charge') || (skip_service_charge_operation && charges.class === 'service_tax')) {
+      if (((skip_packaging_charge_operation || packagingChargeDisabled) && charges.class === 'packaging_charge') || (skip_service_charge_operation && charges.class === 'service_tax')) {
         return false;
       } else {
         return true;
