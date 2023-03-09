@@ -9,4 +9,5 @@ export interface DiscountInterface {
     discountAction: DiscountAction;
     discountCategory: DiscountCategory;
     maxValue: number;
+    reason?: string;
 }

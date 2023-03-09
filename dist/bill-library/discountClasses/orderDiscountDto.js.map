@@ -1,1 +1,1 @@
-{"version":3,"file":"orderDiscountDto.js","sourceRoot":"","sources":["../../../src/bill-library/discountClasses/orderDiscountDto.ts"],"names":[],"mappings":";;;AAEA,MAAa,gBAAgB;CAO5B;AAPD,4CAOC;AAED,MAAa,qBAAqB;CAGjC;AAHD,sDAGC"}
+{"version":3,"file":"orderDiscountDto.js","sourceRoot":"","sources":["../../../src/bill-library/discountClasses/orderDiscountDto.ts"],"names":[],"mappings":";;;AAEA,MAAa,gBAAgB;CAQ5B;AARD,4CAQC;AAED,MAAa,qBAAqB;CAGjC;AAHD,sDAGC"}

@@ -13,6 +13,8 @@ export interface FeeObj {
   value: number;
   // value_text: string;
   id: string;
+
+  reason?: string;
 }
 
 export class DiscountFeeObj implements FeeObj {
@@ -21,4 +23,5 @@ export class DiscountFeeObj implements FeeObj {
   // value_text: string;
   id: string;
   discountCategory: DiscountCategory;
+  reason: string;
 }

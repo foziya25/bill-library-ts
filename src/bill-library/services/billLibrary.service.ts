@@ -1,23 +1,41 @@
-import { getCountryLanguage } from '../../enums/country.enum';
-import { localize } from '../../locale/i18n';
-import { getLocalizedData } from '../../utils/number-format';
-import { CartCalculationInfo, CartItemInfo } from '../baseClass/cartItemInfo';
-import { OrderCalculationInfo, OrderItemInfo } from '../baseClass/orderItemInfo';
-import { ApplicableCartResponseDto, ApplicableOrderResponseDto, CalculateCartChargeDto, CalculateOrderChargeDto } from '../baseClass/responseDto';
-import { CartDiscountDto } from '../discountClasses/cartDiscountDto';
-import { OrderDiscountDto } from '../discountClasses/orderDiscountDto';
-import { ChargeApplicableType, ChargeType } from '../enum/billLib.enum';
-import { DiscountAction, DiscountCategory } from '../enum/discountLib.enum';
-import { BillResponseInterface, DiscountFeeObj, FeeObj } from '../interfaces/billResponse.interface';
-import { ChargesInterface } from '../interfaces/charges.interface';
-import { getRoundOffValue } from '../lib/common.function.lib';
+import { getCountryLanguage } from "../../enums/country.enum";
+import { localize } from "../../locale/i18n";
+import { getLocalizedData } from "../../utils/number-format";
+import { CartCalculationInfo, CartItemInfo } from "../baseClass/cartItemInfo";
+import {
+  OrderCalculationInfo,
+  OrderItemInfo,
+} from "../baseClass/orderItemInfo";
+import {
+  ApplicableCartResponseDto,
+  ApplicableOrderResponseDto,
+  CalculateCartChargeDto,
+  CalculateOrderChargeDto,
+} from "../baseClass/responseDto";
+import { CartDiscountDto } from "../discountClasses/cartDiscountDto";
+import { OrderDiscountDto } from "../discountClasses/orderDiscountDto";
+import { ChargeApplicableType, ChargeType } from "../enum/billLib.enum";
+import { DiscountAction, DiscountCategory } from "../enum/discountLib.enum";
+import {
+  BillResponseInterface,
+  DiscountFeeObj,
+  FeeObj,
+} from "../interfaces/billResponse.interface";
+import { ChargesInterface } from "../interfaces/charges.interface";
+import { getRoundOffValue } from "../lib/common.function.lib";
 
 export class BillLibraryService {
-  getCartBill(cartItemInfo: CartItemInfo[], discountInfo: CartDiscountDto[], chargesInfo: ChargesInterface[], rest_round_off = 0.05, country_code): BillResponseInterface {
+  getCartBill(
+    cartItemInfo: CartItemInfo[],
+    discountInfo: CartDiscountDto[],
+    chargesInfo: ChargesInterface[],
+    rest_round_off = 0.05,
+    country_code
+  ): BillResponseInterface {
     const response: BillResponseInterface = {
       fees: [],
       bill_total: 0,
-      message: 'Bill generated',
+      message: "Bill generated",
       status: 1,
       // bill_total_text: '0',
     };
@@ -25,10 +43,10 @@ export class BillLibraryService {
     const cartCalculationInfo: CartCalculationInfo[] = [];
     // Item total fee object calculation
     const itemTotalFeeObj: FeeObj = {
-      name: 'Item Total',
+      name: "Item Total",
       value: 0,
       // value_text: '0',
-      id: 'item_total',
+      id: "item_total",
     };
 
     cartItemInfo.forEach((item) => {
@@ -53,12 +71,15 @@ export class BillLibraryService {
         // value_text: discount.discountValue.toFixed(2),
         id: discount.id,
         discountCategory: discount.discountCategory,
+        reason: discount.reason,
       };
       if (discount.discountCategory === DiscountCategory.TOP_UP) {
         effectiveTotal += discount.discountValue;
         if (effectiveTotal > 0) {
           discount.itemDiscountInfo.forEach((itemDiscount) => {
-            const discountItem = cartCalculationInfo.find((item) => item.cartItemId === itemDiscount.cartItemId);
+            const discountItem = cartCalculationInfo.find(
+              (item) => item.cartItemId === itemDiscount.cartItemId
+            );
             if (discountItem) {
               discountItem.appliedDiscount += itemDiscount.itemDiscountValue;
             }
@@ -77,13 +98,19 @@ export class BillLibraryService {
           // value_text: discount.discountValue.toFixed(2),
           id: discount.id,
           discountCategory: discount.discountCategory,
+          reason: discount.reason,
         };
         if (discount.discountCategory === DiscountCategory.ITEM_LEVEL) {
           effectiveTotal += discount.discountValue;
           discount.itemDiscountInfo.forEach((itemDiscount) => {
-            const discountItem = cartCalculationInfo.find((item) => item.cartItemId === itemDiscount.cartItemId);
+            const discountItem = cartCalculationInfo.find(
+              (item) => item.cartItemId === itemDiscount.cartItemId
+            );
             if (discountItem) {
-              if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
+              if (
+                discountItem.effectivePrice + discountItem.appliedDiscount >
+                0
+              ) {
                 discountItem.appliedDiscount += itemDiscount.itemDiscountValue;
               }
             }
@@ -102,25 +129,43 @@ export class BillLibraryService {
           // value_text: discount.discountValue.toFixed(2),
           id: discount.id,
           discountCategory: discount.discountCategory,
+          reason: discount.reason,
         };
-        if (discount.discountCategory !== DiscountCategory.ITEM_LEVEL && discount.discountCategory !== DiscountCategory.TOP_UP && discount.discountAction !== DiscountAction.FREE_DELIVERY) {
+        if (
+          discount.discountCategory !== DiscountCategory.ITEM_LEVEL &&
+          discount.discountCategory !== DiscountCategory.TOP_UP &&
+          discount.discountAction !== DiscountAction.FREE_DELIVERY
+        ) {
           if (effectiveTotal >= -1 * discount.discountValue) {
             effectiveTotal += discount.discountValue;
             let tempTotal = 0;
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = cartCalculationInfo.find((item) => item.cartItemId === itemDiscount.cartItemId);
+              const discountItem = cartCalculationInfo.find(
+                (item) => item.cartItemId === itemDiscount.cartItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
-                  tempTotal += discountItem.effectivePrice + discountItem.appliedDiscount;
+                if (
+                  discountItem.effectivePrice + discountItem.appliedDiscount >
+                  0
+                ) {
+                  tempTotal +=
+                    discountItem.effectivePrice + discountItem.appliedDiscount;
                 }
               }
             });
 
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = cartCalculationInfo.find((item) => item.cartItemId === itemDiscount.cartItemId);
+              const discountItem = cartCalculationInfo.find(
+                (item) => item.cartItemId === itemDiscount.cartItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
-                  const propDiscount = (discountItem.effectivePrice * discount.discountValue) / tempTotal;
+                if (
+                  discountItem.effectivePrice + discountItem.appliedDiscount >
+                  0
+                ) {
+                  const propDiscount =
+                    (discountItem.effectivePrice * discount.discountValue) /
+                    tempTotal;
                   discountItem.appliedDiscount += propDiscount;
                 }
               }
@@ -130,19 +175,31 @@ export class BillLibraryService {
           } else {
             let tempTotal = 0;
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = cartCalculationInfo.find((item) => item.cartItemId === itemDiscount.cartItemId);
+              const discountItem = cartCalculationInfo.find(
+                (item) => item.cartItemId === itemDiscount.cartItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
-                  tempTotal += discountItem.effectivePrice + discountItem.appliedDiscount;
+                if (
+                  discountItem.effectivePrice + discountItem.appliedDiscount >
+                  0
+                ) {
+                  tempTotal +=
+                    discountItem.effectivePrice + discountItem.appliedDiscount;
                 }
               }
             });
 
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = cartCalculationInfo.find((item) => item.cartItemId === itemDiscount.cartItemId);
+              const discountItem = cartCalculationInfo.find(
+                (item) => item.cartItemId === itemDiscount.cartItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
-                  const propDiscount = (discountItem.effectivePrice * effectiveTotal) / tempTotal;
+                if (
+                  discountItem.effectivePrice + discountItem.appliedDiscount >
+                  0
+                ) {
+                  const propDiscount =
+                    (discountItem.effectivePrice * effectiveTotal) / tempTotal;
                   discountItem.appliedDiscount -= propDiscount;
                 }
               }
@@ -162,12 +219,18 @@ export class BillLibraryService {
     let deliveryCharge = 0;
     const chargesList: FeeObj[] = [];
     chargesInfo.forEach((charge) => {
-      const applicableResponse = this.findApplicableCartItemTotal(charge, cartCalculationInfo);
+      const applicableResponse = this.findApplicableCartItemTotal(
+        charge,
+        cartCalculationInfo
+      );
 
       if (applicableResponse.status) {
-        const chargeResponse = this.calculateCartChargeAmount(charge, applicableResponse);
+        const chargeResponse = this.calculateCartChargeAmount(
+          charge,
+          applicableResponse
+        );
         if (chargeResponse.status) {
-          if (charge.class === 'DeliveryFee') {
+          if (charge.class === "DeliveryFee") {
             deliveryCharge = 1;
           }
           chargesList.push(chargeResponse.chargeFee);
@@ -177,7 +240,10 @@ export class BillLibraryService {
     // add Free Delivery discount
     if (deliveryCharge) {
       const freeDeliveryDiscount = discountInfo.find((disc) => {
-        if (disc.discountCategory === DiscountCategory.COUPON && disc.discountAction === DiscountAction.FREE_DELIVERY) {
+        if (
+          disc.discountCategory === DiscountCategory.COUPON &&
+          disc.discountAction === DiscountAction.FREE_DELIVERY
+        ) {
           return true;
         }
       });
@@ -191,11 +257,14 @@ export class BillLibraryService {
           // value_text: freeDeliveryDiscount.discountValue.toFixed(2),
           id: freeDeliveryDiscount.id,
           discountCategory: freeDeliveryDiscount.discountCategory,
+          reason: "delivery",
         };
         discountFeesArray.push(discountFee);
       }
     }
-    response.fees.push(...this.mergeItemAndMerchantDiscount(discountFeesArray, country_code));
+    response.fees.push(
+      ...this.mergeItemAndMerchantDiscount(discountFeesArray, country_code)
+    );
     response.fees.push(...chargesList);
 
     const sub_total = this.calculateBillTotal(response);
@@ -206,10 +275,10 @@ export class BillLibraryService {
 
     if (round_off_diff && Number(round_off_diff.toFixed(2))) {
       response.fees.push({
-        name: 'Round Off',
+        name: "Round Off",
         value: Number(round_off_diff.toFixed(2)),
         // value_text: Number(round_off_diff).toFixed(2),
-        id: 'round_off',
+        id: "round_off",
       });
       response.bill_total = this.calculateBillTotal(response);
     } else {
@@ -219,11 +288,17 @@ export class BillLibraryService {
     return response;
   }
 
-  getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: OrderDiscountDto[], chargesInfo: ChargesInterface[], rest_round_off = 0.05, country_code = 'MY'): BillResponseInterface {
+  getOrderBill(
+    orderItemInfo: OrderItemInfo[],
+    discountInfo: OrderDiscountDto[],
+    chargesInfo: ChargesInterface[],
+    rest_round_off = 0.05,
+    country_code = "MY"
+  ): BillResponseInterface {
     let response: BillResponseInterface = {
       fees: [],
       bill_total: 0,
-      message: 'Bill generated',
+      message: "Bill generated",
       status: 1,
       // bill_total_text: '0',
     };
@@ -233,10 +308,10 @@ export class BillLibraryService {
 
     // Item total fee object calculation
     const itemTotalFeeObj: FeeObj = {
-      name: localize('itemTotal', language),
+      name: localize("itemTotal", language),
       value: 0,
       // value_text: '0',
-      id: 'item_total',
+      id: "item_total",
     };
     orderItemInfo.forEach((item) => {
       const orderCalculationObj = new OrderCalculationInfo();
@@ -260,12 +335,15 @@ export class BillLibraryService {
         // value_text: discount.discountValue.toFixed(2),
         id: discount.id,
         discountCategory: discount.discountCategory,
+        reason: discount.reason,
       };
       if (discount.discountCategory === DiscountCategory.TOP_UP) {
         effectiveTotal += discount.discountValue;
         if (effectiveTotal > 0) {
           discount.itemDiscountInfo.forEach((itemDiscount) => {
-            const discountItem = orderCalculationInfo.find((item) => item.orderItemId === itemDiscount.orderItemId);
+            const discountItem = orderCalculationInfo.find(
+              (item) => item.orderItemId === itemDiscount.orderItemId
+            );
             if (discountItem) {
               discountItem.appliedDiscount += itemDiscount.itemDiscountValue;
             }
@@ -284,13 +362,19 @@ export class BillLibraryService {
           // value_text: discount.discountValue.toFixed(2),
           id: discount.id,
           discountCategory: discount.discountCategory,
+          reason: discount.reason,
         };
         if (discount.discountCategory === DiscountCategory.ITEM_LEVEL) {
           effectiveTotal += discount.discountValue;
           discount.itemDiscountInfo.forEach((itemDiscount) => {
-            const discountItem = orderCalculationInfo.find((item) => item.orderItemId === itemDiscount.orderItemId);
+            const discountItem = orderCalculationInfo.find(
+              (item) => item.orderItemId === itemDiscount.orderItemId
+            );
             if (discountItem) {
-              if (discountItem.effectivePrice + itemDiscount.itemDiscountValue >= 0) {
+              if (
+                discountItem.effectivePrice + itemDiscount.itemDiscountValue >=
+                0
+              ) {
                 discountItem.appliedDiscount += itemDiscount.itemDiscountValue;
               }
             }
@@ -309,25 +393,47 @@ export class BillLibraryService {
           // value_text: discount.discountValue.toFixed(2),
           id: discount.id,
           discountCategory: discount.discountCategory,
+          reason: discount.reason,
         };
-        if (discount.discountCategory !== DiscountCategory.ITEM_LEVEL && discount.discountCategory !== DiscountCategory.TOP_UP && discount.discountAction !== DiscountAction.FREE_DELIVERY) {
+        if (
+          discount.discountCategory !== DiscountCategory.ITEM_LEVEL &&
+          discount.discountCategory !== DiscountCategory.TOP_UP &&
+          discount.discountAction !== DiscountAction.FREE_DELIVERY
+        ) {
           if (effectiveTotal >= -1 * discount.discountValue) {
             effectiveTotal += discount.discountValue;
             let tempTotal = 0;
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = orderCalculationInfo.find((item) => item.orderItemId === itemDiscount.orderItemId);
+              const discountItem = orderCalculationInfo.find(
+                (item) => item.orderItemId === itemDiscount.orderItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + itemDiscount.itemDiscountValue >= 0) {
-                  tempTotal += discountItem.effectivePrice + discountItem.appliedDiscount;
+                if (
+                  discountItem.effectivePrice +
+                    itemDiscount.itemDiscountValue >=
+                  0
+                ) {
+                  tempTotal +=
+                    discountItem.effectivePrice + discountItem.appliedDiscount;
                 }
               }
             });
 
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = orderCalculationInfo.find((item) => item.orderItemId === itemDiscount.orderItemId);
+              const discountItem = orderCalculationInfo.find(
+                (item) => item.orderItemId === itemDiscount.orderItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + itemDiscount.itemDiscountValue >= 0) {
-                  const propDiscount = ((discountItem.effectivePrice + discountItem.appliedDiscount) * discount.discountValue) / tempTotal;
+                if (
+                  discountItem.effectivePrice +
+                    itemDiscount.itemDiscountValue >=
+                  0
+                ) {
+                  const propDiscount =
+                    ((discountItem.effectivePrice +
+                      discountItem.appliedDiscount) *
+                      discount.discountValue) /
+                    tempTotal;
                   discountItem.appliedDiscount += propDiscount;
                 }
               }
@@ -336,19 +442,34 @@ export class BillLibraryService {
           } else {
             let tempTotal = 0;
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = orderCalculationInfo.find((item) => item.orderItemId === itemDiscount.orderItemId);
+              const discountItem = orderCalculationInfo.find(
+                (item) => item.orderItemId === itemDiscount.orderItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
-                  tempTotal += discountItem.effectivePrice + discountItem.appliedDiscount;
+                if (
+                  discountItem.effectivePrice + discountItem.appliedDiscount >
+                  0
+                ) {
+                  tempTotal +=
+                    discountItem.effectivePrice + discountItem.appliedDiscount;
                 }
               }
             });
 
             discount.itemDiscountInfo.forEach((itemDiscount) => {
-              const discountItem = orderCalculationInfo.find((item) => item.orderItemId === itemDiscount.orderItemId);
+              const discountItem = orderCalculationInfo.find(
+                (item) => item.orderItemId === itemDiscount.orderItemId
+              );
               if (discountItem) {
-                if (discountItem.effectivePrice + discountItem.appliedDiscount > 0) {
-                  const propDiscount = ((discountItem.effectivePrice + discountItem.appliedDiscount) * effectiveTotal) / tempTotal;
+                if (
+                  discountItem.effectivePrice + discountItem.appliedDiscount >
+                  0
+                ) {
+                  const propDiscount =
+                    ((discountItem.effectivePrice +
+                      discountItem.appliedDiscount) *
+                      effectiveTotal) /
+                    tempTotal;
                   discountItem.appliedDiscount -= propDiscount;
                 }
               }
@@ -368,12 +489,19 @@ export class BillLibraryService {
     let deliveryCharge = 0;
     const chargesList: FeeObj[] = [];
     chargesInfo.forEach((charge) => {
-      const applicableResponse = this.findApplicableOrderItemTotal(charge, orderCalculationInfo, discountInfo);
+      const applicableResponse = this.findApplicableOrderItemTotal(
+        charge,
+        orderCalculationInfo,
+        discountInfo
+      );
 
       if (applicableResponse.status) {
-        const chargeResponse = this.calculateOrderChargeAmount(charge, applicableResponse);
+        const chargeResponse = this.calculateOrderChargeAmount(
+          charge,
+          applicableResponse
+        );
         if (chargeResponse.status) {
-          if (charge.class === 'DeliveryFee') {
+          if (charge.class === "DeliveryFee") {
             deliveryCharge = charge.chargeValue;
           }
           if (chargeResponse.chargeFee.value > 0) {
@@ -386,7 +514,10 @@ export class BillLibraryService {
     // add Free Delivery discount
     if (deliveryCharge) {
       const freeDeliveryDiscount = discountInfo.find((disc) => {
-        if (disc.discountCategory === DiscountCategory.COUPON && disc.discountAction === DiscountAction.FREE_DELIVERY) {
+        if (
+          disc.discountCategory === DiscountCategory.COUPON &&
+          disc.discountAction === DiscountAction.FREE_DELIVERY
+        ) {
           return true;
         }
       });
@@ -400,11 +531,14 @@ export class BillLibraryService {
           // value_text: freeDeliveryDiscount.discountValue.toFixed(2),
           id: freeDeliveryDiscount.id,
           discountCategory: freeDeliveryDiscount.discountCategory,
+          reason: "delivery",
         };
         discountFeesArray.push(discountFee);
       }
     }
-    response.fees.push(...this.mergeItemAndMerchantDiscount(discountFeesArray, country_code));
+    response.fees.push(
+      ...this.mergeItemAndMerchantDiscount(discountFeesArray, country_code)
+    );
     response.fees.push(...chargesList);
 
     const sub_total = this.calculateBillTotal(response);
@@ -415,22 +549,31 @@ export class BillLibraryService {
 
     if (round_off_diff && Number(round_off_diff.toFixed(2))) {
       response.fees.push({
-        name: localize('roundOff', language),
+        name: localize("roundOff", language),
         value: Number(round_off_diff.toFixed(2)),
         // value_text: Number(round_off_diff).toFixed(2),
-        id: 'round_off',
+        id: "round_off",
       });
       response.bill_total = this.calculateBillTotal(response);
     } else {
       response.bill_total = sub_total;
     }
-    const quantity_keys_to_format = ['value', 'bill_total'];
+    const quantity_keys_to_format = ["value", "bill_total"];
     // response.bill_total_text = response.bill_total.toFixed(2);
-    response = getLocalizedData(response, '', country_code, [], quantity_keys_to_format);
+    response = getLocalizedData(
+      response,
+      "",
+      country_code,
+      [],
+      quantity_keys_to_format
+    );
     return response;
   }
 
-  calculateCartChargeAmount(charge: ChargesInterface, applicableResponse: ApplicableCartResponseDto): CalculateCartChargeDto {
+  calculateCartChargeAmount(
+    charge: ChargesInterface,
+    applicableResponse: ApplicableCartResponseDto
+  ): CalculateCartChargeDto {
     const response: CalculateCartChargeDto = {
       status: 0,
       chargeFee: null,
@@ -449,7 +592,9 @@ export class BillLibraryService {
         response.status = 1;
         break;
       case ChargeType.PERCENTAGE:
-        chargeFee.value = Number(((itemTotalWithDiscount * chargeValue) / 100).toFixed(2));
+        chargeFee.value = Number(
+          ((itemTotalWithDiscount * chargeValue) / 100).toFixed(2)
+        );
         response.status = 1;
         break;
       default:
@@ -461,7 +606,10 @@ export class BillLibraryService {
     return response;
   }
 
-  calculateOrderChargeAmount(charge: ChargesInterface, applicableResponse: ApplicableOrderResponseDto): CalculateOrderChargeDto {
+  calculateOrderChargeAmount(
+    charge: ChargesInterface,
+    applicableResponse: ApplicableOrderResponseDto
+  ): CalculateOrderChargeDto {
     const response: CalculateOrderChargeDto = {
       status: 0,
       chargeFee: null,
@@ -493,7 +641,10 @@ export class BillLibraryService {
     return response;
   }
 
-  findApplicableCartItemTotal(charge: ChargesInterface, cartItemInfo: CartCalculationInfo[]): ApplicableCartResponseDto {
+  findApplicableCartItemTotal(
+    charge: ChargesInterface,
+    cartItemInfo: CartCalculationInfo[]
+  ): ApplicableCartResponseDto {
     const response: ApplicableCartResponseDto = {
       itemTotalWithDiscount: 0,
       cartItemList: [],
@@ -517,7 +668,9 @@ export class BillLibraryService {
         break;
       case ChargeApplicableType.SUB_CATEGORY:
         cartItemInfo.forEach((item) => {
-          const subCatId = applicableOn.find((subCatId) => subCatId === item.subcategoryId);
+          const subCatId = applicableOn.find(
+            (subCatId) => subCatId === item.subcategoryId
+          );
           if (subCatId) {
             const effectivePrice = item.effectivePrice + item.appliedDiscount;
             if (effectivePrice > 0) {
@@ -529,7 +682,7 @@ export class BillLibraryService {
         break;
       case ChargeApplicableType.OVER_ALL:
         cartItemInfo.forEach((item) => {
-          if (className === 'DeliveryCharge') {
+          if (className === "DeliveryCharge") {
             response.itemTotalWithDiscount += item.effectivePrice;
             response.cartItemList.push(item.cartItemId);
           } else {
@@ -550,7 +703,11 @@ export class BillLibraryService {
     return response;
   }
 
-  findApplicableOrderItemTotal(charge: ChargesInterface, orderItemInfo: OrderCalculationInfo[], discountInfo: OrderDiscountDto[]): ApplicableOrderResponseDto {
+  findApplicableOrderItemTotal(
+    charge: ChargesInterface,
+    orderItemInfo: OrderCalculationInfo[],
+    discountInfo: OrderDiscountDto[]
+  ): ApplicableOrderResponseDto {
     const response: ApplicableOrderResponseDto = {
       itemTotalWithDiscount: 0,
       orderItemList: [],
@@ -581,7 +738,9 @@ export class BillLibraryService {
         break;
       case ChargeApplicableType.SUB_CATEGORY:
         orderItemInfo.forEach((item) => {
-          const subCatId = applicableOn.find((subCatId) => subCatId === item.subcategoryId);
+          const subCatId = applicableOn.find(
+            (subCatId) => subCatId === item.subcategoryId
+          );
           if (subCatId) {
             const effectivePrice = item.effectivePrice;
             if (effectivePrice > 0) {
@@ -598,7 +757,7 @@ export class BillLibraryService {
         break;
       case ChargeApplicableType.OVER_ALL:
         orderItemInfo.forEach((item) => {
-          if (className === 'DeliveryCharge') {
+          if (className === "DeliveryCharge") {
             response.itemTotalWithDiscount += item.effectivePrice;
             response.orderItemList.push(item.orderItemId);
           } else {
@@ -633,51 +792,84 @@ export class BillLibraryService {
     return total;
   }
 
-  mergeItemAndMerchantDiscount(discountFeesArray: DiscountFeeObj[], country_code): FeeObj[] {
+  mergeItemAndMerchantDiscount(
+    discountFeesArray: DiscountFeeObj[],
+    country_code
+  ): FeeObj[] {
     const response: FeeObj[] = [];
     const language = getCountryLanguage(country_code);
     const itemLevel = {
       status: 0,
       value: 0,
-      name: localize('itemLevel', language),
+      name: localize("itemLevel", language),
+      reason: "",
     };
+    let itemLevelCount = 0;
+    let isTopUp = 0;
     discountFeesArray.forEach((discount) => {
       if (discount.discountCategory === DiscountCategory.ITEM_LEVEL) {
         itemLevel.value += discount.value;
         itemLevel.status = 1;
+        itemLevelCount++;
+        if (itemLevelCount == 1) {
+          itemLevel.reason = discount.reason;
+        } else {
+          itemLevel.reason = localize("itemLevel", language);
+        }
       }
     });
 
     const discountItemMerchant: FeeObj = {
-      name: '',
+      name: "",
       value: 0,
       // value_text: '',
-      id: 'coupon_discount',
+      id: "coupon_discount",
+      reason: "",
     };
     let flag = 0;
     if (itemLevel.status) {
       discountItemMerchant.value = itemLevel.value;
-      discountItemMerchant.name = '(' + itemLevel.name;
+      discountItemMerchant.name = "(" + '"' + itemLevel.reason + '"';
       flag = 1;
+      discountItemMerchant.reason = itemLevel.reason;
     }
     discountFeesArray.forEach((discount) => {
       if (discount.discountCategory === DiscountCategory.MERCHANT) {
-        discount.name = localize('byRestaurant', language);
+        if (discount.reason) {
+          discount.name = '"' + discount.reason + '"';
+        } else {
+          discount.name = '"' + localize("byRestaurant", language) + '"';
+          discount.reason = localize("byRestaurant", language);
+        }
         discountItemMerchant.value += discount.value;
         if (flag) {
-          discountItemMerchant.name = discountItemMerchant.name + ',' + discount.name;
+          discountItemMerchant.name =
+            discountItemMerchant.name + "," + discount.name;
+          discountItemMerchant.reason =
+            discount.reason + "," + discountItemMerchant.reason;
         } else {
-          discountItemMerchant.name = '(' + discount.name;
+          discountItemMerchant.name = "(" + discount.name;
           flag = 1;
+          discountItemMerchant.reason = discount.reason;
         }
       } else if (discount.discountCategory === DiscountCategory.TOP_UP) {
-        discount.name = localize('byRestaurant', language);
+        isTopUp = 1;
+        if (discount.reason) {
+          discount.name = '"' + discount.reason + '"';
+        } else {
+          discount.name = '"' + localize("byRestaurant", language) + '"';
+          discount.reason = localize("byRestaurant", language);
+        }
         discountItemMerchant.value += discount.value;
         if (flag) {
-          discountItemMerchant.name = discountItemMerchant.name + ',' + discount.name;
+          discountItemMerchant.name =
+            discountItemMerchant.name + "," + discount.name;
+          discountItemMerchant.reason =
+            discount.reason + "," + discountItemMerchant.reason;
         } else {
-          discountItemMerchant.name = '(' + discount.name;
+          discountItemMerchant.name = "(" + discount.name;
           flag = 1;
+          discountItemMerchant.reason = discount.reason;
         }
       } else if (discount.discountCategory != DiscountCategory.ITEM_LEVEL) {
         delete discount.discountCategory;
@@ -688,7 +880,12 @@ export class BillLibraryService {
     });
 
     if (flag) {
-      discountItemMerchant.name = discountItemMerchant.name + ')';
+      if (isTopUp) {
+        discountItemMerchant.name = "TopUp" + discountItemMerchant.name + ")";
+      } else {
+        discountItemMerchant.name =
+          "Discount" + discountItemMerchant.name + ")";
+      }
       // discountItemMerchant.value_text = discountItemMerchant.value.toFixed(2);
       if (discountItemMerchant.value != 0) {
         response.push(discountItemMerchant);

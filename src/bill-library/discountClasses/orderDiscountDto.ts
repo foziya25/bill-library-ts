@@ -7,6 +7,7 @@ export class OrderDiscountDto {
   id: string;
   discountCategory: DiscountCategory;
   discountAction: DiscountAction;
+  reason: string;
 }
 
 export class OrderItemDiscountInfo {

@@ -1,9 +1,5 @@
 import { OrderItemInfo } from '../baseClass/orderItemInfo';
-import {
-  DiscountAction,
-  DiscountCategory,
-  DiscountType,
-} from '../enum/discountLib.enum';
+import { DiscountAction, DiscountCategory, DiscountType } from '../enum/discountLib.enum';
 
 export class SaveDiscountObjDto {
   type: DiscountCategory;
@@ -42,6 +38,7 @@ export class GetMerchantDiscountInterfaceDto {
   type: DiscountAction;
   value: number;
   discountType: DiscountType;
+  reason: string;
 }
 
 export class GetItemLevelDiscountInterfaceDto {
@@ -51,4 +48,5 @@ export class GetItemLevelDiscountInterfaceDto {
   quantity: number;
   discountType: DiscountType;
   orderItemId: string;
+  reason: string;
 }

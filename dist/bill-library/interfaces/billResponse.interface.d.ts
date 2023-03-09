@@ -9,10 +9,12 @@ export interface FeeObj {
     name: string;
     value: number;
     id: string;
+    reason?: string;
 }
 export declare class DiscountFeeObj implements FeeObj {
     name: string;
     value: number;
     id: string;
     discountCategory: DiscountCategory;
+    reason: string;
 }

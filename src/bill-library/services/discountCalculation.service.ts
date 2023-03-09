@@ -22,6 +22,7 @@ export class DiscountCalculationService {
               type: discountMData.type,
               value: discountMData.value,
               discountType: discountMData.discountType,
+              reason: discountMData.reason,
             };
             const merchantInterface = this.getMerchantDiscountInterface(getMerchantDiscountInterfaceDto);
             if (merchantInterface) {
@@ -38,6 +39,7 @@ export class DiscountCalculationService {
               itemInfo: itemInfo,
               quantity: discountILData.quantity,
               orderItemId: discountILData.orderItemId,
+              reason: discountILData.reason,
             };
             const itemLevelInterface = this.getItemLevelDiscountInterface(getItemLevelDiscountInterfaceDto);
             if (itemLevelInterface) {
@@ -137,6 +139,7 @@ export class DiscountCalculationService {
               type: discountMData.type,
               value: discountMData.value,
               discountType: discountMData.discountType,
+              reason: discountMData.reason,
             };
             const merchantInterface = this.getMerchantDiscountInterface(getMerchantDiscountInterfaceDto);
             if (merchantInterface) {
@@ -153,6 +156,7 @@ export class DiscountCalculationService {
               itemInfo: itemInfo,
               quantity: discountILData.quantity,
               orderItemId: discountILData.orderItemId,
+              reason: discountILData.reason,
             };
             const itemLevelInterface = this.getItemLevelDiscountInterface(getItemLevelDiscountInterfaceDto);
             if (itemLevelInterface) {
@@ -460,7 +464,7 @@ export class DiscountCalculationService {
   }
 
   getMerchantDiscountInterface(getMerchantDiscountInterfaceDto: GetMerchantDiscountInterfaceDto): DiscountInterface {
-    const { type, value, discountType, id } = getMerchantDiscountInterfaceDto;
+    const { type, value, discountType, id, reason } = getMerchantDiscountInterfaceDto;
     const discountInterfaceObj: DiscountInterface = {
       name: 'Merchant',
       discountType: discountType,
@@ -471,6 +475,7 @@ export class DiscountCalculationService {
       discountAction: null,
       discountCategory: null,
       maxValue: null,
+      reason: reason,
     };
     if (type === DiscountAction.NORMAL) {
       discountInterfaceObj.discountAction = DiscountAction.NORMAL;
@@ -483,7 +488,7 @@ export class DiscountCalculationService {
   }
 
   getItemLevelDiscountInterface(getItemLevelDiscountInterfaceDto: GetItemLevelDiscountInterfaceDto): DiscountInterface {
-    const { value, discountType, id, orderItemId, itemInfo } = getItemLevelDiscountInterfaceDto;
+    const { value, discountType, id, orderItemId, itemInfo, reason } = getItemLevelDiscountInterfaceDto;
     let { quantity } = getItemLevelDiscountInterfaceDto;
     const itemData = itemInfo.find((item) => {
       if (item.orderItemId === orderItemId) {
@@ -512,6 +517,7 @@ export class DiscountCalculationService {
         discountAction: DiscountAction.NORMAL,
         discountCategory: DiscountCategory.ITEM_LEVEL,
         maxValue: null,
+        reason: reason,
       };
       return discountInterfaceObj;
     }

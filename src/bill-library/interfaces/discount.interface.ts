@@ -1,9 +1,4 @@
-import {
-  DiscountAction,
-  DiscountApplicableType,
-  DiscountCategory,
-  DiscountType,
-} from '../enum/discountLib.enum';
+import { DiscountAction, DiscountApplicableType, DiscountCategory, DiscountType } from '../enum/discountLib.enum';
 
 export interface DiscountInterface {
   name: string;
@@ -15,4 +10,5 @@ export interface DiscountInterface {
   discountAction: DiscountAction;
   discountCategory: DiscountCategory;
   maxValue: number;
+  reason?: string;
 }

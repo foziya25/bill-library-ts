@@ -6,6 +6,7 @@ export declare class CartDiscountDto {
     id: string;
     discountCategory: DiscountCategory;
     discountAction: DiscountAction;
+    reason: string;
 }
 export declare class CartItemDiscountInfo {
     cartItemId: string;

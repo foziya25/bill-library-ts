@@ -33,6 +33,7 @@ export declare class GetMerchantDiscountInterfaceDto {
     type: DiscountAction;
     value: number;
     discountType: DiscountType;
+    reason: string;
 }
 export declare class GetItemLevelDiscountInterfaceDto {
     itemInfo: OrderItemInfo[];
@@ -41,4 +42,5 @@ export declare class GetItemLevelDiscountInterfaceDto {
     quantity: number;
     discountType: DiscountType;
     orderItemId: string;
+    reason: string;
 }

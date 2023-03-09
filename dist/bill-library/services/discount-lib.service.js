@@ -14,6 +14,7 @@ class DiscountLibService {
                     id: discount.id,
                     discountCategory: discount.discountCategory,
                     discountAction: discount.discountAction,
+                    reason: discount.reason,
                 };
                 cartItemInfo.forEach((item) => {
                     const isApplicable = this.isDiscountApplicableOnCartItem(discount, item);
@@ -64,6 +65,7 @@ class DiscountLibService {
                     id: discount.id,
                     discountCategory: discount.discountCategory,
                     discountAction: discount.discountAction,
+                    reason: discount.reason,
                 };
                 orderItemInfo.forEach((item) => {
                     const isApplicable = this.isDiscountApplicableOnOrderItem(discount, item);
@@ -140,10 +142,7 @@ class DiscountLibService {
                 break;
         }
         discountDto.itemDiscountInfo.forEach((itemInfo) => {
-            itemInfo.itemDiscountValue =
-                -1 *
-                    (itemInfo.itemDiscountValue / itemTotal) *
-                    discountDto.discountValue;
+            itemInfo.itemDiscountValue = -1 * (itemInfo.itemDiscountValue / itemTotal) * discountDto.discountValue;
         });
         discountDto.discountValue = discountDto.discountValue * -1;
         return discountDto;
@@ -167,8 +166,7 @@ class DiscountLibService {
                 break;
         }
         discountDto.itemDiscountInfo.forEach((itemInfo) => {
-            itemInfo.itemDiscountValue =
-                (itemInfo.itemDiscountValue / itemTotal) * discountDto.discountValue;
+            itemInfo.itemDiscountValue = (itemInfo.itemDiscountValue / itemTotal) * discountDto.discountValue;
         });
         return discountDto;
     }
@@ -209,10 +207,7 @@ class DiscountLibService {
                 break;
         }
         discountDto.itemDiscountInfo.forEach((itemInfo) => {
-            itemInfo.itemDiscountValue =
-                -1 *
-                    (itemInfo.itemDiscountValue / itemTotal) *
-                    discountDto.discountValue;
+            itemInfo.itemDiscountValue = -1 * (itemInfo.itemDiscountValue / itemTotal) * discountDto.discountValue;
         });
         discountDto.discountValue = discountDto.discountValue * -1;
         return discountDto;
@@ -236,8 +231,7 @@ class DiscountLibService {
                 break;
         }
         discountDto.itemDiscountInfo.forEach((itemInfo) => {
-            itemInfo.itemDiscountValue =
-                (itemInfo.itemDiscountValue / itemTotal) * discountDto.discountValue;
+            itemInfo.itemDiscountValue = (itemInfo.itemDiscountValue / itemTotal) * discountDto.discountValue;
         });
         return discountDto;
     }
