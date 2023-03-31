@@ -4,14 +4,14 @@ exports.getCartItemTotal = exports.getTransformedRestaurantCharges = exports.get
 const calculateAddonVariantPrice = (itemInfo) => {
     let totalPrice = 0;
     if (itemInfo.addons) {
-        itemInfo.addons.forEach((addon) => {
+        itemInfo.addons.forEach(addon => {
             totalPrice += addon.price * addon.quantity;
         });
     }
     if (itemInfo.variants) {
-        itemInfo.variants.forEach((variations) => {
+        itemInfo.variants.forEach(variations => {
             if (variations.options) {
-                variations.options.forEach((option) => {
+                variations.options.forEach(option => {
                     totalPrice += option.price;
                 });
             }
@@ -42,7 +42,7 @@ function getCartItemInfo(items, orderType) {
     const cartItemInfo = [];
     const priceKey = getPriceKeyByOrderType(orderType);
     if (items && items.length) {
-        items.forEach((item) => {
+        items.forEach(item => {
             const { addons, new_variation } = item;
             const cartItemInfoObj = {
                 addons: [],
@@ -55,7 +55,7 @@ function getCartItemInfo(items, orderType) {
                 orderItemId: item.cart_item_id,
             };
             if (addons && addons.length) {
-                addons.forEach((addon) => {
+                addons.forEach(addon => {
                     const addonInfo = {
                         id: addon.id,
                         price: addon.price,
@@ -73,7 +73,7 @@ exports.getCartItemInfo = getCartItemInfo;
 function getOrderItemInfo(items) {
     const orderItemInfo = [];
     if (items && items.length) {
-        items.forEach((item) => {
+        items.forEach(item => {
             const { addons, new_variation } = item;
             const orderItemInfoObj = {
                 addons: [],
@@ -86,7 +86,7 @@ function getOrderItemInfo(items) {
                 orderItemId: item.order_item_id,
             };
             if (addons && addons.length) {
-                addons.forEach((addon) => {
+                addons.forEach(addon => {
                     const addonInfo = {
                         id: addon.id,
                         price: addon.price,
@@ -104,10 +104,10 @@ exports.getOrderItemInfo = getOrderItemInfo;
 function getTransformedRestaurantCharges(charges, order_type) {
     const chargesList = [];
     if (charges && charges.length) {
-        charges.forEach((charge) => {
+        charges.forEach(charge => {
             const { order_type: applicableOrderType } = charge;
             if (charge.status && charge.id !== 'delivery') {
-                const applicable = applicableOrderType.find((ot) => {
+                const applicable = applicableOrderType.find(ot => {
                     if (ot === order_type) {
                         return true;
                     }
@@ -126,7 +126,8 @@ function getTransformedRestaurantCharges(charges, order_type) {
                         subName: charge.sub_name,
                     };
                     if (restCharge.chargeType == "percentage") {
-                        restCharge.name = restCharge.name + ' @' + restCharge.chargeValue + '%';
+                        restCharge.name =
+                            restCharge.name + ' @' + restCharge.chargeValue + '%';
                     }
                     chargesList.push(restCharge);
                 }
@@ -160,7 +161,7 @@ function getApplicableOnInfo(applicableOn, applicableSubcat) {
 }
 function getCartItemTotal(itemInfo) {
     let itemTotal = 0;
-    itemInfo.forEach((item) => {
+    itemInfo.forEach(item => {
         itemTotal += item.price * item.quantity;
     });
     return itemTotal;

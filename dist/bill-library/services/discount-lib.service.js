@@ -6,7 +6,7 @@ class DiscountLibService {
     applyDiscountOnCart(cartItemInfo, discountInfo) {
         const appliedDiscountResponse = [];
         if (discountInfo) {
-            discountInfo.forEach((discount) => {
+            discountInfo.forEach(discount => {
                 let discountDto = {
                     itemDiscountInfo: [],
                     discountValue: 0,
@@ -16,7 +16,7 @@ class DiscountLibService {
                     discountAction: discount.discountAction,
                     reason: discount.reason,
                 };
-                cartItemInfo.forEach((item) => {
+                cartItemInfo.forEach(item => {
                     const isApplicable = this.isDiscountApplicableOnCartItem(discount, item);
                     if (isApplicable.status == 1) {
                         const additionalPrice = (0, common_function_lib_1.calculateAddonVariantPrice)(item);
@@ -57,7 +57,7 @@ class DiscountLibService {
     applyDiscountOnOrder(orderItemInfo, discountInfo) {
         const appliedDiscountResponse = [];
         if (discountInfo) {
-            discountInfo.forEach((discount) => {
+            discountInfo.forEach(discount => {
                 let discountDto = {
                     itemDiscountInfo: [],
                     discountValue: 0,
@@ -67,7 +67,7 @@ class DiscountLibService {
                     discountAction: discount.discountAction,
                     reason: discount.reason,
                 };
-                orderItemInfo.forEach((item) => {
+                orderItemInfo.forEach(item => {
                     const isApplicable = this.isDiscountApplicableOnOrderItem(discount, item);
                     if (isApplicable.status == 1) {
                         const itemDiscountInfo = {
@@ -108,7 +108,7 @@ class DiscountLibService {
     calculateCartProportionalDiscount(discount, discountDto) {
         const { discountType, value, maxValue } = discount;
         let itemTotal = 0;
-        discountDto.itemDiscountInfo.forEach((itemInfo) => {
+        discountDto.itemDiscountInfo.forEach(itemInfo => {
             itemTotal += itemInfo.itemDiscountValue;
         });
         switch (discountType) {
@@ -141,8 +141,11 @@ class DiscountLibService {
                 discountDto.discountValue = 0;
                 break;
         }
-        discountDto.itemDiscountInfo.forEach((itemInfo) => {
-            itemInfo.itemDiscountValue = -1 * (itemInfo.itemDiscountValue / itemTotal) * discountDto.discountValue;
+        discountDto.itemDiscountInfo.forEach(itemInfo => {
+            itemInfo.itemDiscountValue =
+                -1 *
+                    (itemInfo.itemDiscountValue / itemTotal) *
+                    discountDto.discountValue;
         });
         discountDto.discountValue = discountDto.discountValue * -1;
         return discountDto;
@@ -150,7 +153,7 @@ class DiscountLibService {
     calculateCartTopUpProportionalDiscount(discount, discountDto) {
         const { discountType, value, maxValue } = discount;
         let itemTotal = 0;
-        discountDto.itemDiscountInfo.forEach((itemInfo) => {
+        discountDto.itemDiscountInfo.forEach(itemInfo => {
             itemTotal += itemInfo.itemDiscountValue;
         });
         switch (discountType) {
@@ -165,15 +168,16 @@ class DiscountLibService {
                 discountDto.discountValue = 0;
                 break;
         }
-        discountDto.itemDiscountInfo.forEach((itemInfo) => {
-            itemInfo.itemDiscountValue = (itemInfo.itemDiscountValue / itemTotal) * discountDto.discountValue;
+        discountDto.itemDiscountInfo.forEach(itemInfo => {
+            itemInfo.itemDiscountValue =
+                (itemInfo.itemDiscountValue / itemTotal) * discountDto.discountValue;
         });
         return discountDto;
     }
     calculateOrderProportionalDiscount(discount, discountDto) {
         const { discountType, value, maxValue } = discount;
         let itemTotal = 0;
-        discountDto.itemDiscountInfo.forEach((itemInfo) => {
+        discountDto.itemDiscountInfo.forEach(itemInfo => {
             itemTotal += itemInfo.itemDiscountValue;
         });
         switch (discountType) {
@@ -206,8 +210,11 @@ class DiscountLibService {
                 discountDto.discountValue = 0;
                 break;
         }
-        discountDto.itemDiscountInfo.forEach((itemInfo) => {
-            itemInfo.itemDiscountValue = -1 * (itemInfo.itemDiscountValue / itemTotal) * discountDto.discountValue;
+        discountDto.itemDiscountInfo.forEach(itemInfo => {
+            itemInfo.itemDiscountValue =
+                -1 *
+                    (itemInfo.itemDiscountValue / itemTotal) *
+                    discountDto.discountValue;
         });
         discountDto.discountValue = discountDto.discountValue * -1;
         return discountDto;
@@ -215,7 +222,7 @@ class DiscountLibService {
     calculateOrderTopUpProportionalDiscount(discount, discountDto) {
         const { discountType, value, maxValue } = discount;
         let itemTotal = 0;
-        discountDto.itemDiscountInfo.forEach((itemInfo) => {
+        discountDto.itemDiscountInfo.forEach(itemInfo => {
             itemTotal += itemInfo.itemDiscountValue;
         });
         switch (discountType) {
@@ -230,8 +237,9 @@ class DiscountLibService {
                 discountDto.discountValue = 0;
                 break;
         }
-        discountDto.itemDiscountInfo.forEach((itemInfo) => {
-            itemInfo.itemDiscountValue = (itemInfo.itemDiscountValue / itemTotal) * discountDto.discountValue;
+        discountDto.itemDiscountInfo.forEach(itemInfo => {
+            itemInfo.itemDiscountValue =
+                (itemInfo.itemDiscountValue / itemTotal) * discountDto.discountValue;
         });
         return discountDto;
     }
@@ -250,7 +258,7 @@ class DiscountLibService {
                 break;
         }
         discountDto.discountValue = discountDto.discountValue * -1;
-        discountDto.itemDiscountInfo.forEach((itemInfo) => {
+        discountDto.itemDiscountInfo.forEach(itemInfo => {
             itemInfo.itemDiscountValue = 0;
         });
         return discountDto;
@@ -270,7 +278,7 @@ class DiscountLibService {
                 break;
         }
         discountDto.discountValue = discountDto.discountValue * -1;
-        discountDto.itemDiscountInfo.forEach((itemInfo) => {
+        discountDto.itemDiscountInfo.forEach(itemInfo => {
             itemInfo.itemDiscountValue = 0;
         });
         return discountDto;
@@ -280,25 +288,25 @@ class DiscountLibService {
         const { applicableOn, discountApplicableType } = discount;
         switch (discountApplicableType) {
             case "item":
-                const itemId = applicableOn.find((ids) => ids === cartItemInfo.itemId);
+                const itemId = applicableOn.find(ids => ids === cartItemInfo.itemId);
                 if (itemId) {
                     response.status = 1;
                 }
                 break;
             case "category":
-                const categoryId = applicableOn.find((ids) => ids === cartItemInfo.categoryId);
+                const categoryId = applicableOn.find(ids => ids === cartItemInfo.categoryId);
                 if (categoryId) {
                     response.status = 1;
                 }
                 break;
             case "subCategory":
-                const subCategoryId = applicableOn.find((ids) => ids === cartItemInfo.subcategoryId);
+                const subCategoryId = applicableOn.find(ids => ids === cartItemInfo.subcategoryId);
                 if (subCategoryId) {
                     response.status = 1;
                 }
                 break;
             case "cartItemId":
-                const cartItemId = applicableOn.find((ids) => ids === cartItemInfo.cartItemId);
+                const cartItemId = applicableOn.find(ids => ids === cartItemInfo.cartItemId);
                 if (cartItemId) {
                     response.status = 1;
                 }
@@ -316,25 +324,25 @@ class DiscountLibService {
         const { applicableOn, discountApplicableType } = discount;
         switch (discountApplicableType) {
             case "item":
-                const itemId = applicableOn.find((ids) => ids === orderItemInfo.itemId);
+                const itemId = applicableOn.find(ids => ids === orderItemInfo.itemId);
                 if (itemId) {
                     response.status = 1;
                 }
                 break;
             case "category":
-                const categoryId = applicableOn.find((ids) => ids === orderItemInfo.categoryId);
+                const categoryId = applicableOn.find(ids => ids === orderItemInfo.categoryId);
                 if (categoryId) {
                     response.status = 1;
                 }
                 break;
             case "subCategory":
-                const subCategoryId = applicableOn.find((ids) => ids === orderItemInfo.subcategoryId);
+                const subCategoryId = applicableOn.find(ids => ids === orderItemInfo.subcategoryId);
                 if (subCategoryId) {
                     response.status = 1;
                 }
                 break;
             case "orderItemId":
-                const orderItemId = applicableOn.find((ids) => ids === orderItemInfo.orderItemId);
+                const orderItemId = applicableOn.find(ids => ids === orderItemInfo.orderItemId);
                 if (orderItemId) {
                     response.status = 1;
                 }

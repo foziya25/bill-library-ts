@@ -76,7 +76,7 @@ class DiscountCalculationService {
             }
             discountInfo.push(mDiscountObj);
         }
-        cart_items.forEach((item) => {
+        cart_items.forEach(item => {
             const { item_discount } = item;
             if (item_discount) {
                 const { value, type, reason, qty } = item_discount;
@@ -93,10 +93,12 @@ class DiscountCalculationService {
                     },
                 };
                 if (type === 'percent') {
-                    itemLevelDiscountObj.info.discountData.discountType = "percentage";
+                    itemLevelDiscountObj.info.discountData.discountType =
+                        "percentage";
                 }
                 else if (type === 'fixed') {
-                    itemLevelDiscountObj.info.discountData.discountType = "fixed";
+                    itemLevelDiscountObj.info.discountData.discountType =
+                        "fixed";
                 }
                 discountInfo.push(itemLevelDiscountObj);
             }
@@ -219,7 +221,7 @@ class DiscountCalculationService {
             }
             discountInfo.push(mDiscountObj);
         }
-        items.forEach((item) => {
+        items.forEach(item => {
             const { item_discount } = item;
             if (item_discount) {
                 const { value, type, reason, qty } = item_discount;
@@ -236,10 +238,12 @@ class DiscountCalculationService {
                     },
                 };
                 if (type === 'percent') {
-                    itemLevelDiscountObj.info.discountData.discountType = "percentage";
+                    itemLevelDiscountObj.info.discountData.discountType =
+                        "percentage";
                 }
                 else if (type === 'fixed') {
-                    itemLevelDiscountObj.info.discountData.discountType = "fixed";
+                    itemLevelDiscountObj.info.discountData.discountType =
+                        "fixed";
                 }
                 discountInfo.push(itemLevelDiscountObj);
             }
@@ -260,7 +264,7 @@ class DiscountCalculationService {
     }
     getFPOFdDiscountFromOrder(getCouponInfoDto) {
         const { couponInfoDto, coupon_id, itemInfo } = getCouponInfoDto;
-        const { applicableOn, applicableType, maxValue, minAmount, name, discountType } = couponInfoDto;
+        const { applicableOn, applicableType, maxValue, minAmount, name, discountType, } = couponInfoDto;
         let { value } = couponInfoDto;
         const itemTotal = (0, common_function_lib_1.getCartItemTotal)(itemInfo);
         if (itemTotal <= minAmount) {
@@ -304,7 +308,7 @@ class DiscountCalculationService {
     }
     getBxGyDiscountFromOrder(getCouponInfoDto) {
         const { couponInfoDto, coupon_id, itemInfo } = getCouponInfoDto;
-        const { applicableOn, applicableType, applicableDType, maxValue, minAmount, name } = couponInfoDto;
+        const { applicableOn, applicableType, applicableDType, maxValue, minAmount, name, } = couponInfoDto;
         const itemTotal = (0, common_function_lib_1.getCartItemTotal)(itemInfo);
         if (itemTotal <= minAmount) {
             return null;
@@ -375,7 +379,7 @@ class DiscountCalculationService {
             status: false,
             discountValue: 0,
         };
-        const { requiredList, applicableOn, applicableQuantity, applicableType, discountType, applicableDType, maxValue } = coupon_info;
+        const { requiredList, applicableOn, applicableQuantity, applicableType, discountType, applicableDType, maxValue, } = coupon_info;
         let applicableDValue = coupon_info.applicableDValue;
         if (applicableType === 0) {
             return response;
@@ -432,7 +436,8 @@ class DiscountCalculationService {
                             if (applicableDValue > 100) {
                                 applicableDValue = 100;
                             }
-                            let percentageValue = (applicableDValue * appliedItem.price * applicableQuantity) / 100;
+                            let percentageValue = (applicableDValue * appliedItem.price * applicableQuantity) /
+                                100;
                             if (percentageValue > maxValue) {
                                 percentageValue = maxValue;
                             }
@@ -475,7 +480,7 @@ class DiscountCalculationService {
     getItemLevelDiscountInterface(getItemLevelDiscountInterfaceDto) {
         const { value, discountType, id, orderItemId, itemInfo, reason } = getItemLevelDiscountInterfaceDto;
         let { quantity } = getItemLevelDiscountInterfaceDto;
-        const itemData = itemInfo.find((item) => {
+        const itemData = itemInfo.find(item => {
             if (item.orderItemId === orderItemId) {
                 return true;
             }

@@ -20,22 +20,25 @@ export const CountryMapping = {
 };
 
 export const countries = (): any => {
-  return Object.values(CountryMapping).map((e) => e.country);
+  return Object.values(CountryMapping).map(e => e.country);
 };
 
 export const countryCodes = (): any => {
-  return Object.values(CountryMapping).map((e) => e.country_code);
+  return Object.values(CountryMapping).map(e => e.country_code);
 };
 
 export const currencyCodes = (): any => {
-  return Object.values(CountryMapping).map((e) => e.currency_code);
+  return Object.values(CountryMapping).map(e => e.currency_code);
 };
 
 export const currencySymbols = (): any => {
-  return Object.values(CountryMapping).map((e) => e.currency_symbol);
+  return Object.values(CountryMapping).map(e => e.currency_symbol);
 };
 
-export const getCountryDetails = (sub_key: string, value: string): Record<any, any> => {
+export const getCountryDetails = (
+  sub_key: string,
+  value: string,
+): Record<any, any> => {
   let country_details = {};
   for (const key of Object.keys(CountryMapping)) {
     if (CountryMapping[key][sub_key] === value) {
@@ -66,7 +69,7 @@ export const getLocaleForCountry = (countryKey: string): any => {
   return locale;
 };
 
-export const getCountryLanguage = (countryCode) => {
+export const getCountryLanguage = countryCode => {
   let language = CountryMapping.MALAYSIA.language;
   if (countryCode == CountryMapping.INDONESIA.country_code) {
     language = CountryMapping.INDONESIA.language;

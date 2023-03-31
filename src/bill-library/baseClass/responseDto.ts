@@ -1,4 +1,4 @@
-import { FeeObj } from '../interfaces/billResponse.interface';
+import {FeeObj} from '../interfaces/billResponse.interface';
 
 export class ApplicableCartResponseDto {
   status: number;

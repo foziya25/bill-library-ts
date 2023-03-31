@@ -1,4 +1,4 @@
-import { CountryMapping } from '../enums/country.enum';
+import {CountryMapping} from '../enums/country.enum';
 import * as enKeys from '../locale/en.json';
 import * as idKeys from '../locale/id.json';
 

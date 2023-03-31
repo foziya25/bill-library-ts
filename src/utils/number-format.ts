@@ -1,4 +1,8 @@
-import { CountryMapping, getCountryDetails, getLocaleForCountry } from '../enums/country.enum';
+import {
+  CountryMapping,
+  getCountryDetails,
+  getLocaleForCountry,
+} from '../enums/country.enum';
 
 /**
  * It takes a number and a country, and returns the number formatted according to the country's conventions
@@ -6,7 +10,10 @@ import { CountryMapping, getCountryDetails, getLocaleForCountry } from '../enums
  * @param {string} country - The country for which you want to format the number.
  * @returns - Formatted number in string if input is a number or can be converted to a number. Else returns the input itself.
  */
-export const getInternationalizedNumber = (number: any | number, country: string): any => {
+export const getInternationalizedNumber = (
+  number: any | number,
+  country: string,
+): any => {
   if (isNaN(number)) {
     return number;
   }
@@ -22,7 +29,10 @@ export const getInternationalizedNumber = (number: any | number, country: string
  * @param {string} country - The country code for the country you want to format the number for.
  * @returns - Formatted number in string if input is a number or can be converted to a number. Else returns the input itself.
  */
-export const getInternationalizedQuantity = (number: any | number, country: string): any => {
+export const getInternationalizedQuantity = (
+  number: any | number,
+  country: string,
+): any => {
   if (isNaN(number)) {
     return number;
   }
@@ -86,8 +96,15 @@ const localizeData = (
   let res = JSON.parse(JSON.stringify(data));
   try {
     // Localise all elements in array with only numbers
-    if (data && Array.isArray(data) && data.length > 0 && isNumberOnlyArray(data)) {
-      if (isLocalizable(key_to_format, include_list, quantity_list, exclude_list)) {
+    if (
+      data &&
+      Array.isArray(data) &&
+      data.length > 0 &&
+      isNumberOnlyArray(data)
+    ) {
+      if (
+        isLocalizable(key_to_format, include_list, quantity_list, exclude_list)
+      ) {
         const arraySize = data.length;
         for (let i = 0; i < arraySize; i++) {
           res[i] = localizeData(
@@ -114,7 +131,8 @@ const localizeData = (
           }
         } else if (
           typeof value === 'number' ||
-          (!['null', 'undefined', ''].includes(String(value)) && !isNaN(Number(value)))
+          (!['null', 'undefined', ''].includes(String(value)) &&
+            !isNaN(Number(value)))
         ) {
           if (isLocalizable(key, include_list, quantity_list, exclude_list)) {
             new_key = key + (key_suffix ? key_suffix : '_text');
@@ -134,9 +152,12 @@ const localizeData = (
       }
     } else if (
       typeof data === 'number' ||
-      (!['null', 'undefined', ''].includes(String(data)) && !isNaN(Number(data)))
+      (!['null', 'undefined', ''].includes(String(data)) &&
+        !isNaN(Number(data)))
     ) {
-      if (isLocalizable(key_to_format, include_list, quantity_list, exclude_list)) {
+      if (
+        isLocalizable(key_to_format, include_list, quantity_list, exclude_list)
+      ) {
         try {
           if (quantity_list.includes(key_to_format)) {
             res = getQuantityFormatter(locale).format(Number(data));
@@ -156,7 +177,7 @@ const localizeData = (
  * @returns true
  */
 function isNumberOnlyArray(data: Array<any>) {
-  return !data.some((element) => isNaN(element));
+  return !data.some(element => isNaN(element));
 }
 
 /* Check whether the key is localizable */
@@ -201,11 +222,16 @@ const isLocalizable = (
  * @returns A function that returns a formatter based on the locale.
  */
 const getNumberFormatter = (locale: string): any => {
-  const malaysiaFormatter = new Intl.NumberFormat(CountryMapping.MALAYSIA.locale, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-  const indonesiaFormatter = new Intl.NumberFormat(CountryMapping.INDONESIA.locale);
+  const malaysiaFormatter = new Intl.NumberFormat(
+    CountryMapping.MALAYSIA.locale,
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    },
+  );
+  const indonesiaFormatter = new Intl.NumberFormat(
+    CountryMapping.INDONESIA.locale,
+  );
 
   if (typeof locale === 'string' && locale.trim() != '') {
     if (locale === CountryMapping.INDONESIA.locale) {
@@ -221,8 +247,12 @@ const getNumberFormatter = (locale: string): any => {
  * @returns A function that returns a number formatter.
  */
 const getQuantityFormatter = (locale: string): any => {
-  const malaysiaFormatter = new Intl.NumberFormat(CountryMapping.MALAYSIA.locale);
-  const indonesiaFormatter = new Intl.NumberFormat(CountryMapping.INDONESIA.locale);
+  const malaysiaFormatter = new Intl.NumberFormat(
+    CountryMapping.MALAYSIA.locale,
+  );
+  const indonesiaFormatter = new Intl.NumberFormat(
+    CountryMapping.INDONESIA.locale,
+  );
 
   if (typeof locale === 'string' && locale.trim() != '') {
     if (locale === CountryMapping.INDONESIA.locale) {
@@ -239,13 +269,19 @@ const getQuantityFormatter = (locale: string): any => {
  * @param {string} country - The country name or country code.
  * @returns The current locale is being returned.
  */
-function getCurrentLocale(locale: string, current_locale: string, country: string) {
+function getCurrentLocale(
+  locale: string,
+  current_locale: string,
+  country: string,
+) {
   if (typeof locale === 'string' && locale.trim() != '') {
     current_locale = locale.trim();
   } else if (typeof country === 'string' && country.trim() != '') {
     if (country.length === 2) {
       const country_details = getCountryDetails('country_code', country.trim());
-      current_locale = country_details['locale'] ? country_details['locale'] : current_locale;
+      current_locale = country_details['locale']
+        ? country_details['locale']
+        : current_locale;
     } else {
       current_locale = getLocaleForCountry(country.trim());
     }

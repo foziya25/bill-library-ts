@@ -1,21 +1,21 @@
-import { OrderItemInfo } from '../baseClass/orderItemInfo';
-import { ChargeApplicableType, ChargeType } from '../enum/billLib.enum';
-import { ChargesInterface } from '../interfaces/charges.interface';
-import { Addons, ItemInfo } from '../interfaces/itemInfo.interface';
+import {OrderItemInfo} from '../baseClass/orderItemInfo';
+import {ChargeApplicableType, ChargeType} from '../enum/billLib.enum';
+import {ChargesInterface} from '../interfaces/charges.interface';
+import {Addons, ItemInfo} from '../interfaces/itemInfo.interface';
 
 export const calculateAddonVariantPrice = (itemInfo: ItemInfo): number => {
   let totalPrice = 0;
 
   if (itemInfo.addons) {
-    itemInfo.addons.forEach((addon) => {
+    itemInfo.addons.forEach(addon => {
       totalPrice += addon.price * addon.quantity;
     });
   }
 
   if (itemInfo.variants) {
-    itemInfo.variants.forEach((variations) => {
+    itemInfo.variants.forEach(variations => {
       if (variations.options) {
-        variations.options.forEach((option) => {
+        variations.options.forEach(option => {
           totalPrice += option.price;
         });
       }
@@ -46,14 +46,17 @@ function getPriceKeyByOrderType(orderType: number): string {
   }
 }
 
-export function getCartItemInfo(items: Array<any>, orderType: number): OrderItemInfo[] {
+export function getCartItemInfo(
+  items: Array<any>,
+  orderType: number,
+): OrderItemInfo[] {
   const cartItemInfo: OrderItemInfo[] = [];
   /* Getting the price key from the order type. */
   const priceKey = getPriceKeyByOrderType(orderType);
   if (items && items.length) {
-    items.forEach((item) => {
+    items.forEach(item => {
       /* Destructuring the object. */
-      const { addons, new_variation } = item;
+      const {addons, new_variation} = item;
       /* Creating an object of type OrderItemInfo. */
       const cartItemInfoObj: OrderItemInfo = {
         addons: [],
@@ -70,7 +73,7 @@ export function getCartItemInfo(items: Array<any>, orderType: number): OrderItem
       if (addons && addons.length) {
         /* Iterating over the addons array and pushing the addonInfo object into the
         cartItemInfoObj.addons array. */
-        addons.forEach((addon) => {
+        addons.forEach(addon => {
           const addonInfo: Addons = {
             id: addon.id,
             price: addon.price,
@@ -114,8 +117,8 @@ export function getCartItemInfo(items: Array<any>, orderType: number): OrderItem
 export function getOrderItemInfo(items): OrderItemInfo[] {
   const orderItemInfo: OrderItemInfo[] = [];
   if (items && items.length) {
-    items.forEach((item) => {
-      const { addons, new_variation } = item;
+    items.forEach(item => {
+      const {addons, new_variation} = item;
       const orderItemInfoObj: OrderItemInfo = {
         addons: [],
         variants: [],
@@ -129,7 +132,7 @@ export function getOrderItemInfo(items): OrderItemInfo[] {
 
       // transforming addons
       if (addons && addons.length) {
-        addons.forEach((addon) => {
+        addons.forEach(addon => {
           const addonInfo: Addons = {
             id: addon.id,
             price: addon.price,
@@ -169,20 +172,26 @@ export function getOrderItemInfo(items): OrderItemInfo[] {
   return orderItemInfo;
 }
 
-export function getTransformedRestaurantCharges(charges: any[], order_type: number): ChargesInterface[] {
+export function getTransformedRestaurantCharges(
+  charges: any[],
+  order_type: number,
+): ChargesInterface[] {
   const chargesList: ChargesInterface[] = [];
   if (charges && charges.length) {
-    charges.forEach((charge) => {
-      const { order_type: applicableOrderType } = charge;
+    charges.forEach(charge => {
+      const {order_type: applicableOrderType} = charge;
       if (charge.status && charge.id !== 'delivery') {
-        const applicable = applicableOrderType.find((ot) => {
+        const applicable = applicableOrderType.find(ot => {
           if (ot === order_type) {
             return true;
           }
         });
         if (applicable != undefined) {
           const chargeInfo = getChargesTypeAndValue(charge.type, charge.data);
-          const applicableInfo = getApplicableOnInfo(charge.applicable_on, charge.applicable_subcat);
+          const applicableInfo = getApplicableOnInfo(
+            charge.applicable_on,
+            charge.applicable_subcat,
+          );
           const restCharge: ChargesInterface = {
             chargeType: chargeInfo.type,
             chargeValue: chargeInfo.value,
@@ -194,7 +203,8 @@ export function getTransformedRestaurantCharges(charges: any[], order_type: numb
             subName: charge.sub_name,
           };
           if (restCharge.chargeType == ChargeType.PERCENTAGE) {
-            restCharge.name = restCharge.name + ' @' + restCharge.chargeValue + '%';
+            restCharge.name =
+              restCharge.name + ' @' + restCharge.chargeValue + '%';
           }
           chargesList.push(restCharge);
         }
@@ -204,16 +214,22 @@ export function getTransformedRestaurantCharges(charges: any[], order_type: numb
   return chargesList;
 }
 
-function getChargesTypeAndValue(chargeType: string, data: any): { type: ChargeType; value: number } {
+function getChargesTypeAndValue(
+  chargeType: string,
+  data: any,
+): {type: ChargeType; value: number} {
   switch (chargeType) {
     case 'fixed':
-      return { type: ChargeType.FIXED, value: data.fixed_amount };
+      return {type: ChargeType.FIXED, value: data.fixed_amount};
     case 'percentage':
-      return { type: ChargeType.PERCENTAGE, value: data.percentage_amount };
+      return {type: ChargeType.PERCENTAGE, value: data.percentage_amount};
   }
 }
 
-function getApplicableOnInfo(applicableOn, applicableSubcat): { chargeApplicableType: ChargeApplicableType; applicableList: [] } {
+function getApplicableOnInfo(
+  applicableOn,
+  applicableSubcat,
+): {chargeApplicableType: ChargeApplicableType; applicableList: []} {
   if (applicableOn[0] === 'category') {
     return {
       chargeApplicableType: ChargeApplicableType.SUB_CATEGORY,
@@ -229,7 +245,7 @@ function getApplicableOnInfo(applicableOn, applicableSubcat): { chargeApplicable
 
 export function getCartItemTotal(itemInfo: OrderItemInfo[]): number {
   let itemTotal = 0;
-  itemInfo.forEach((item) => {
+  itemInfo.forEach(item => {
     itemTotal += item.price * item.quantity;
   });
   return itemTotal;

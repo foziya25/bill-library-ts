@@ -40,7 +40,10 @@ exports.getLocalizedData = getLocalizedData;
 const localizeData = (data, locale, key_to_format = '', include_list = [], quantity_list = [], exclude_list = [], key_suffix = '') => {
     let res = JSON.parse(JSON.stringify(data));
     try {
-        if (data && Array.isArray(data) && data.length > 0 && isNumberOnlyArray(data)) {
+        if (data &&
+            Array.isArray(data) &&
+            data.length > 0 &&
+            isNumberOnlyArray(data)) {
             if (isLocalizable(key_to_format, include_list, quantity_list, exclude_list)) {
                 const arraySize = data.length;
                 for (let i = 0; i < arraySize; i++) {
@@ -59,7 +62,8 @@ const localizeData = (data, locale, key_to_format = '', include_list = [], quant
                     }
                 }
                 else if (typeof value === 'number' ||
-                    (!['null', 'undefined', ''].includes(String(value)) && !isNaN(Number(value)))) {
+                    (!['null', 'undefined', ''].includes(String(value)) &&
+                        !isNaN(Number(value)))) {
                     if (isLocalizable(key, include_list, quantity_list, exclude_list)) {
                         new_key = key + (key_suffix ? key_suffix : '_text');
                         res[key] = Number(value);
@@ -69,7 +73,8 @@ const localizeData = (data, locale, key_to_format = '', include_list = [], quant
             }
         }
         else if (typeof data === 'number' ||
-            (!['null', 'undefined', ''].includes(String(data)) && !isNaN(Number(data)))) {
+            (!['null', 'undefined', ''].includes(String(data)) &&
+                !isNaN(Number(data)))) {
             if (isLocalizable(key_to_format, include_list, quantity_list, exclude_list)) {
                 try {
                     if (quantity_list.includes(key_to_format)) {
@@ -87,7 +92,7 @@ const localizeData = (data, locale, key_to_format = '', include_list = [], quant
     return res;
 };
 function isNumberOnlyArray(data) {
-    return !data.some((element) => isNaN(element));
+    return !data.some(element => isNaN(element));
 }
 const isLocalizable = (key, include_list, quantity_list, exclude_list) => {
     if ((Array.isArray(include_list) && include_list.length > 0) ||
@@ -144,7 +149,9 @@ function getCurrentLocale(locale, current_locale, country) {
     else if (typeof country === 'string' && country.trim() != '') {
         if (country.length === 2) {
             const country_details = (0, country_enum_1.getCountryDetails)('country_code', country.trim());
-            current_locale = country_details['locale'] ? country_details['locale'] : current_locale;
+            current_locale = country_details['locale']
+                ? country_details['locale']
+                : current_locale;
         }
         else {
             current_locale = (0, country_enum_1.getLocaleForCountry)(country.trim());

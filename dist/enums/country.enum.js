@@ -22,19 +22,19 @@ exports.CountryMapping = {
     },
 };
 const countries = () => {
-    return Object.values(exports.CountryMapping).map((e) => e.country);
+    return Object.values(exports.CountryMapping).map(e => e.country);
 };
 exports.countries = countries;
 const countryCodes = () => {
-    return Object.values(exports.CountryMapping).map((e) => e.country_code);
+    return Object.values(exports.CountryMapping).map(e => e.country_code);
 };
 exports.countryCodes = countryCodes;
 const currencyCodes = () => {
-    return Object.values(exports.CountryMapping).map((e) => e.currency_code);
+    return Object.values(exports.CountryMapping).map(e => e.currency_code);
 };
 exports.currencyCodes = currencyCodes;
 const currencySymbols = () => {
-    return Object.values(exports.CountryMapping).map((e) => e.currency_symbol);
+    return Object.values(exports.CountryMapping).map(e => e.currency_symbol);
 };
 exports.currencySymbols = currencySymbols;
 const getCountryDetails = (sub_key, value) => {
@@ -68,7 +68,7 @@ const getLocaleForCountry = (countryKey) => {
     return locale;
 };
 exports.getLocaleForCountry = getLocaleForCountry;
-const getCountryLanguage = (countryCode) => {
+const getCountryLanguage = countryCode => {
     let language = exports.CountryMapping.MALAYSIA.language;
     if (countryCode == exports.CountryMapping.INDONESIA.country_code) {
         language = exports.CountryMapping.INDONESIA.language;
