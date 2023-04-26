@@ -1,5 +1,7 @@
 import {OrderItemInfo} from '../baseClass/orderItemInfo';
+import {RoundOffObj} from '../baseClass/roundOff';
 import {ChargeApplicableType, ChargeType} from '../enum/billLib.enum';
+import {RoundOffMasks} from '../enum/common.enum';
 import {ChargesInterface} from '../interfaces/charges.interface';
 import {Addons, ItemInfo} from '../interfaces/itemInfo.interface';
 
@@ -26,14 +28,23 @@ export const calculateAddonVariantPrice = (itemInfo: ItemInfo): number => {
 };
 
 /* Get round off value around a base value */
-export const getRoundOffValue = (value: number, base: number): any => {
-  base = base > 0 ? base : 1;
-  // Smaller multiple
-  const a = parseInt((Number(value) / base).toString()) * base;
-  // Larger multiple
-  const b = a + base;
-  // Return of closest of two
-  return value - a >= b - value ? b : a;
+export const getRoundOffValue = (
+  value: number,
+  round_off: RoundOffObj,
+): any => {
+  if (round_off.roundOffClose) {
+    return value;
+  } else {
+    let base = round_off.baseRoundOff;
+    const roundUp = round_off.roundUp;
+    base = base > 0 ? base : 1;
+    // Smaller multiple
+    const a = parseInt((Number(value) / base).toString()) * base;
+    // Larger multiple
+    const b = a + base;
+    // Return of closest of two
+    return value - a >= b - value || (roundUp == true && value - a > 0) ? b : a;
+  }
 };
 
 function getPriceKeyByOrderType(orderType: number): string {
@@ -249,4 +260,17 @@ export function getCartItemTotal(itemInfo: OrderItemInfo[]): number {
     itemTotal += item.price * item.quantity;
   });
   return itemTotal;
+}
+
+export function getRoundOffDisableStatus(
+  order_type: number,
+  round_off_close: number,
+): boolean {
+  let response = false;
+  const orderTypeMask = RoundOffMasks[order_type];
+  if (round_off_close && orderTypeMask & order_type) {
+    response = true;
+  }
+
+  return response;
 }

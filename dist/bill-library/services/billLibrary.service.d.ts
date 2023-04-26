@@ -1,14 +1,15 @@
 import { CartCalculationInfo, CartItemInfo } from '../baseClass/cartItemInfo';
 import { OrderCalculationInfo, OrderItemInfo } from '../baseClass/orderItemInfo';
 import { ApplicableCartResponseDto, ApplicableOrderResponseDto, CalculateCartChargeDto, CalculateOrderChargeDto } from '../baseClass/responseDto';
+import { RoundOffObj } from '../baseClass/roundOff';
 import { CartDiscountDto } from '../discountClasses/cartDiscountDto';
 import { OrderDiscountDto } from '../discountClasses/orderDiscountDto';
 import { BillResponseInterface, DiscountFeeObj, FeeObj } from '../interfaces/billResponse.interface';
 import { ChargesInterface } from '../interfaces/charges.interface';
 export declare class BillLibraryService {
-    getCartBill(cartItemInfo: CartItemInfo[], discountInfo: CartDiscountDto[], chargesInfo: ChargesInterface[], rest_round_off: number, country_code: any): BillResponseInterface;
-    getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: OrderDiscountDto[], chargesInfo: ChargesInterface[], rest_round_off?: number, country_code?: string): BillResponseInterface;
-    getIndonesiaOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: OrderDiscountDto[], chargesInfo: ChargesInterface[], rest_round_off: number, country_code: string, taxAfterDiscount: any): BillResponseInterface;
+    getCartBill(cartItemInfo: CartItemInfo[], discountInfo: CartDiscountDto[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code: any): BillResponseInterface;
+    getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: OrderDiscountDto[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code?: string): BillResponseInterface;
+    getIndonesiaOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: OrderDiscountDto[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code: string, taxAfterDiscount: any): BillResponseInterface;
     calculateCartChargeAmount(charge: ChargesInterface, applicableResponse: ApplicableCartResponseDto): CalculateCartChargeDto;
     calculateOrderChargeAmount(charge: ChargesInterface, applicableResponse: ApplicableOrderResponseDto): CalculateOrderChargeDto;
     findApplicableCartItemTotal(charge: ChargesInterface, cartItemInfo: CartCalculationInfo[]): ApplicableCartResponseDto;

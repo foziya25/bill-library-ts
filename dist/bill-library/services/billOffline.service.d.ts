@@ -1,4 +1,5 @@
 import { OrderItemInfo } from '../baseClass/orderItemInfo';
+import { RoundOffObj } from '../baseClass/roundOff';
 import { BillResponseInterface } from '../interfaces/billResponse.interface';
 import { ChargesInterface } from '../interfaces/charges.interface';
 import { DiscountInterface } from '../interfaces/discount.interface';
@@ -10,14 +11,14 @@ export declare class BillOfflineCalculationService {
     private billLibrary;
     private discountCalculationService;
     constructor(discountLibrary: DiscountLibService, billLibrary: BillLibraryService, discountCalculationService: DiscountCalculationService);
-    getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[], chargesInfo: ChargesInterface[], rest_round_off?: number, country_code?: string): BillResponseInterface;
-    getIndonesiaOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[], chargesInfo: ChargesInterface[], rest_round_off: number, country_code: string, taxAfterDiscount: any): BillResponseInterface;
+    getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code?: string): BillResponseInterface;
+    getIndonesiaOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code: string, taxAfterDiscount: any): BillResponseInterface;
     validateDiscount(discountInfo: DiscountInterface[]): {
         status: number;
         message: string;
     };
-    getOfflineCartBill(cart: any, restFee: any, offlinePlatform: any, platform: string, rest_round_off: any, country_code?: string): BillResponseInterface;
-    getOfflineOrderBill(order: any, restFee: any, couponInfo: any, orderBill: any, offlinePlatform: any, rest_round_off: any, country_code?: string): BillResponseInterface;
-    getIndonesiaOfflineCartBill(cart: any, restFee: any, offlinePlatform: any, platform: string, rest_round_off: any, country_code: string, taxAfterDiscount: any): BillResponseInterface;
-    getIndonesiaOfflineOrderBill(order: any, restFee: any, couponInfo: any, orderBill: any, offlinePlatform: any, rest_round_off: any, country_code: string, taxAfterDiscount: any): BillResponseInterface;
+    getOfflineCartBill(cart: any, restFee: any, offlinePlatform: any, platform: string, round_off: RoundOffObj, country_code?: string): BillResponseInterface;
+    getOfflineOrderBill(order: any, restFee: any, couponInfo: any, orderBill: any, offlinePlatform: any, round_off: RoundOffObj, country_code?: string): BillResponseInterface;
+    getIndonesiaOfflineCartBill(cart: any, restFee: any, offlinePlatform: any, platform: string, round_off: RoundOffObj, country_code: string, taxAfterDiscount: any): BillResponseInterface;
+    getIndonesiaOfflineOrderBill(order: any, restFee: any, couponInfo: any, orderBill: any, offlinePlatform: any, round_off: RoundOffObj, country_code: string, taxAfterDiscount: any): BillResponseInterface;
 }

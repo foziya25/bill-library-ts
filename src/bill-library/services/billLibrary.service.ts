@@ -9,6 +9,7 @@ import {
   CalculateCartChargeDto,
   CalculateOrderChargeDto,
 } from '../baseClass/responseDto';
+import {RoundOffObj} from '../baseClass/roundOff';
 import {CartDiscountDto} from '../discountClasses/cartDiscountDto';
 import {OrderDiscountDto} from '../discountClasses/orderDiscountDto';
 import {ChargeApplicableType, ChargeType} from '../enum/billLib.enum';
@@ -26,7 +27,7 @@ export class BillLibraryService {
     cartItemInfo: CartItemInfo[],
     discountInfo: CartDiscountDto[],
     chargesInfo: ChargesInterface[],
-    rest_round_off = 0.05,
+    round_off: RoundOffObj,
     country_code,
   ): BillResponseInterface {
     const response: BillResponseInterface = {
@@ -267,7 +268,7 @@ export class BillLibraryService {
     const sub_total = this.calculateBillTotal(response);
 
     //round off calculations
-    const round_off_bill_total = getRoundOffValue(sub_total, rest_round_off);
+    const round_off_bill_total = getRoundOffValue(sub_total, round_off);
     const round_off_diff = round_off_bill_total - sub_total;
 
     if (round_off_diff && Number(round_off_diff.toFixed(2))) {
@@ -289,7 +290,7 @@ export class BillLibraryService {
     orderItemInfo: OrderItemInfo[],
     discountInfo: OrderDiscountDto[],
     chargesInfo: ChargesInterface[],
-    rest_round_off = 0.05,
+    round_off: RoundOffObj,
     country_code = 'MY',
   ): BillResponseInterface {
     let response: BillResponseInterface = {
@@ -541,7 +542,8 @@ export class BillLibraryService {
     const sub_total = this.calculateBillTotal(response);
 
     //round off calculations
-    const round_off_bill_total = getRoundOffValue(sub_total, rest_round_off);
+
+    const round_off_bill_total = getRoundOffValue(sub_total, round_off);
     const round_off_diff = round_off_bill_total - sub_total;
 
     if (round_off_diff && Number(round_off_diff.toFixed(2))) {
@@ -571,7 +573,7 @@ export class BillLibraryService {
     orderItemInfo: OrderItemInfo[],
     discountInfo: OrderDiscountDto[],
     chargesInfo: ChargesInterface[],
-    rest_round_off = 0.05,
+    round_off: RoundOffObj,
     country_code = 'ID',
     taxAfterDiscount,
   ): BillResponseInterface {
@@ -859,7 +861,7 @@ export class BillLibraryService {
     const sub_total = this.calculateBillTotal(response);
 
     //round off calculations
-    const round_off_bill_total = getRoundOffValue(sub_total, rest_round_off);
+    const round_off_bill_total = getRoundOffValue(sub_total, round_off);
     const round_off_diff = round_off_bill_total - sub_total;
 
     if (round_off_diff && Number(round_off_diff.toFixed(2))) {

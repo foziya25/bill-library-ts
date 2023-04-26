@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCartItemTotal = exports.getTransformedRestaurantCharges = exports.getOrderItemInfo = exports.getCartItemInfo = exports.getRoundOffValue = exports.calculateAddonVariantPrice = void 0;
+exports.getRoundOffDisableStatus = exports.getCartItemTotal = exports.getTransformedRestaurantCharges = exports.getOrderItemInfo = exports.getCartItemInfo = exports.getRoundOffValue = exports.calculateAddonVariantPrice = void 0;
+const common_enum_1 = require("../enum/common.enum");
 const calculateAddonVariantPrice = (itemInfo) => {
     let totalPrice = 0;
     if (itemInfo.addons) {
@@ -20,11 +21,18 @@ const calculateAddonVariantPrice = (itemInfo) => {
     return totalPrice;
 };
 exports.calculateAddonVariantPrice = calculateAddonVariantPrice;
-const getRoundOffValue = (value, base) => {
-    base = base > 0 ? base : 1;
-    const a = parseInt((Number(value) / base).toString()) * base;
-    const b = a + base;
-    return value - a >= b - value ? b : a;
+const getRoundOffValue = (value, round_off) => {
+    if (round_off.roundOffClose) {
+        return value;
+    }
+    else {
+        let base = round_off.baseRoundOff;
+        const roundUp = round_off.roundUp;
+        base = base > 0 ? base : 1;
+        const a = parseInt((Number(value) / base).toString()) * base;
+        const b = a + base;
+        return value - a >= b - value || (roundUp == true && value - a > 0) ? b : a;
+    }
 };
 exports.getRoundOffValue = getRoundOffValue;
 function getPriceKeyByOrderType(orderType) {
@@ -167,4 +175,13 @@ function getCartItemTotal(itemInfo) {
     return itemTotal;
 }
 exports.getCartItemTotal = getCartItemTotal;
+function getRoundOffDisableStatus(order_type, round_off_close) {
+    let response = false;
+    const orderTypeMask = common_enum_1.RoundOffMasks[order_type];
+    if (round_off_close && orderTypeMask & order_type) {
+        response = true;
+    }
+    return response;
+}
+exports.getRoundOffDisableStatus = getRoundOffDisableStatus;
 //# sourceMappingURL=common.function.lib.js.map

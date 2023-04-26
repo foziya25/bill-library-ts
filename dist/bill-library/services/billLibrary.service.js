@@ -8,7 +8,7 @@ const cartItemInfo_1 = require("../baseClass/cartItemInfo");
 const orderItemInfo_1 = require("../baseClass/orderItemInfo");
 const common_function_lib_1 = require("../lib/common.function.lib");
 class BillLibraryService {
-    getCartBill(cartItemInfo, discountInfo, chargesInfo, rest_round_off = 0.05, country_code) {
+    getCartBill(cartItemInfo, discountInfo, chargesInfo, round_off, country_code) {
         const response = {
             fees: [],
             bill_total: 0,
@@ -182,7 +182,7 @@ class BillLibraryService {
         response.fees.push(...this.mergeItemAndMerchantDiscount(discountFeesArray, country_code));
         response.fees.push(...chargesList);
         const sub_total = this.calculateBillTotal(response);
-        const round_off_bill_total = (0, common_function_lib_1.getRoundOffValue)(sub_total, rest_round_off);
+        const round_off_bill_total = (0, common_function_lib_1.getRoundOffValue)(sub_total, round_off);
         const round_off_diff = round_off_bill_total - sub_total;
         if (round_off_diff && Number(round_off_diff.toFixed(2))) {
             response.fees.push({
@@ -197,7 +197,7 @@ class BillLibraryService {
         }
         return response;
     }
-    getOrderBill(orderItemInfo, discountInfo, chargesInfo, rest_round_off = 0.05, country_code = 'MY') {
+    getOrderBill(orderItemInfo, discountInfo, chargesInfo, round_off, country_code = 'MY') {
         let response = {
             fees: [],
             bill_total: 0,
@@ -381,7 +381,7 @@ class BillLibraryService {
         response.fees.push(...this.mergeItemAndMerchantDiscount(discountFeesArray, country_code));
         response.fees.push(...chargesList);
         const sub_total = this.calculateBillTotal(response);
-        const round_off_bill_total = (0, common_function_lib_1.getRoundOffValue)(sub_total, rest_round_off);
+        const round_off_bill_total = (0, common_function_lib_1.getRoundOffValue)(sub_total, round_off);
         const round_off_diff = round_off_bill_total - sub_total;
         if (round_off_diff && Number(round_off_diff.toFixed(2))) {
             response.fees.push({
@@ -398,7 +398,7 @@ class BillLibraryService {
         response = (0, number_format_1.getLocalizedData)(response, '', country_code, [], quantity_keys_to_format);
         return response;
     }
-    getIndonesiaOrderBill(orderItemInfo, discountInfo, chargesInfo, rest_round_off = 0.05, country_code = 'ID', taxAfterDiscount) {
+    getIndonesiaOrderBill(orderItemInfo, discountInfo, chargesInfo, round_off, country_code = 'ID', taxAfterDiscount) {
         let response = {
             fees: [],
             bill_total: 0,
@@ -604,7 +604,7 @@ class BillLibraryService {
         response.fees.push(...this.mergeItemAndMerchantDiscount(discountFeesArray, country_code));
         response.fees.push(...chargesList);
         const sub_total = this.calculateBillTotal(response);
-        const round_off_bill_total = (0, common_function_lib_1.getRoundOffValue)(sub_total, rest_round_off);
+        const round_off_bill_total = (0, common_function_lib_1.getRoundOffValue)(sub_total, round_off);
         const round_off_diff = round_off_bill_total - sub_total;
         if (round_off_diff && Number(round_off_diff.toFixed(2))) {
             response.fees.push({

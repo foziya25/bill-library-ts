@@ -1,4 +1,5 @@
 import {OrderItemInfo} from '../baseClass/orderItemInfo';
+import {RoundOffObj} from '../baseClass/roundOff';
 import {ChargeApplicableType, ChargeType} from '../enum/billLib.enum';
 import {
   DiscountAction,
@@ -29,7 +30,7 @@ export class BillOfflineCalculationService {
     orderItemInfo: OrderItemInfo[],
     discountInfo: DiscountInterface[],
     chargesInfo: ChargesInterface[],
-    rest_round_off = 0.05,
+    round_off: RoundOffObj,
     country_code = 'MY',
   ): BillResponseInterface {
     const validationResponse = this.validateDiscount(discountInfo);
@@ -51,7 +52,7 @@ export class BillOfflineCalculationService {
       orderItemInfo,
       discountDto,
       chargesInfo,
-      rest_round_off,
+      round_off,
       country_code,
     );
   }
@@ -60,7 +61,7 @@ export class BillOfflineCalculationService {
     orderItemInfo: OrderItemInfo[],
     discountInfo: DiscountInterface[],
     chargesInfo: ChargesInterface[],
-    rest_round_off = 0.05,
+    round_off: RoundOffObj,
     country_code = 'ID',
     taxAfterDiscount,
   ): BillResponseInterface {
@@ -83,7 +84,7 @@ export class BillOfflineCalculationService {
       orderItemInfo,
       discountDto,
       chargesInfo,
-      rest_round_off,
+      round_off,
       country_code,
       taxAfterDiscount,
     );
@@ -168,7 +169,7 @@ export class BillOfflineCalculationService {
     restFee: any,
     offlinePlatform: any,
     platform = 'easyeat',
-    rest_round_off,
+    round_off: RoundOffObj,
     country_code = 'MY',
   ): BillResponseInterface {
     const {
@@ -220,7 +221,7 @@ export class BillOfflineCalculationService {
       itemInfo,
       discountInfo,
       restCharges,
-      rest_round_off,
+      round_off,
       country_code,
     );
   }
@@ -231,7 +232,7 @@ export class BillOfflineCalculationService {
     couponInfo: any,
     orderBill: any,
     offlinePlatform: any,
-    rest_round_off,
+    round_off: RoundOffObj,
     country_code = 'MY',
   ): BillResponseInterface {
     const {
@@ -316,7 +317,7 @@ export class BillOfflineCalculationService {
       itemInfo,
       discountInfo,
       restCharges,
-      rest_round_off,
+      round_off,
       country_code,
     );
   }
@@ -326,7 +327,7 @@ export class BillOfflineCalculationService {
     restFee: any,
     offlinePlatform: any,
     platform = 'easyeat',
-    rest_round_off,
+    round_off: RoundOffObj,
     country_code = 'ID',
     taxAfterDiscount,
   ): BillResponseInterface {
@@ -379,7 +380,7 @@ export class BillOfflineCalculationService {
       itemInfo,
       discountInfo,
       restCharges,
-      rest_round_off,
+      round_off,
       country_code,
       taxAfterDiscount,
     );
@@ -391,7 +392,7 @@ export class BillOfflineCalculationService {
     couponInfo: any,
     orderBill: any,
     offlinePlatform: any,
-    rest_round_off,
+    round_off: RoundOffObj,
     country_code = 'ID',
     taxAfterDiscount,
   ): BillResponseInterface {
@@ -477,7 +478,7 @@ export class BillOfflineCalculationService {
       itemInfo,
       discountInfo,
       restCharges,
-      rest_round_off,
+      round_off,
       country_code,
       taxAfterDiscount,
     );

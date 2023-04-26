@@ -1,3 +1,5 @@
+import {RoundOffObj} from './bill-library/baseClass/roundOff';
+import {getRoundOffDisableStatus} from './bill-library/lib/common.function.lib';
 import {BillLibraryService} from './bill-library/services/billLibrary.service';
 import {BillOfflineCalculationService} from './bill-library/services/billOffline.service';
 import {DiscountLibService} from './bill-library/services/discount-lib.service';
@@ -7,7 +9,7 @@ export function calculateBill(
   cartItemInfo,
   discountInfo,
   chargesInfo,
-  rest_round_off = 0.05,
+  rest_round_off: any,
   country_code = 'MY',
 ) {
   const discountLibrary = new DiscountLibService();
@@ -18,12 +20,24 @@ export function calculateBill(
     billLibrary,
     discountCalculation,
   );
+  const round_off = new RoundOffObj();
+  if (rest_round_off) {
+    if (rest_round_off.base_roundoff) {
+      round_off.baseRoundOff = rest_round_off.base_roundoff;
+    }
+    if (rest_round_off.round_off_close) {
+      round_off.roundOffClose = rest_round_off.round_off_close;
+    }
+    if (rest_round_off.roundup) {
+      round_off.roundUp = rest_round_off.roundup;
+    }
+  }
 
   return billOfflineCalculationService.getOrderBill(
     cartItemInfo,
     discountInfo,
     chargesInfo,
-    rest_round_off,
+    round_off,
     country_code,
   );
 }
@@ -45,6 +59,22 @@ export function calculateOfflineCartBill(
     billLibrary,
     discountCalculation,
   );
+  const order_type = cart.order_type;
+  const round_off = new RoundOffObj();
+  if (rest_round_off) {
+    if (rest_round_off.base_roundoff) {
+      round_off.baseRoundOff = rest_round_off.base_roundoff;
+    }
+    if (rest_round_off.roundup) {
+      round_off.roundUp = rest_round_off.roundup;
+    }
+    if (rest_round_off.round_off_close) {
+      round_off.roundOffClose = getRoundOffDisableStatus(
+        order_type,
+        rest_round_off.round_off_close,
+      );
+    }
+  }
 
   if (country_code === 'MY') {
     return billOfflineCalculationService.getOfflineCartBill(
@@ -52,7 +82,7 @@ export function calculateOfflineCartBill(
       restFee,
       offlinePlatform,
       platform,
-      rest_round_off,
+      round_off,
       country_code,
     );
   } else {
@@ -61,7 +91,7 @@ export function calculateOfflineCartBill(
       restFee,
       offlinePlatform,
       platform,
-      rest_round_off,
+      round_off,
       country_code,
       taxAfterDiscount,
     );
@@ -86,6 +116,22 @@ export function calculateOfflineOrderBill(
     billLibrary,
     discountCalculation,
   );
+  const order_type = order.order_type;
+  const round_off = new RoundOffObj();
+  if (rest_round_off) {
+    if (rest_round_off.base_roundoff) {
+      round_off.baseRoundOff = rest_round_off.base_roundoff;
+    }
+    if (rest_round_off.roundup) {
+      round_off.roundUp = rest_round_off.roundup;
+    }
+    if (rest_round_off.round_off_close) {
+      round_off.roundOffClose = getRoundOffDisableStatus(
+        order_type,
+        rest_round_off.round_off_close,
+      );
+    }
+  }
 
   if (country_code === 'MY') {
     return billOfflineCalculationService.getOfflineOrderBill(
@@ -94,7 +140,7 @@ export function calculateOfflineOrderBill(
       coupon_info,
       order_bill,
       offlinePlatform,
-      rest_round_off,
+      round_off,
       country_code,
     );
   } else {
@@ -104,7 +150,7 @@ export function calculateOfflineOrderBill(
       coupon_info,
       order_bill,
       offlinePlatform,
-      rest_round_off,
+      round_off,
       country_code,
       taxAfterDiscount,
     );
