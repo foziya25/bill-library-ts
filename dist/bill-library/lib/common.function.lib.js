@@ -178,7 +178,7 @@ exports.getCartItemTotal = getCartItemTotal;
 function getRoundOffDisableStatus(order_type, round_off_close) {
     let response = false;
     const orderTypeMask = common_enum_1.RoundOffMasks[order_type];
-    if (round_off_close && orderTypeMask & order_type) {
+    if (round_off_close && orderTypeMask & round_off_close) {
         response = true;
     }
     return response;

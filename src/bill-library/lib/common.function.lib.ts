@@ -268,7 +268,7 @@ export function getRoundOffDisableStatus(
 ): boolean {
   let response = false;
   const orderTypeMask = RoundOffMasks[order_type];
-  if (round_off_close && orderTypeMask & order_type) {
+  if (round_off_close && orderTypeMask & round_off_close) {
     response = true;
   }
 
