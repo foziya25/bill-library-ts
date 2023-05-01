@@ -4,6 +4,6 @@ exports.RoundOffMasks = void 0;
 exports.RoundOffMasks = {
     0: 1,
     1: 2,
-    3: 4,
+    2: 4,
 };
 //# sourceMappingURL=common.enum.js.map
