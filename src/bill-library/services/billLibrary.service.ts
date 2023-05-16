@@ -20,7 +20,10 @@ import {
   FeeObj,
 } from '../interfaces/billResponse.interface';
 import {ChargesInterface} from '../interfaces/charges.interface';
-import {getRoundOffValue} from '../lib/common.function.lib';
+import {
+  getPlatformCommission,
+  getRoundOffValue,
+} from '../lib/common.function.lib';
 
 export class BillLibraryService {
   getCartBill(
@@ -292,6 +295,8 @@ export class BillLibraryService {
     chargesInfo: ChargesInterface[],
     round_off: RoundOffObj,
     country_code = 'MY',
+    platform,
+    restaurant_platform,
   ): BillResponseInterface {
     let response: BillResponseInterface = {
       fees: [],
@@ -538,6 +543,14 @@ export class BillLibraryService {
       ...this.mergeItemAndMerchantDiscount(discountFeesArray, country_code),
     );
     response.fees.push(...chargesList);
+    const commission = getPlatformCommission(
+      platform,
+      restaurant_platform,
+      itemTotalFeeObj.value,
+    );
+    if (commission.status == 1) {
+      response.fees.push(commission.fees);
+    }
 
     const sub_total = this.calculateBillTotal(response);
 
@@ -576,6 +589,8 @@ export class BillLibraryService {
     round_off: RoundOffObj,
     country_code = 'ID',
     taxAfterDiscount,
+    platform,
+    restaurant_platform,
   ): BillResponseInterface {
     let response: BillResponseInterface = {
       fees: [],
@@ -857,6 +872,14 @@ export class BillLibraryService {
       ...this.mergeItemAndMerchantDiscount(discountFeesArray, country_code),
     );
     response.fees.push(...chargesList);
+    const commission = getPlatformCommission(
+      platform,
+      restaurant_platform,
+      itemTotalFeeObj.value,
+    );
+    if (commission.status == 1) {
+      response.fees.push(commission.fees);
+    }
 
     const sub_total = this.calculateBillTotal(response);
 

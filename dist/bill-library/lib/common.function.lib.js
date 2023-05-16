@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRoundOffDisableStatus = exports.getCartItemTotal = exports.getTransformedRestaurantCharges = exports.getOrderItemInfo = exports.getCartItemInfo = exports.getRoundOffValue = exports.calculateAddonVariantPrice = void 0;
+exports.getPlatformCommission = exports.getRoundOffDisableStatus = exports.getCartItemTotal = exports.getTransformedRestaurantCharges = exports.getOrderItemInfo = exports.getCartItemInfo = exports.getRoundOffValue = exports.calculateAddonVariantPrice = void 0;
 const common_enum_1 = require("../enum/common.enum");
 const calculateAddonVariantPrice = (itemInfo) => {
     let totalPrice = 0;
@@ -35,20 +35,25 @@ const getRoundOffValue = (value, round_off) => {
     }
 };
 exports.getRoundOffValue = getRoundOffValue;
-function getPriceKeyByOrderType(orderType) {
-    if (orderType == 1) {
-        return 'delivery_price';
-    }
-    else if (orderType == 2) {
-        return 'takeaway_price';
+function getPriceKeyByOrderType(orderType, platform) {
+    if (platform == common_enum_1.Platform.EASYEAT) {
+        if (orderType == 1) {
+            return 'delivery_price';
+        }
+        else if (orderType == 2) {
+            return 'takeaway_price';
+        }
+        else {
+            return 'price';
+        }
     }
     else {
-        return 'price';
+        return 'original_price';
     }
 }
-function getCartItemInfo(items, orderType) {
+function getCartItemInfo(items, orderType, platform) {
     const cartItemInfo = [];
-    const priceKey = getPriceKeyByOrderType(orderType);
+    const priceKey = getPriceKeyByOrderType(orderType, platform);
     if (items && items.length) {
         items.forEach(item => {
             const { addons, new_variation } = item;
@@ -184,4 +189,44 @@ function getRoundOffDisableStatus(order_type, round_off_close) {
     return response;
 }
 exports.getRoundOffDisableStatus = getRoundOffDisableStatus;
+function getPlatformCommission(platform, restaurant_platforms, item_total) {
+    const fees = {
+        name: '',
+        value: 0,
+        id: 'platform_commision',
+    };
+    const response = {
+        status: 0,
+        fees: fees,
+    };
+    for (const i in restaurant_platforms) {
+        const commission = restaurant_platforms[i];
+        if (commission['id'] == platform) {
+            if (commission['comm_typ'] == 'percentage') {
+                fees.value = Number(((item_total * commission['comm_amt']) / 100).toFixed(2));
+                fees.name =
+                    'Commission(' +
+                        commission['name'] +
+                        ')@' +
+                        commission['comm_amt'] +
+                        '%';
+            }
+            else if (commission['comm_typ'] == 'fixed') {
+                fees.value = Number(commission['comm_amt'].toFixed(2));
+                fees.name = 'Commission ' + commission['name'];
+            }
+            if (fees.value > item_total) {
+                fees.value = Number(item_total.toFixed(2));
+            }
+            break;
+        }
+    }
+    if (fees.value > 0) {
+        fees.value = -1 * fees.value;
+        response.status = 1;
+        response.fees = fees;
+    }
+    return response;
+}
+exports.getPlatformCommission = getPlatformCommission;
 //# sourceMappingURL=common.function.lib.js.map

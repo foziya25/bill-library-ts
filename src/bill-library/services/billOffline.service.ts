@@ -32,6 +32,8 @@ export class BillOfflineCalculationService {
     chargesInfo: ChargesInterface[],
     round_off: RoundOffObj,
     country_code = 'MY',
+    platform,
+    restaurant_platform,
   ): BillResponseInterface {
     const validationResponse = this.validateDiscount(discountInfo);
     if (!validationResponse.status) {
@@ -54,6 +56,8 @@ export class BillOfflineCalculationService {
       chargesInfo,
       round_off,
       country_code,
+      platform,
+      restaurant_platform,
     );
   }
 
@@ -64,6 +68,8 @@ export class BillOfflineCalculationService {
     round_off: RoundOffObj,
     country_code = 'ID',
     taxAfterDiscount,
+    platform,
+    restaurant_platform,
   ): BillResponseInterface {
     const validationResponse = this.validateDiscount(discountInfo);
     if (!validationResponse.status) {
@@ -87,6 +93,8 @@ export class BillOfflineCalculationService {
       round_off,
       country_code,
       taxAfterDiscount,
+      platform,
+      restaurant_platform,
     );
   }
 
@@ -171,6 +179,7 @@ export class BillOfflineCalculationService {
     platform = 'easyeat',
     round_off: RoundOffObj,
     country_code = 'MY',
+    restaurant_platform,
   ): BillResponseInterface {
     const {
       cart_items,
@@ -178,7 +187,7 @@ export class BillOfflineCalculationService {
       skip_service_charge_operation,
       skip_packaging_charge_operation,
     } = cart;
-    const itemInfo = getCartItemInfo(cart_items, order_type);
+    const itemInfo = getCartItemInfo(cart_items, order_type, platform);
     let restCharges = getTransformedRestaurantCharges(restFee, order_type);
     const discountInfo = this.discountCalculationService.getDiscountFromCart(
       cart,
@@ -223,6 +232,8 @@ export class BillOfflineCalculationService {
       restCharges,
       round_off,
       country_code,
+      platform,
+      restaurant_platform,
     );
   }
 
@@ -234,6 +245,7 @@ export class BillOfflineCalculationService {
     offlinePlatform: any,
     round_off: RoundOffObj,
     country_code = 'MY',
+    restaurant_platform,
   ): BillResponseInterface {
     const {
       items,
@@ -319,6 +331,8 @@ export class BillOfflineCalculationService {
       restCharges,
       round_off,
       country_code,
+      platform,
+      restaurant_platform,
     );
   }
 
@@ -330,6 +344,7 @@ export class BillOfflineCalculationService {
     round_off: RoundOffObj,
     country_code = 'ID',
     taxAfterDiscount,
+    restaurant_platform,
   ): BillResponseInterface {
     const {
       cart_items,
@@ -337,7 +352,7 @@ export class BillOfflineCalculationService {
       skip_service_charge_operation,
       skip_packaging_charge_operation,
     } = cart;
-    const itemInfo = getCartItemInfo(cart_items, order_type);
+    const itemInfo = getCartItemInfo(cart_items, order_type, platform);
     let restCharges = getTransformedRestaurantCharges(restFee, order_type);
     const discountInfo = this.discountCalculationService.getDiscountFromCart(
       cart,
@@ -383,6 +398,8 @@ export class BillOfflineCalculationService {
       round_off,
       country_code,
       taxAfterDiscount,
+      platform,
+      restaurant_platform,
     );
   }
 
@@ -395,6 +412,7 @@ export class BillOfflineCalculationService {
     round_off: RoundOffObj,
     country_code = 'ID',
     taxAfterDiscount,
+    restaurant_platform,
   ): BillResponseInterface {
     const {
       items,
@@ -481,6 +499,8 @@ export class BillOfflineCalculationService {
       round_off,
       country_code,
       taxAfterDiscount,
+      platform,
+      restaurant_platform,
     );
   }
 }

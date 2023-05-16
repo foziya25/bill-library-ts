@@ -11,6 +11,8 @@ export function calculateBill(
   chargesInfo,
   rest_round_off: any,
   country_code = 'MY',
+  platform,
+  restaurant_platform,
 ) {
   const discountLibrary = new DiscountLibService();
   const billLibrary = new BillLibraryService();
@@ -39,6 +41,8 @@ export function calculateBill(
     chargesInfo,
     round_off,
     country_code,
+    platform,
+    restaurant_platform,
   );
 }
 
@@ -50,6 +54,7 @@ export function calculateOfflineCartBill(
   rest_round_off: any,
   taxAfterDiscount = 1,
   country_code = 'MY',
+  restaurant_platform,
 ) {
   const discountLibrary = new DiscountLibService();
   const billLibrary = new BillLibraryService();
@@ -84,6 +89,7 @@ export function calculateOfflineCartBill(
       platform,
       round_off,
       country_code,
+      restaurant_platform,
     );
   } else {
     return billOfflineCalculationService.getIndonesiaOfflineCartBill(
@@ -94,6 +100,7 @@ export function calculateOfflineCartBill(
       round_off,
       country_code,
       taxAfterDiscount,
+      restaurant_platform,
     );
   }
 }
@@ -107,6 +114,7 @@ export function calculateOfflineOrderBill(
   rest_round_off,
   taxAfterDiscount = 1,
   country_code = 'MY',
+  restaurant_platform,
 ) {
   const discountLibrary = new DiscountLibService();
   const billLibrary = new BillLibraryService();
@@ -142,6 +150,7 @@ export function calculateOfflineOrderBill(
       offlinePlatform,
       round_off,
       country_code,
+      restaurant_platform,
     );
   } else {
     return billOfflineCalculationService.getIndonesiaOfflineOrderBill(
@@ -153,6 +162,7 @@ export function calculateOfflineOrderBill(
       round_off,
       country_code,
       taxAfterDiscount,
+      restaurant_platform,
     );
   }
 }
