@@ -179,7 +179,6 @@ export class BillOfflineCalculationService {
     platform = 'easyeat',
     round_off: RoundOffObj,
     country_code = 'MY',
-    restaurant_platform,
   ): BillResponseInterface {
     const {
       cart_items,
@@ -233,7 +232,7 @@ export class BillOfflineCalculationService {
       round_off,
       country_code,
       platform,
-      restaurant_platform,
+      offlinePlatform,
     );
   }
 
@@ -245,7 +244,6 @@ export class BillOfflineCalculationService {
     offlinePlatform: any,
     round_off: RoundOffObj,
     country_code = 'MY',
-    restaurant_platform,
   ): BillResponseInterface {
     const {
       items,
@@ -332,7 +330,7 @@ export class BillOfflineCalculationService {
       round_off,
       country_code,
       platform,
-      restaurant_platform,
+      offlinePlatform,
     );
   }
 
@@ -344,7 +342,6 @@ export class BillOfflineCalculationService {
     round_off: RoundOffObj,
     country_code = 'ID',
     taxAfterDiscount,
-    restaurant_platform,
   ): BillResponseInterface {
     const {
       cart_items,
@@ -399,7 +396,7 @@ export class BillOfflineCalculationService {
       country_code,
       taxAfterDiscount,
       platform,
-      restaurant_platform,
+      offlinePlatform,
     );
   }
 
@@ -412,7 +409,6 @@ export class BillOfflineCalculationService {
     round_off: RoundOffObj,
     country_code = 'ID',
     taxAfterDiscount,
-    restaurant_platform,
   ): BillResponseInterface {
     const {
       items,
@@ -500,7 +496,7 @@ export class BillOfflineCalculationService {
       country_code,
       taxAfterDiscount,
       platform,
-      restaurant_platform,
+      offlinePlatform,
     );
   }
 }

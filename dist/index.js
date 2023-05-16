@@ -27,7 +27,7 @@ function calculateBill(cartItemInfo, discountInfo, chargesInfo, rest_round_off, 
     return billOfflineCalculationService.getOrderBill(cartItemInfo, discountInfo, chargesInfo, round_off, country_code, platform, restaurant_platform);
 }
 exports.calculateBill = calculateBill;
-function calculateOfflineCartBill(cart, restFee, offlinePlatform, platform, rest_round_off, taxAfterDiscount = 1, country_code = 'MY', restaurant_platform) {
+function calculateOfflineCartBill(cart, restFee, offlinePlatform, platform, rest_round_off, taxAfterDiscount = 1, country_code = 'MY') {
     const discountLibrary = new discount_lib_service_1.DiscountLibService();
     const billLibrary = new billLibrary_service_1.BillLibraryService();
     const discountCalculation = new discountCalculation_service_1.DiscountCalculationService();
@@ -46,14 +46,14 @@ function calculateOfflineCartBill(cart, restFee, offlinePlatform, platform, rest
         }
     }
     if (country_code === 'MY') {
-        return billOfflineCalculationService.getOfflineCartBill(cart, restFee, offlinePlatform, platform, round_off, country_code, restaurant_platform);
+        return billOfflineCalculationService.getOfflineCartBill(cart, restFee, offlinePlatform, platform, round_off, country_code);
     }
     else {
-        return billOfflineCalculationService.getIndonesiaOfflineCartBill(cart, restFee, offlinePlatform, platform, round_off, country_code, taxAfterDiscount, restaurant_platform);
+        return billOfflineCalculationService.getIndonesiaOfflineCartBill(cart, restFee, offlinePlatform, platform, round_off, country_code, taxAfterDiscount);
     }
 }
 exports.calculateOfflineCartBill = calculateOfflineCartBill;
-function calculateOfflineOrderBill(order, restFee, coupon_info, order_bill, offlinePlatform, rest_round_off, taxAfterDiscount = 1, country_code = 'MY', restaurant_platform) {
+function calculateOfflineOrderBill(order, restFee, coupon_info, order_bill, offlinePlatform, rest_round_off, taxAfterDiscount = 1, country_code = 'MY') {
     const discountLibrary = new discount_lib_service_1.DiscountLibService();
     const billLibrary = new billLibrary_service_1.BillLibraryService();
     const discountCalculation = new discountCalculation_service_1.DiscountCalculationService();
@@ -72,10 +72,10 @@ function calculateOfflineOrderBill(order, restFee, coupon_info, order_bill, offl
         }
     }
     if (country_code === 'MY') {
-        return billOfflineCalculationService.getOfflineOrderBill(order, restFee, coupon_info, order_bill, offlinePlatform, round_off, country_code, restaurant_platform);
+        return billOfflineCalculationService.getOfflineOrderBill(order, restFee, coupon_info, order_bill, offlinePlatform, round_off, country_code);
     }
     else {
-        return billOfflineCalculationService.getIndonesiaOfflineOrderBill(order, restFee, coupon_info, order_bill, offlinePlatform, round_off, country_code, taxAfterDiscount, restaurant_platform);
+        return billOfflineCalculationService.getIndonesiaOfflineOrderBill(order, restFee, coupon_info, order_bill, offlinePlatform, round_off, country_code, taxAfterDiscount);
     }
 }
 exports.calculateOfflineOrderBill = calculateOfflineOrderBill;

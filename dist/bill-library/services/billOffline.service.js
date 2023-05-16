@@ -101,7 +101,7 @@ class BillOfflineCalculationService {
         }
         return { status: flag, message: message };
     }
-    getOfflineCartBill(cart, restFee, offlinePlatform, platform = 'easyeat', round_off, country_code = 'MY', restaurant_platform) {
+    getOfflineCartBill(cart, restFee, offlinePlatform, platform = 'easyeat', round_off, country_code = 'MY') {
         const { cart_items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, } = cart;
         const itemInfo = (0, common_function_lib_1.getCartItemInfo)(cart_items, order_type, platform);
         let restCharges = (0, common_function_lib_1.getTransformedRestaurantCharges)(restFee, order_type);
@@ -131,9 +131,9 @@ class BillOfflineCalculationService {
                 return true;
             }
         });
-        return this.getOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, platform, restaurant_platform);
+        return this.getOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, platform, offlinePlatform);
     }
-    getOfflineOrderBill(order, restFee, couponInfo, orderBill, offlinePlatform, round_off, country_code = 'MY', restaurant_platform) {
+    getOfflineOrderBill(order, restFee, couponInfo, orderBill, offlinePlatform, round_off, country_code = 'MY') {
         const { items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, platform, } = order;
         const { fees } = orderBill;
         const itemInfo = (0, common_function_lib_1.getOrderItemInfo)(items);
@@ -195,9 +195,9 @@ class BillOfflineCalculationService {
                 }
             });
         }
-        return this.getOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, platform, restaurant_platform);
+        return this.getOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, platform, offlinePlatform);
     }
-    getIndonesiaOfflineCartBill(cart, restFee, offlinePlatform, platform = 'easyeat', round_off, country_code = 'ID', taxAfterDiscount, restaurant_platform) {
+    getIndonesiaOfflineCartBill(cart, restFee, offlinePlatform, platform = 'easyeat', round_off, country_code = 'ID', taxAfterDiscount) {
         const { cart_items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, } = cart;
         const itemInfo = (0, common_function_lib_1.getCartItemInfo)(cart_items, order_type, platform);
         let restCharges = (0, common_function_lib_1.getTransformedRestaurantCharges)(restFee, order_type);
@@ -227,9 +227,9 @@ class BillOfflineCalculationService {
                 return true;
             }
         });
-        return this.getIndonesiaOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, taxAfterDiscount, platform, restaurant_platform);
+        return this.getIndonesiaOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, taxAfterDiscount, platform, offlinePlatform);
     }
-    getIndonesiaOfflineOrderBill(order, restFee, couponInfo, orderBill, offlinePlatform, round_off, country_code = 'ID', taxAfterDiscount, restaurant_platform) {
+    getIndonesiaOfflineOrderBill(order, restFee, couponInfo, orderBill, offlinePlatform, round_off, country_code = 'ID', taxAfterDiscount) {
         const { items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, platform, } = order;
         const { fees } = orderBill;
         const itemInfo = (0, common_function_lib_1.getOrderItemInfo)(items);
@@ -291,7 +291,7 @@ class BillOfflineCalculationService {
                 }
             });
         }
-        return this.getIndonesiaOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, taxAfterDiscount, platform, restaurant_platform);
+        return this.getIndonesiaOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, taxAfterDiscount, platform, offlinePlatform);
     }
 }
 exports.BillOfflineCalculationService = BillOfflineCalculationService;
