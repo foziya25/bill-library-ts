@@ -8,8 +8,8 @@ import { BillResponseInterface, DiscountFeeObj, FeeObj } from '../interfaces/bil
 import { ChargesInterface } from '../interfaces/charges.interface';
 export declare class BillLibraryService {
     getCartBill(cartItemInfo: CartItemInfo[], discountInfo: CartDiscountDto[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code: any): BillResponseInterface;
-    getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: OrderDiscountDto[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code?: string): BillResponseInterface;
-    getIndonesiaOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: OrderDiscountDto[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code: string, taxAfterDiscount: any): BillResponseInterface;
+    getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: OrderDiscountDto[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code: string, platform: any, restaurant_platform: any): BillResponseInterface;
+    getIndonesiaOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: OrderDiscountDto[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code: string, taxAfterDiscount: any, platform: any, restaurant_platform: any): BillResponseInterface;
     calculateCartChargeAmount(charge: ChargesInterface, applicableResponse: ApplicableCartResponseDto): CalculateCartChargeDto;
     calculateOrderChargeAmount(charge: ChargesInterface, applicableResponse: ApplicableOrderResponseDto): CalculateOrderChargeDto;
     findApplicableCartItemTotal(charge: ChargesInterface, cartItemInfo: CartCalculationInfo[]): ApplicableCartResponseDto;

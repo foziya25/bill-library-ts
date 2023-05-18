@@ -1,7 +1,8 @@
 import {OrderItemInfo} from '../baseClass/orderItemInfo';
 import {RoundOffObj} from '../baseClass/roundOff';
 import {ChargeApplicableType, ChargeType} from '../enum/billLib.enum';
-import {RoundOffMasks} from '../enum/common.enum';
+import {Platform, RoundOffMasks} from '../enum/common.enum';
+import {FeeObj} from '../interfaces/billResponse.interface';
 import {ChargesInterface} from '../interfaces/charges.interface';
 import {Addons, ItemInfo} from '../interfaces/itemInfo.interface';
 
@@ -47,23 +48,28 @@ export const getRoundOffValue = (
   }
 };
 
-function getPriceKeyByOrderType(orderType: number): string {
-  if (orderType == 1) {
-    return 'delivery_price';
-  } else if (orderType == 2) {
-    return 'takeaway_price';
+function getPriceKeyByOrderType(orderType: number, platform: string): string {
+  if (platform == Platform.EASYEAT) {
+    if (orderType == 1) {
+      return 'delivery_price';
+    } else if (orderType == 2) {
+      return 'takeaway_price';
+    } else {
+      return 'price';
+    }
   } else {
-    return 'price';
+    return 'original_price';
   }
 }
 
 export function getCartItemInfo(
   items: Array<any>,
   orderType: number,
+  platform: string,
 ): OrderItemInfo[] {
   const cartItemInfo: OrderItemInfo[] = [];
   /* Getting the price key from the order type. */
-  const priceKey = getPriceKeyByOrderType(orderType);
+  const priceKey = getPriceKeyByOrderType(orderType, platform);
   if (items && items.length) {
     items.forEach(item => {
       /* Destructuring the object. */
@@ -272,5 +278,51 @@ export function getRoundOffDisableStatus(
     response = true;
   }
 
+  return response;
+}
+
+export function getPlatformCommission(
+  platform: string,
+  restaurant_platforms: any,
+  item_total: number,
+): {status: number; fees: FeeObj} {
+  const fees: FeeObj = {
+    name: '',
+    value: 0,
+    id: 'platform_commision',
+  };
+  const response = {
+    status: 0,
+    fees: fees,
+  };
+
+  for (const i in restaurant_platforms) {
+    const commission = restaurant_platforms[i];
+    if (commission['id'] == platform) {
+      if (commission['comm_typ'] == 'percentage') {
+        fees.value = Number(
+          ((item_total * commission['comm_amt']) / 100).toFixed(2),
+        );
+        fees.name =
+          'Commission(' +
+          commission['name'] +
+          ')@' +
+          commission['comm_amt'] +
+          '%';
+      } else if (commission['comm_typ'] == 'fixed') {
+        fees.value = Number(commission['comm_amt'].toFixed(2));
+        fees.name = 'Commission ' + commission['name'];
+      }
+      if (fees.value > item_total) {
+        fees.value = Number(item_total.toFixed(2));
+      }
+      break;
+    }
+  }
+  if (fees.value > 0) {
+    fees.value = -1 * fees.value;
+    response.status = 1;
+    response.fees = fees;
+  }
   return response;
 }

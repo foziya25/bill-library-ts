@@ -8,7 +8,7 @@ class BillOfflineCalculationService {
         this.billLibrary = billLibrary;
         this.discountCalculationService = discountCalculationService;
     }
-    getOrderBill(orderItemInfo, discountInfo, chargesInfo, round_off, country_code = 'MY') {
+    getOrderBill(orderItemInfo, discountInfo, chargesInfo, round_off, country_code = 'MY', platform, restaurant_platform) {
         const validationResponse = this.validateDiscount(discountInfo);
         if (!validationResponse.status) {
             const bill = {
@@ -20,9 +20,9 @@ class BillOfflineCalculationService {
             return bill;
         }
         const discountDto = this.discountLibrary.applyDiscountOnOrder(orderItemInfo, discountInfo);
-        return this.billLibrary.getOrderBill(orderItemInfo, discountDto, chargesInfo, round_off, country_code);
+        return this.billLibrary.getOrderBill(orderItemInfo, discountDto, chargesInfo, round_off, country_code, platform, restaurant_platform);
     }
-    getIndonesiaOrderBill(orderItemInfo, discountInfo, chargesInfo, round_off, country_code = 'ID', taxAfterDiscount) {
+    getIndonesiaOrderBill(orderItemInfo, discountInfo, chargesInfo, round_off, country_code = 'ID', taxAfterDiscount, platform, restaurant_platform) {
         const validationResponse = this.validateDiscount(discountInfo);
         if (!validationResponse.status) {
             const bill = {
@@ -34,7 +34,7 @@ class BillOfflineCalculationService {
             return bill;
         }
         const discountDto = this.discountLibrary.applyDiscountOnOrder(orderItemInfo, discountInfo);
-        return this.billLibrary.getIndonesiaOrderBill(orderItemInfo, discountDto, chargesInfo, round_off, country_code, taxAfterDiscount);
+        return this.billLibrary.getIndonesiaOrderBill(orderItemInfo, discountDto, chargesInfo, round_off, country_code, taxAfterDiscount, platform, restaurant_platform);
     }
     validateDiscount(discountInfo) {
         const discountMap = [];
@@ -103,7 +103,7 @@ class BillOfflineCalculationService {
     }
     getOfflineCartBill(cart, restFee, offlinePlatform, platform = 'easyeat', round_off, country_code = 'MY') {
         const { cart_items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, } = cart;
-        const itemInfo = (0, common_function_lib_1.getCartItemInfo)(cart_items, order_type);
+        const itemInfo = (0, common_function_lib_1.getCartItemInfo)(cart_items, order_type, platform);
         let restCharges = (0, common_function_lib_1.getTransformedRestaurantCharges)(restFee, order_type);
         const discountInfo = this.discountCalculationService.getDiscountFromCart(cart, itemInfo);
         let packagingChargeDisabled = false;
@@ -131,7 +131,7 @@ class BillOfflineCalculationService {
                 return true;
             }
         });
-        return this.getOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code);
+        return this.getOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, platform, offlinePlatform);
     }
     getOfflineOrderBill(order, restFee, couponInfo, orderBill, offlinePlatform, round_off, country_code = 'MY') {
         const { items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, platform, } = order;
@@ -195,11 +195,11 @@ class BillOfflineCalculationService {
                 }
             });
         }
-        return this.getOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code);
+        return this.getOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, platform, offlinePlatform);
     }
     getIndonesiaOfflineCartBill(cart, restFee, offlinePlatform, platform = 'easyeat', round_off, country_code = 'ID', taxAfterDiscount) {
         const { cart_items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, } = cart;
-        const itemInfo = (0, common_function_lib_1.getCartItemInfo)(cart_items, order_type);
+        const itemInfo = (0, common_function_lib_1.getCartItemInfo)(cart_items, order_type, platform);
         let restCharges = (0, common_function_lib_1.getTransformedRestaurantCharges)(restFee, order_type);
         const discountInfo = this.discountCalculationService.getDiscountFromCart(cart, itemInfo);
         let packagingChargeDisabled = false;
@@ -227,7 +227,7 @@ class BillOfflineCalculationService {
                 return true;
             }
         });
-        return this.getIndonesiaOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, taxAfterDiscount);
+        return this.getIndonesiaOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, taxAfterDiscount, platform, offlinePlatform);
     }
     getIndonesiaOfflineOrderBill(order, restFee, couponInfo, orderBill, offlinePlatform, round_off, country_code = 'ID', taxAfterDiscount) {
         const { items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, platform, } = order;
@@ -291,7 +291,7 @@ class BillOfflineCalculationService {
                 }
             });
         }
-        return this.getIndonesiaOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, taxAfterDiscount);
+        return this.getIndonesiaOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, taxAfterDiscount, platform, offlinePlatform);
     }
 }
 exports.BillOfflineCalculationService = BillOfflineCalculationService;

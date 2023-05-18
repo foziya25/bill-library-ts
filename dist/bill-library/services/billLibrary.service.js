@@ -197,7 +197,7 @@ class BillLibraryService {
         }
         return response;
     }
-    getOrderBill(orderItemInfo, discountInfo, chargesInfo, round_off, country_code = 'MY') {
+    getOrderBill(orderItemInfo, discountInfo, chargesInfo, round_off, country_code = 'MY', platform, restaurant_platform) {
         let response = {
             fees: [],
             bill_total: 0,
@@ -380,6 +380,10 @@ class BillLibraryService {
         }
         response.fees.push(...this.mergeItemAndMerchantDiscount(discountFeesArray, country_code));
         response.fees.push(...chargesList);
+        const commission = (0, common_function_lib_1.getPlatformCommission)(platform, restaurant_platform, itemTotalFeeObj.value);
+        if (commission.status == 1) {
+            response.fees.push(commission.fees);
+        }
         const sub_total = this.calculateBillTotal(response);
         const round_off_bill_total = (0, common_function_lib_1.getRoundOffValue)(sub_total, round_off);
         const round_off_diff = round_off_bill_total - sub_total;
@@ -398,7 +402,7 @@ class BillLibraryService {
         response = (0, number_format_1.getLocalizedData)(response, '', country_code, [], quantity_keys_to_format);
         return response;
     }
-    getIndonesiaOrderBill(orderItemInfo, discountInfo, chargesInfo, round_off, country_code = 'ID', taxAfterDiscount) {
+    getIndonesiaOrderBill(orderItemInfo, discountInfo, chargesInfo, round_off, country_code = 'ID', taxAfterDiscount, platform, restaurant_platform) {
         let response = {
             fees: [],
             bill_total: 0,
@@ -603,6 +607,10 @@ class BillLibraryService {
         }
         response.fees.push(...this.mergeItemAndMerchantDiscount(discountFeesArray, country_code));
         response.fees.push(...chargesList);
+        const commission = (0, common_function_lib_1.getPlatformCommission)(platform, restaurant_platform, itemTotalFeeObj.value);
+        if (commission.status == 1) {
+            response.fees.push(commission.fees);
+        }
         const sub_total = this.calculateBillTotal(response);
         const round_off_bill_total = (0, common_function_lib_1.getRoundOffValue)(sub_total, round_off);
         const round_off_diff = round_off_bill_total - sub_total;

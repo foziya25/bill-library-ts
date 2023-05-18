@@ -11,8 +11,8 @@ export declare class BillOfflineCalculationService {
     private billLibrary;
     private discountCalculationService;
     constructor(discountLibrary: DiscountLibService, billLibrary: BillLibraryService, discountCalculationService: DiscountCalculationService);
-    getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code?: string): BillResponseInterface;
-    getIndonesiaOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code: string, taxAfterDiscount: any): BillResponseInterface;
+    getOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code: string, platform: any, restaurant_platform: any): BillResponseInterface;
+    getIndonesiaOrderBill(orderItemInfo: OrderItemInfo[], discountInfo: DiscountInterface[], chargesInfo: ChargesInterface[], round_off: RoundOffObj, country_code: string, taxAfterDiscount: any, platform: any, restaurant_platform: any): BillResponseInterface;
     validateDiscount(discountInfo: DiscountInterface[]): {
         status: number;
         message: string;
