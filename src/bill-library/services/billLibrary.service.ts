@@ -1298,6 +1298,7 @@ export class BillLibraryService {
       } else if (discount.discountCategory != DiscountCategory.ITEM_LEVEL) {
         delete discount.discountCategory;
         if (discount.value != 0) {
+          discount.name = 'Discount(' + discount.name + ')';
           response.push(discount);
         }
       }
@@ -1315,7 +1316,15 @@ export class BillLibraryService {
         response.push(discountItemMerchant);
       }
     }
-
+    if (response.length == 0) {
+      const emptyDiscount: FeeObj = {
+        name: 'Discount',
+        value: 0,
+        id: 'coupon_discount',
+        reason: '',
+      };
+      response.push(emptyDiscount);
+    }
     return response;
   }
 }

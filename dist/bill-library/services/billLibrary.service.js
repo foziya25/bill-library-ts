@@ -988,6 +988,7 @@ class BillLibraryService {
             else if (discount.discountCategory != "itemLevel") {
                 delete discount.discountCategory;
                 if (discount.value != 0) {
+                    discount.name = 'Discount(' + discount.name + ')';
                     response.push(discount);
                 }
             }
@@ -1003,6 +1004,15 @@ class BillLibraryService {
             if (discountItemMerchant.value != 0) {
                 response.push(discountItemMerchant);
             }
+        }
+        if (response.length == 0) {
+            const emptyDiscount = {
+                name: 'Discount',
+                value: 0,
+                id: 'coupon_discount',
+                reason: '',
+            };
+            response.push(emptyDiscount);
         }
         return response;
     }
