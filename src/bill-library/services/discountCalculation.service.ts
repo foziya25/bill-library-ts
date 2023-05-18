@@ -213,9 +213,9 @@ export class DiscountCalculationService {
         applicableDType: null,
         maxValue: coupon_info.max_amount,
         minAmount: coupon_info.min_amount,
-        name: coupon_info.title,
+        name: coupon_info.code,
         value: coupon_info.value,
-        code: coupon_info.coupon_name,
+        code: coupon_info.code,
         reason: reason,
       };
       if (coupon_info.applicable_dtype === 'flat') {
