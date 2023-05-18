@@ -396,6 +396,11 @@ class BillLibraryService {
             response.bill_total = this.calculateBillTotal(response);
         }
         else {
+            response.fees.push({
+                name: (0, i18n_1.localize)('roundOff', language),
+                value: 0,
+                id: 'round_off',
+            });
             response.bill_total = sub_total;
         }
         const quantity_keys_to_format = ['value', 'bill_total'];
@@ -623,6 +628,11 @@ class BillLibraryService {
             response.bill_total = this.calculateBillTotal(response);
         }
         else {
+            response.fees.push({
+                name: (0, i18n_1.localize)('roundOff', language),
+                value: 0,
+                id: 'round_off',
+            });
             response.bill_total = sub_total;
         }
         const quantity_keys_to_format = ['value', 'bill_total'];
