@@ -3,8 +3,8 @@ import { CouponInfoDto, GetCouponInfoDto, GetItemLevelDiscountInterfaceDto, GetM
 import { DiscountApplicableType } from '../enum/discountLib.enum';
 import { DiscountInterface } from '../interfaces/discount.interface';
 export declare class DiscountCalculationService {
-    getDiscountFromCart(cart: any, itemInfo: OrderItemInfo[]): DiscountInterface[];
-    getDiscountInfoFromCart(cart: any): any;
+    getDiscountFromCart(cart: any, itemInfo: OrderItemInfo[], coupon_info: any): DiscountInterface[];
+    getDiscountInfoFromCart(cart: any, coupon_info: any): any;
     getDiscountOnOrder(order: any, couponInfo: any, itemInfo: OrderItemInfo[]): DiscountInterface[];
     getDiscountInfoFromOrder(order: any, coupon_info: any): any;
     getOrderCouponDiscountInterface(getCouponInfoDto: GetCouponInfoDto): DiscountInterface;
