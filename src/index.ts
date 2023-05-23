@@ -49,6 +49,7 @@ export function calculateBill(
 export function calculateOfflineCartBill(
   cart: any,
   restFee: any,
+  coupon_info: any,
   offlinePlatform: any,
   platform: string,
   rest_round_off: any,
@@ -84,22 +85,22 @@ export function calculateOfflineCartBill(
     return billOfflineCalculationService.getOfflineCartBill(
       cart,
       restFee,
+      coupon_info,
       offlinePlatform,
       platform,
       round_off,
       country_code,
-     
     );
   } else {
     return billOfflineCalculationService.getIndonesiaOfflineCartBill(
       cart,
       restFee,
+      coupon_info,
       offlinePlatform,
       platform,
       round_off,
       country_code,
       taxAfterDiscount,
-     
     );
   }
 }
@@ -148,7 +149,6 @@ export function calculateOfflineOrderBill(
       offlinePlatform,
       round_off,
       country_code,
-     
     );
   } else {
     return billOfflineCalculationService.getIndonesiaOfflineOrderBill(
