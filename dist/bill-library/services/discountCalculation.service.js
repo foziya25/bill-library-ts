@@ -3,13 +3,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DiscountCalculationService = void 0;
 const common_function_lib_1 = require("../lib/common.function.lib");
 class DiscountCalculationService {
-    getDiscountFromCart(cart, itemInfo) {
+    getDiscountFromCart(cart, itemInfo, coupon_info) {
         const discountInterfaceList = [];
-        const discountInfo = this.getDiscountInfoFromCart(cart);
+        const discountInfo = this.getDiscountInfoFromCart(cart, coupon_info);
         if (discountInfo) {
             for (const i in discountInfo) {
                 const discount = discountInfo[i];
                 switch (discount.type) {
+                    case "coupon":
+                        const couponId = discount.info.id;
+                        const couponData = discount.info.discountData;
+                        const getCouponInfoDto = {
+                            couponInfoDto: couponData,
+                            itemInfo: itemInfo,
+                            coupon_id: couponId,
+                        };
+                        const couponInterface = this.getOrderCouponDiscountInterface(getCouponInfoDto);
+                        if (couponInterface) {
+                            discountInterfaceList.push(couponInterface);
+                        }
+                        else {
+                        }
+                        break;
                     case "merchant":
                         const discountMData = discount.info.discountData;
                         const discountMid = discount.info.id;
@@ -47,9 +62,37 @@ class DiscountCalculationService {
         }
         return discountInterfaceList;
     }
-    getDiscountInfoFromCart(cart) {
+    getDiscountInfoFromCart(cart, coupon_info) {
         const discountInfo = [];
         const { coupon_id, reason, coupon_name, dvalue, dtype, cart_items } = cart;
+        if (coupon_info && coupon_id && coupon_id === coupon_info.coupon_id) {
+            const couponInfoData = {
+                applicableOn: coupon_info.applicable_on,
+                requiredList: coupon_info.required_list,
+                applicableQuantity: coupon_info.applicable_qty,
+                applicableType: coupon_info.applicable_type,
+                discountType: coupon_info.discount_type,
+                applicableDValue: coupon_info.applicable_dvalue,
+                applicableDType: null,
+                maxValue: coupon_info.max_amount,
+                minAmount: coupon_info.min_amount,
+                name: coupon_info.code,
+                value: coupon_info.value,
+                code: coupon_info.code,
+                reason: reason,
+            };
+            if (coupon_info.applicable_dtype === 'flat') {
+                couponInfoData.applicableDType = "fixed";
+            }
+            else if (coupon_info.applicable_dtype === 'percent') {
+                couponInfoData.applicableDType = "percentage";
+            }
+            const discountInfoObj = {
+                type: "coupon",
+                info: { id: coupon_id, discountData: couponInfoData },
+            };
+            discountInfo.push(discountInfoObj);
+        }
         if (coupon_id === 'mm_discount' || coupon_id === 'mm_topup') {
             const mDiscountObj = {
                 type: "merchant",

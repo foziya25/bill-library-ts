@@ -101,11 +101,11 @@ class BillOfflineCalculationService {
         }
         return { status: flag, message: message };
     }
-    getOfflineCartBill(cart, restFee, offlinePlatform, platform = 'easyeat', round_off, country_code = 'MY') {
+    getOfflineCartBill(cart, restFee, coupon_info, offlinePlatform, platform = 'easyeat', round_off, country_code = 'MY') {
         const { cart_items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, } = cart;
         const itemInfo = (0, common_function_lib_1.getCartItemInfo)(cart_items, order_type, platform);
         let restCharges = (0, common_function_lib_1.getTransformedRestaurantCharges)(restFee, order_type);
-        const discountInfo = this.discountCalculationService.getDiscountFromCart(cart, itemInfo);
+        const discountInfo = this.discountCalculationService.getDiscountFromCart(cart, itemInfo, coupon_info);
         let packagingChargeDisabled = false;
         if (platform &&
             platform != 'easyeat' &&
@@ -197,11 +197,11 @@ class BillOfflineCalculationService {
         }
         return this.getOrderBill(itemInfo, discountInfo, restCharges, round_off, country_code, platform, offlinePlatform);
     }
-    getIndonesiaOfflineCartBill(cart, restFee, offlinePlatform, platform = 'easyeat', round_off, country_code = 'ID', taxAfterDiscount) {
+    getIndonesiaOfflineCartBill(cart, restFee, coupon_info, offlinePlatform, platform = 'easyeat', round_off, country_code = 'ID', taxAfterDiscount) {
         const { cart_items, order_type, skip_service_charge_operation, skip_packaging_charge_operation, } = cart;
         const itemInfo = (0, common_function_lib_1.getCartItemInfo)(cart_items, order_type, platform);
         let restCharges = (0, common_function_lib_1.getTransformedRestaurantCharges)(restFee, order_type);
-        const discountInfo = this.discountCalculationService.getDiscountFromCart(cart, itemInfo);
+        const discountInfo = this.discountCalculationService.getDiscountFromCart(cart, itemInfo, coupon_info);
         let packagingChargeDisabled = false;
         if (platform &&
             platform != 'easyeat' &&

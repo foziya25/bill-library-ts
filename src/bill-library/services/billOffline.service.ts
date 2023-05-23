@@ -175,6 +175,7 @@ export class BillOfflineCalculationService {
   getOfflineCartBill(
     cart: any,
     restFee: any,
+    coupon_info: any,
     offlinePlatform: any,
     platform = 'easyeat',
     round_off: RoundOffObj,
@@ -191,6 +192,7 @@ export class BillOfflineCalculationService {
     const discountInfo = this.discountCalculationService.getDiscountFromCart(
       cart,
       itemInfo,
+      coupon_info,
     );
 
     let packagingChargeDisabled = false;
@@ -337,6 +339,7 @@ export class BillOfflineCalculationService {
   getIndonesiaOfflineCartBill(
     cart: any,
     restFee: any,
+    coupon_info: any,
     offlinePlatform: any,
     platform = 'easyeat',
     round_off: RoundOffObj,
@@ -354,6 +357,7 @@ export class BillOfflineCalculationService {
     const discountInfo = this.discountCalculationService.getDiscountFromCart(
       cart,
       itemInfo,
+      coupon_info,
     );
 
     let packagingChargeDisabled = false;
