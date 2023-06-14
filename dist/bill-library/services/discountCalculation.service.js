@@ -5,7 +5,8 @@ const common_function_lib_1 = require("../lib/common.function.lib");
 class DiscountCalculationService {
     getDiscountFromCart(cart, itemInfo, coupon_info) {
         const discountInterfaceList = [];
-        const discountInfo = this.getDiscountInfoFromCart(cart, coupon_info);
+        const item_total = (0, common_function_lib_1.getCartItemTotal)(itemInfo);
+        const discountInfo = this.getDiscountInfoFromCart(cart, coupon_info, item_total);
         if (discountInfo) {
             for (const i in discountInfo) {
                 const discount = discountInfo[i];
@@ -62,10 +63,20 @@ class DiscountCalculationService {
         }
         return discountInterfaceList;
     }
-    getDiscountInfoFromCart(cart, coupon_info) {
+    getDiscountInfoFromCart(cart, coupon_info, item_total) {
         const discountInfo = [];
         const { coupon_id, reason, coupon_name, dvalue, dtype, cart_items } = cart;
         if (coupon_info && coupon_id && coupon_id === coupon_info.coupon_id) {
+            const values = coupon_info.values;
+            const value_ranges = coupon_info.value_ranges;
+            let value = coupon_info.value;
+            for (const i in value_ranges) {
+                const range = value_ranges[i];
+                if (range >= item_total) {
+                    value = values[i];
+                    break;
+                }
+            }
             const couponInfoData = {
                 applicableOn: coupon_info.applicable_on,
                 requiredList: coupon_info.required_list,
@@ -77,7 +88,7 @@ class DiscountCalculationService {
                 maxValue: coupon_info.max_amount,
                 minAmount: coupon_info.min_amount,
                 name: coupon_info.code,
-                value: coupon_info.value,
+                value: value,
                 code: coupon_info.code,
                 reason: reason,
             };
@@ -150,7 +161,8 @@ class DiscountCalculationService {
     }
     getDiscountOnOrder(order, couponInfo, itemInfo) {
         const discountInterfaceList = [];
-        const discountInfo = this.getDiscountInfoFromOrder(order, couponInfo);
+        const item_total = (0, common_function_lib_1.getCartItemTotal)(itemInfo);
+        const discountInfo = this.getDiscountInfoFromOrder(order, couponInfo, item_total);
         if (discountInfo) {
             for (const i in discountInfo) {
                 const discount = discountInfo[i];
@@ -207,10 +219,20 @@ class DiscountCalculationService {
         }
         return discountInterfaceList;
     }
-    getDiscountInfoFromOrder(order, coupon_info) {
+    getDiscountInfoFromOrder(order, coupon_info, item_total) {
         const discountInfo = [];
         const { coupon_id, reason, coupon_name, dtype, dvalue, items } = order;
         if (coupon_info && coupon_id && coupon_id === coupon_info.coupon_id) {
+            const values = coupon_info.values;
+            const value_ranges = coupon_info.value_ranges;
+            let value = coupon_info.value;
+            for (const i in value_ranges) {
+                const range = value_ranges[i];
+                if (range >= item_total) {
+                    value = values[i];
+                    break;
+                }
+            }
             const couponInfoData = {
                 applicableOn: coupon_info.applicable_on,
                 requiredList: coupon_info.required_list,
@@ -360,7 +382,7 @@ class DiscountCalculationService {
         if (discountCal && discountCal.status) {
             const discountInterfaceObj = {
                 name: name,
-                discountType: applicableDType,
+                discountType: discountCal.applicableDType,
                 value: discountCal.discountValue,
                 applicableOn: applicableOn,
                 discountApplicableType: this.getDiscountApplicableType(applicableType),
@@ -421,6 +443,7 @@ class DiscountCalculationService {
         const response = {
             status: false,
             discountValue: 0,
+            applicableDType: null,
         };
         const { requiredList, applicableOn, applicableQuantity, applicableType, discountType, applicableDType, maxValue, } = coupon_info;
         let applicableDValue = coupon_info.applicableDValue;
@@ -460,9 +483,11 @@ class DiscountCalculationService {
                 if (discountType === 'bxgy') {
                     response.status = true;
                     response.discountValue = appliedItem.price * applicableQuantity;
+                    response.applicableDType = "fixed";
                     return response;
                 }
                 else if (discountType === 'bxgyoz') {
+                    response.applicableDType = applicableDType;
                     switch (applicableDType) {
                         case "fixed":
                             let useValue = applicableDValue;
