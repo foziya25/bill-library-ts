@@ -96,7 +96,15 @@ export class DiscountCalculationService {
     item_total: number,
   ): any {
     const discountInfo: any[] = [];
-    const {coupon_id, reason, coupon_name, dvalue, dtype, cart_items} = cart;
+    const {
+      coupon_id,
+      reason,
+      coupon_name,
+      dvalue,
+      dtype,
+      cart_items,
+      order_type,
+    } = cart;
     if (coupon_info && coupon_id && coupon_id === coupon_info.coupon_id) {
       const values = coupon_info.values;
       const value_ranges = coupon_info.value_ranges;
@@ -133,7 +141,16 @@ export class DiscountCalculationService {
         type: DiscountCategory.COUPON,
         info: {id: coupon_id, discountData: couponInfoData},
       };
-      discountInfo.push(discountInfoObj);
+      const discountOrderType = coupon_info.order_type;
+      if (discountOrderType) {
+        for (const i in discountOrderType) {
+          const applicableOrderType = discountOrderType[i];
+          if (applicableOrderType == order_type) {
+            discountInfo.push(discountInfoObj);
+            break;
+          }
+        }
+      }
     }
 
     if (coupon_id === 'mm_discount' || coupon_id === 'mm_topup') {
@@ -274,7 +291,8 @@ export class DiscountCalculationService {
     item_total: number,
   ): any {
     const discountInfo: any[] = [];
-    const {coupon_id, reason, coupon_name, dtype, dvalue, items} = order;
+    const {coupon_id, reason, coupon_name, dtype, dvalue, items, order_type} =
+      order;
     if (coupon_info && coupon_id && coupon_id === coupon_info.coupon_id) {
       const values = coupon_info.values;
       const value_ranges = coupon_info.value_ranges;
@@ -311,7 +329,16 @@ export class DiscountCalculationService {
         type: DiscountCategory.COUPON,
         info: {id: coupon_id, discountData: couponInfoData},
       };
-      discountInfo.push(discountInfoObj);
+      const discountOrderType = coupon_info.order_type;
+      if (discountOrderType) {
+        for (const i in discountOrderType) {
+          const applicableOrderType = discountOrderType[i];
+          if (applicableOrderType == order_type) {
+            discountInfo.push(discountInfoObj);
+            break;
+          }
+        }
+      }
     }
 
     if (coupon_id === 'mm_discount' || coupon_id === 'mm_topup') {
