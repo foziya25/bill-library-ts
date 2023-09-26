@@ -188,7 +188,7 @@ class BillOfflineCalculationService {
                         discountApplicableType: "overAll",
                         id: fee.id,
                         discountAction: "normal",
-                        discountCategory: "merchant",
+                        discountCategory: "loyalty",
                         maxValue: 0,
                     };
                     discountInfo.push(loyaltyDiscount);
@@ -284,7 +284,7 @@ class BillOfflineCalculationService {
                         discountApplicableType: "overAll",
                         id: fee.id,
                         discountAction: "normal",
-                        discountCategory: "merchant",
+                        discountCategory: "loyalty",
                         maxValue: 0,
                     };
                     discountInfo.push(loyaltyDiscount);
