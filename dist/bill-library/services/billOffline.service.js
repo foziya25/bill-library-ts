@@ -191,7 +191,9 @@ class BillOfflineCalculationService {
                         discountCategory: "loyalty",
                         maxValue: 0,
                     };
-                    discountInfo.push(loyaltyDiscount);
+                    if (loyaltyDiscount.value !== 0) {
+                        discountInfo.push(loyaltyDiscount);
+                    }
                 }
             });
         }
@@ -287,7 +289,9 @@ class BillOfflineCalculationService {
                         discountCategory: "loyalty",
                         maxValue: 0,
                     };
-                    discountInfo.push(loyaltyDiscount);
+                    if (loyaltyDiscount.value !== 0) {
+                        discountInfo.push(loyaltyDiscount);
+                    }
                 }
             });
         }
