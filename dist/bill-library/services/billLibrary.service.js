@@ -251,6 +251,79 @@ class BillLibraryService {
                     discountCategory: discount.discountCategory,
                     reason: discount.reason,
                 };
+                if (discount.discountCategory === "loyalty") {
+                    if (effectiveTotal >= -1 * discount.discountValue) {
+                        effectiveTotal += discount.discountValue;
+                        let tempTotal = 0;
+                        discount.itemDiscountInfo.forEach(itemDiscount => {
+                            const discountItem = orderCalculationInfo.find(item => item.orderItemId === itemDiscount.orderItemId);
+                            if (discountItem) {
+                                if (discountItem.effectivePrice +
+                                    itemDiscount.itemDiscountValue >=
+                                    0) {
+                                    tempTotal +=
+                                        discountItem.effectivePrice + discountItem.appliedDiscount;
+                                }
+                            }
+                        });
+                        discount.itemDiscountInfo.forEach(itemDiscount => {
+                            const discountItem = orderCalculationInfo.find(item => item.orderItemId === itemDiscount.orderItemId);
+                            if (discountItem) {
+                                if (discountItem.effectivePrice +
+                                    itemDiscount.itemDiscountValue >=
+                                    0) {
+                                    const propDiscount = ((discountItem.effectivePrice +
+                                        discountItem.appliedDiscount) *
+                                        discount.discountValue) /
+                                        tempTotal;
+                                    discountItem.appliedDiscount += propDiscount;
+                                }
+                            }
+                        });
+                        discountFeesArray.push(discountFee);
+                    }
+                    else {
+                        let tempTotal = 0;
+                        discount.itemDiscountInfo.forEach(itemDiscount => {
+                            const discountItem = orderCalculationInfo.find(item => item.orderItemId === itemDiscount.orderItemId);
+                            if (discountItem) {
+                                if (discountItem.effectivePrice + discountItem.appliedDiscount >
+                                    0) {
+                                    tempTotal +=
+                                        discountItem.effectivePrice + discountItem.appliedDiscount;
+                                }
+                            }
+                        });
+                        discount.itemDiscountInfo.forEach(itemDiscount => {
+                            const discountItem = orderCalculationInfo.find(item => item.orderItemId === itemDiscount.orderItemId);
+                            if (discountItem) {
+                                if (discountItem.effectivePrice + discountItem.appliedDiscount >
+                                    0) {
+                                    const propDiscount = ((discountItem.effectivePrice +
+                                        discountItem.appliedDiscount) *
+                                        effectiveTotal) /
+                                        tempTotal;
+                                    discountItem.appliedDiscount -= propDiscount;
+                                }
+                            }
+                        });
+                        discount.discountValue = -1 * effectiveTotal;
+                        effectiveTotal = 0;
+                        discountFee.value = Number(discount.discountValue.toFixed(2));
+                        discountFeesArray.push(discountFee);
+                    }
+                }
+            }
+        });
+        discountInfo.forEach(discount => {
+            if (effectiveTotal > 0) {
+                const discountFee = {
+                    name: discount.name,
+                    value: Number(discount.discountValue.toFixed(2)),
+                    id: discount.id,
+                    discountCategory: discount.discountCategory,
+                    reason: discount.reason,
+                };
                 if (discount.discountCategory === "itemLevel") {
                     effectiveTotal += discount.discountValue;
                     discount.itemDiscountInfo.forEach(itemDiscount => {
@@ -277,7 +350,8 @@ class BillLibraryService {
                 };
                 if (discount.discountCategory !== "itemLevel" &&
                     discount.discountCategory !== "topUp" &&
-                    discount.discountAction !== "freeDelivery") {
+                    discount.discountAction !== "freeDelivery" &&
+                    discount.discountCategory !== "loyalty") {
                     if (effectiveTotal >= -1 * discount.discountValue) {
                         effectiveTotal += discount.discountValue;
                         let tempTotal = 0;
@@ -461,6 +535,79 @@ class BillLibraryService {
                     discountCategory: discount.discountCategory,
                     reason: discount.reason,
                 };
+                if (discount.discountCategory == "loyalty") {
+                    if (effectiveTotal >= -1 * discount.discountValue) {
+                        effectiveTotal += discount.discountValue;
+                        let tempTotal = 0;
+                        discount.itemDiscountInfo.forEach(itemDiscount => {
+                            const discountItem = orderCalculationInfo.find(item => item.orderItemId === itemDiscount.orderItemId);
+                            if (discountItem) {
+                                if (discountItem.effectivePrice +
+                                    itemDiscount.itemDiscountValue >=
+                                    0) {
+                                    tempTotal +=
+                                        discountItem.effectivePrice + discountItem.appliedDiscount;
+                                }
+                            }
+                        });
+                        discount.itemDiscountInfo.forEach(itemDiscount => {
+                            const discountItem = orderCalculationInfo.find(item => item.orderItemId === itemDiscount.orderItemId);
+                            if (discountItem) {
+                                if (discountItem.effectivePrice +
+                                    itemDiscount.itemDiscountValue >=
+                                    0) {
+                                    const propDiscount = ((discountItem.effectivePrice +
+                                        discountItem.appliedDiscount) *
+                                        discount.discountValue) /
+                                        tempTotal;
+                                    discountItem.appliedDiscount += propDiscount;
+                                }
+                            }
+                        });
+                        discountFeesArray.push(discountFee);
+                    }
+                    else {
+                        let tempTotal = 0;
+                        discount.itemDiscountInfo.forEach(itemDiscount => {
+                            const discountItem = orderCalculationInfo.find(item => item.orderItemId === itemDiscount.orderItemId);
+                            if (discountItem) {
+                                if (discountItem.effectivePrice + discountItem.appliedDiscount >
+                                    0) {
+                                    tempTotal +=
+                                        discountItem.effectivePrice + discountItem.appliedDiscount;
+                                }
+                            }
+                        });
+                        discount.itemDiscountInfo.forEach(itemDiscount => {
+                            const discountItem = orderCalculationInfo.find(item => item.orderItemId === itemDiscount.orderItemId);
+                            if (discountItem) {
+                                if (discountItem.effectivePrice + discountItem.appliedDiscount >
+                                    0) {
+                                    const propDiscount = ((discountItem.effectivePrice +
+                                        discountItem.appliedDiscount) *
+                                        effectiveTotal) /
+                                        tempTotal;
+                                    discountItem.appliedDiscount -= propDiscount;
+                                }
+                            }
+                        });
+                        discount.discountValue = -1 * effectiveTotal;
+                        effectiveTotal = 0;
+                        discountFee.value = Number(discount.discountValue.toFixed(2));
+                        discountFeesArray.push(discountFee);
+                    }
+                }
+            }
+        });
+        discountInfo.forEach(discount => {
+            if (effectiveTotal > 0) {
+                const discountFee = {
+                    name: discount.name,
+                    value: Number(discount.discountValue.toFixed(2)),
+                    id: discount.id,
+                    discountCategory: discount.discountCategory,
+                    reason: discount.reason,
+                };
                 if (discount.discountCategory === "itemLevel") {
                     effectiveTotal += discount.discountValue;
                     discount.itemDiscountInfo.forEach(itemDiscount => {
@@ -487,7 +634,8 @@ class BillLibraryService {
                 };
                 if (discount.discountCategory !== "itemLevel" &&
                     discount.discountCategory !== "topUp" &&
-                    discount.discountAction !== "freeDelivery") {
+                    discount.discountAction !== "freeDelivery" &&
+                    discount.discountCategory !== "loyalty") {
                     if (effectiveTotal >= -1 * discount.discountValue) {
                         effectiveTotal += discount.discountValue;
                         let tempTotal = 0;
