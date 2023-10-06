@@ -4,9 +4,9 @@ import { DiscountApplicableType } from '../enum/discountLib.enum';
 import { DiscountInterface } from '../interfaces/discount.interface';
 export declare class DiscountCalculationService {
     getDiscountFromCart(cart: any, itemInfo: OrderItemInfo[], coupon_info: any): DiscountInterface[];
-    getDiscountInfoFromCart(cart: any, coupon_info: any): any;
+    getDiscountInfoFromCart(cart: any, coupon_info: any, item_total: number): any;
     getDiscountOnOrder(order: any, couponInfo: any, itemInfo: OrderItemInfo[]): DiscountInterface[];
-    getDiscountInfoFromOrder(order: any, coupon_info: any): any;
+    getDiscountInfoFromOrder(order: any, coupon_info: any, item_total: number): any;
     getOrderCouponDiscountInterface(getCouponInfoDto: GetCouponInfoDto): DiscountInterface;
     getFPOFdDiscountFromOrder(getCouponInfoDto: GetCouponInfoDto): DiscountInterface;
     getBxGyDiscountFromOrder(getCouponInfoDto: GetCouponInfoDto): DiscountInterface;
