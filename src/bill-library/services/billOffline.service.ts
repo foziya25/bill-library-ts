@@ -318,10 +318,12 @@ export class BillOfflineCalculationService {
             discountApplicableType: DiscountApplicableType.OVER_ALL,
             id: fee.id,
             discountAction: DiscountAction.NORMAL,
-            discountCategory: DiscountCategory.MERCHANT,
+            discountCategory: DiscountCategory.LOYALTY,
             maxValue: 0,
           };
-          discountInfo.push(loyaltyDiscount);
+          if (loyaltyDiscount.value !== 0) {
+            discountInfo.push(loyaltyDiscount);
+          }
         }
       });
     }
@@ -485,10 +487,12 @@ export class BillOfflineCalculationService {
             discountApplicableType: DiscountApplicableType.OVER_ALL,
             id: fee.id,
             discountAction: DiscountAction.NORMAL,
-            discountCategory: DiscountCategory.MERCHANT,
+            discountCategory: DiscountCategory.LOYALTY,
             maxValue: 0,
           };
-          discountInfo.push(loyaltyDiscount);
+          if (loyaltyDiscount.value !== 0) {
+            discountInfo.push(loyaltyDiscount);
+          }
         }
       });
     }

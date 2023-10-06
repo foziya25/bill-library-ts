@@ -23,4 +23,5 @@ export const enum DiscountCategory {
   COUPON = 'coupon',
   MERCHANT = 'merchant',
   ITEM_LEVEL = 'itemLevel',
+  LOYALTY = 'loyalty',
 }

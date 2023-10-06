@@ -19,5 +19,6 @@ export declare const enum DiscountCategory {
     TOP_UP = "topUp",
     COUPON = "coupon",
     MERCHANT = "merchant",
-    ITEM_LEVEL = "itemLevel"
+    ITEM_LEVEL = "itemLevel",
+    LOYALTY = "loyalty"
 }
