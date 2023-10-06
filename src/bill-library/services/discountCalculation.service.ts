@@ -641,6 +641,7 @@ export class DiscountCalculationService {
               }
               response.discountValue = percentageValue;
               response.status = true;
+              response.applicableDType = DiscountType.FIXED;
               break;
           }
           return response;

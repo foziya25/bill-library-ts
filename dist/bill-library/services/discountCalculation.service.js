@@ -529,6 +529,7 @@ class DiscountCalculationService {
                             }
                             response.discountValue = percentageValue;
                             response.status = true;
+                            response.applicableDType = "fixed";
                             break;
                     }
                     return response;
