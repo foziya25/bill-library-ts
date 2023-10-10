@@ -597,7 +597,7 @@ export class DiscountCalculationService {
         }
       }
 
-      if (applicableList.length && discountType === 'bxgyoz') {
+      if (applicableList.length) {
         applicableList.sort((a, b) => a.price - b.price);
         let requiredQty = applicableQuantity;
         for (const item of applicableList) {
