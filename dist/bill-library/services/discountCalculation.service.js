@@ -253,7 +253,7 @@ class DiscountCalculationService {
                 maxValue: coupon_info.max_amount,
                 minAmount: coupon_info.min_amount,
                 name: coupon_info.code,
-                value: coupon_info.value,
+                value: value,
                 code: coupon_info.code,
                 reason: reason,
             };
@@ -471,17 +471,38 @@ class DiscountCalculationService {
         else {
             const key = this.getAppliedOnKey(applicableType);
             const appliedItem = { present: 0, qty: 0, price: 0 };
+            const applicableList = [];
             for (const i in itemInfo) {
                 for (const j in applicableOn) {
                     if (itemInfo[i][key] === applicableOn[j]) {
                         appliedItem.present = 1;
-                        appliedItem.qty = itemInfo[i].quantity;
-                        appliedItem.price = itemInfo[i].price;
-                        break;
+                        const itemY = {
+                            qty: itemInfo[i].quantity,
+                            price: itemInfo[i].price,
+                        };
+                        applicableList.push(itemY);
                     }
                 }
             }
-            if (appliedItem.present && appliedItem.qty >= applicableQuantity) {
+            if (applicableList.length) {
+                applicableList.sort((a, b) => a.price - b.price);
+                let requiredQty = applicableQuantity;
+                for (const item of applicableList) {
+                    if (requiredQty > 0) {
+                        if (item.qty <= requiredQty) {
+                            appliedItem.price = appliedItem.price + item.qty * item.price;
+                            requiredQty = requiredQty - item.qty;
+                            appliedItem.qty = appliedItem.qty + item.qty;
+                        }
+                        else {
+                            appliedItem.price = appliedItem.price + requiredQty * item.price;
+                            appliedItem.qty = appliedItem.qty + requiredQty;
+                            requiredQty = 0;
+                        }
+                    }
+                }
+            }
+            if (appliedItem.present && appliedItem.qty == applicableQuantity) {
                 for (const l in requiredList) {
                     const listData = requiredList[l];
                     const listKey = this.getAppliedOnKey(listData.type);
@@ -500,7 +521,7 @@ class DiscountCalculationService {
                 }
                 if (discountType === 'bxgy') {
                     response.status = true;
-                    response.discountValue = appliedItem.price * applicableQuantity;
+                    response.discountValue = appliedItem.price;
                     response.applicableDType = "fixed";
                     return response;
                 }
@@ -509,8 +530,8 @@ class DiscountCalculationService {
                     switch (applicableDType) {
                         case "fixed":
                             let useValue = applicableDValue;
-                            if (applicableDValue > appliedItem.price * applicableQuantity) {
-                                useValue = appliedItem.price * applicableQuantity;
+                            if (applicableDValue > appliedItem.price) {
+                                useValue = appliedItem.price;
                             }
                             if (useValue > maxValue) {
                                 useValue = maxValue;
@@ -522,8 +543,7 @@ class DiscountCalculationService {
                             if (applicableDValue > 100) {
                                 applicableDValue = 100;
                             }
-                            let percentageValue = (applicableDValue * appliedItem.price * applicableQuantity) /
-                                100;
+                            let percentageValue = (applicableDValue * appliedItem.price) / 100;
                             if (percentageValue > maxValue) {
                                 percentageValue = maxValue;
                             }
