@@ -316,7 +316,7 @@ export class DiscountCalculationService {
         maxValue: coupon_info.max_amount,
         minAmount: coupon_info.min_amount,
         name: coupon_info.code,
-        value: coupon_info.value,
+        value: value,
         code: coupon_info.code,
         reason: reason,
       };
