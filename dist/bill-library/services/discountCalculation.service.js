@@ -496,7 +496,7 @@ class DiscountCalculationService {
                         }
                         else {
                             appliedItem.price = appliedItem.price + requiredQty * item.price;
-                            appliedItem.qty = requiredQty;
+                            appliedItem.qty = appliedItem.qty + requiredQty;
                             requiredQty = 0;
                         }
                     }

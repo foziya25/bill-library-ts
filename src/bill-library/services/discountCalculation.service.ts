@@ -608,7 +608,7 @@ export class DiscountCalculationService {
               appliedItem.qty = appliedItem.qty + item.qty;
             } else {
               appliedItem.price = appliedItem.price + requiredQty * item.price;
-              appliedItem.qty = requiredQty;
+              appliedItem.qty = appliedItem.qty + requiredQty;
               requiredQty = 0;
             }
           }
