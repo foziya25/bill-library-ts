@@ -8,6 +8,7 @@ export declare class ApplicableOrderResponseDto {
     status: number;
     itemTotalWithDiscount: number;
     orderItemList: string[];
+    effectiveQuantity: number;
 }
 export declare class CalculateCartChargeDto {
     status: number;
