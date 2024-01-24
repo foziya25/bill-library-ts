@@ -10,6 +10,7 @@ export class ApplicableOrderResponseDto {
   status: number;
   itemTotalWithDiscount: number;
   orderItemList: string[];
+  effectiveQuantity: number;
 }
 
 export class CalculateCartChargeDto {
