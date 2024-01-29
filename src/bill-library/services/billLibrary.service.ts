@@ -1170,10 +1170,10 @@ export class BillLibraryService {
       id: charge.id,
     };
     const {chargeType, chargeValue} = charge;
-    const {itemTotalWithDiscount} = applicableResponse;
+    const {itemTotalWithDiscount, effectiveQuantity} = applicableResponse;
     switch (chargeType) {
       case ChargeType.FIXED:
-        chargeFee.value = chargeValue;
+        chargeFee.value = chargeValue * effectiveQuantity;
         response.status = 1;
         break;
       case ChargeType.PERCENTAGE:
@@ -1261,6 +1261,7 @@ export class BillLibraryService {
       itemTotalWithDiscount: 0,
       orderItemList: [],
       status: 0,
+      effectiveQuantity: 0,
     };
     let totalDiscount = 0;
     discountInfo.forEach(disc => {
@@ -1276,6 +1277,7 @@ export class BillLibraryService {
             if (effectivePrice > 0) {
               response.itemTotalWithDiscount += effectivePrice;
               response.orderItemList.push(item.orderItemId);
+              response.effectiveQuantity += item.quantity;
             }
           }
         });
@@ -1295,6 +1297,7 @@ export class BillLibraryService {
             if (effectivePrice > 0) {
               response.itemTotalWithDiscount += effectivePrice;
               response.orderItemList.push(item.orderItemId);
+              response.effectiveQuantity += item.quantity;
             }
           }
         });
@@ -1314,6 +1317,7 @@ export class BillLibraryService {
             if (effectivePrice > 0) {
               response.itemTotalWithDiscount += effectivePrice;
               response.orderItemList.push(item.orderItemId);
+              response.effectiveQuantity += item.quantity;
             }
           }
         });
@@ -1343,6 +1347,7 @@ export class BillLibraryService {
       itemTotalWithDiscount: 0,
       orderItemList: [],
       status: 0,
+      effectiveQuantity: 0,
     };
     let totalDiscount = 0;
     if (taxAfterDiscount) {
@@ -1360,6 +1365,7 @@ export class BillLibraryService {
             if (effectivePrice > 0) {
               response.itemTotalWithDiscount += effectivePrice;
               response.orderItemList.push(item.orderItemId);
+              response.effectiveQuantity += item.quantity;
             }
           }
         });
@@ -1379,6 +1385,7 @@ export class BillLibraryService {
             if (effectivePrice > 0) {
               response.itemTotalWithDiscount += effectivePrice;
               response.orderItemList.push(item.orderItemId);
+              response.effectiveQuantity += item.quantity;
             }
           }
         });
@@ -1398,6 +1405,7 @@ export class BillLibraryService {
             if (effectivePrice > 0) {
               response.itemTotalWithDiscount += effectivePrice;
               response.orderItemList.push(item.orderItemId);
+              response.effectiveQuantity += item.quantity;
             }
           }
         });
