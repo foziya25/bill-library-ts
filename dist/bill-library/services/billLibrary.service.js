@@ -910,7 +910,7 @@ class BillLibraryService {
         discountInfo.forEach(disc => {
             totalDiscount += disc.discountValue;
         });
-        const { chargeApplicableType, applicableOn, class: className } = charge;
+        const { chargeApplicableType, applicableOn, class: className, chargeType, } = charge;
         switch (chargeApplicableType) {
             case "item":
                 orderItemInfo.forEach(item => {
@@ -961,7 +961,12 @@ class BillLibraryService {
                         if (effectivePrice > 0) {
                             response.itemTotalWithDiscount += effectivePrice;
                             response.orderItemList.push(item.orderItemId);
-                            response.effectiveQuantity += item.quantity;
+                            if (chargeType == "fixed") {
+                                response.effectiveQuantity = 1;
+                            }
+                            else {
+                                response.effectiveQuantity += item.quantity;
+                            }
                         }
                     }
                 });
@@ -993,7 +998,7 @@ class BillLibraryService {
                 totalDiscount += disc.discountValue;
             });
         }
-        const { chargeApplicableType, applicableOn, class: className } = charge;
+        const { chargeApplicableType, applicableOn, class: className, chargeType, } = charge;
         switch (chargeApplicableType) {
             case "item":
                 orderItemInfo.forEach(item => {
@@ -1042,9 +1047,14 @@ class BillLibraryService {
                     else {
                         const effectivePrice = item.effectivePrice;
                         if (effectivePrice > 0) {
+                            if (chargeType == "fixed") {
+                                response.effectiveQuantity = 1;
+                            }
+                            else {
+                                response.effectiveQuantity += item.quantity;
+                            }
                             response.itemTotalWithDiscount += effectivePrice;
                             response.orderItemList.push(item.orderItemId);
-                            response.effectiveQuantity += item.quantity;
                         }
                     }
                 });
