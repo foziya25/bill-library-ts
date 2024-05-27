@@ -598,7 +598,7 @@ class DiscountCalculationService {
                 quantity = itemData.quantity;
             }
             let useValue = value * quantity;
-            if (useValue > itemPrice) {
+            if (discountType !== "percentage" && useValue > itemPrice) {
                 useValue = itemPrice;
             }
             if (quantity < 0 || itemData.quantity < 0) {

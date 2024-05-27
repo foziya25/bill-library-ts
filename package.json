@@ -1,6 +1,6 @@
 {
   "name": "bill-library",
-  "version": "2.1.1",
+  "version": "2.2.2",
   "description": "billing-library",
   "main": "dist/index.js",
   "scripts": {
