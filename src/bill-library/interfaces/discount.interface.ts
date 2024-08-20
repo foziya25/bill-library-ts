@@ -17,3 +17,15 @@ export interface DiscountInterface {
   maxValue: number;
   reason?: string;
 }
+
+export interface DiscountInfoInterface {
+  id: string;
+  type: string;
+  discountData: any;
+}
+
+export interface DiscountCalculationDto {
+  itemLevel: any[];
+  coupon: any;
+  merchant: object;
+}

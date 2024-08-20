@@ -284,7 +284,7 @@ export class DiscountCalculationService {
     }
     return discountInterfaceList;
   }
-
+  // same name function in PHP
   getDiscountInfoFromOrder(
     order: any,
     coupon_info: any,

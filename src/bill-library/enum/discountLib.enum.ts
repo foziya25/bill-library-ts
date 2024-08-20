@@ -5,6 +5,7 @@ export const enum DiscountApplicableType {
   CART_ITEM_ID = 'cartItemId',
   ORDER_ITEM_ID = 'orderItemId',
   OVER_ALL = 'overAll',
+  ORDER = 'order',
 }
 
 export const enum DiscountType {
@@ -24,4 +25,5 @@ export const enum DiscountCategory {
   MERCHANT = 'merchant',
   ITEM_LEVEL = 'itemLevel',
   LOYALTY = 'loyalty',
+  FREE_DEL = 'free_del', // Discounts providing free delivery.
 }

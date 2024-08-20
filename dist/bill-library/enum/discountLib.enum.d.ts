@@ -4,7 +4,8 @@ export declare const enum DiscountApplicableType {
     ITEM = "item",
     CART_ITEM_ID = "cartItemId",
     ORDER_ITEM_ID = "orderItemId",
-    OVER_ALL = "overAll"
+    OVER_ALL = "overAll",
+    ORDER = "order"
 }
 export declare const enum DiscountType {
     PERCENTAGE = "percentage",
@@ -20,5 +21,6 @@ export declare const enum DiscountCategory {
     COUPON = "coupon",
     MERCHANT = "merchant",
     ITEM_LEVEL = "itemLevel",
-    LOYALTY = "loyalty"
+    LOYALTY = "loyalty",
+    FREE_DEL = "free_del"
 }

@@ -2,5 +2,9 @@
   "itemTotal": "Item Total",
   "roundOff": "Round Off",
   "byRestaurant": "By Restaurant",
-  "itemLevel": "Item Level"
+  "itemLevel": "Item Level",
+  "deliveryFee": "Delivery Fee",
+  "discount": "Discount",
+  "topup": "Topup",
+  "byRest": "By Restaurant"
 }

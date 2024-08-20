@@ -9,3 +9,8 @@ export interface ChargesInterface {
     class: string;
     subName: string;
 }
+export interface ChargesObjInterface {
+    value: number;
+    name: string;
+    id: string;
+}

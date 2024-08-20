@@ -172,6 +172,7 @@ export class BillOfflineCalculationService {
     return {status: flag, message: message};
   }
 
+  //First entry function from index.ts
   getOfflineCartBill(
     cart: any,
     restFee: any,
@@ -187,8 +188,10 @@ export class BillOfflineCalculationService {
       skip_service_charge_operation,
       skip_packaging_charge_operation,
     } = cart;
+    //can use getCartItemInfoNew derived from PHP
     const itemInfo = getCartItemInfo(cart_items, order_type, platform);
     let restCharges = getTransformedRestaurantCharges(restFee, order_type);
+    //can use getDiscountInfoFromCart derived from PHP
     const discountInfo = this.discountCalculationService.getDiscountFromCart(
       cart,
       itemInfo,
@@ -227,6 +230,8 @@ export class BillOfflineCalculationService {
       }
     });
 
+    //which function is equivalent to this in PHP?
+    //Might be updateOrderBill in PHP of OrderService
     return this.getOrderBill(
       itemInfo,
       discountInfo,
@@ -294,6 +299,7 @@ export class BillOfflineCalculationService {
         return true;
       }
     });
+    // Add delivery charge and loyalty cashback in get orderbill
     if (fees && fees.length) {
       fees.forEach(fee => {
         if (order_type == 1 && fee.id === 'delivery') {

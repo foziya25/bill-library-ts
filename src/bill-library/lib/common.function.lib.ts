@@ -1,10 +1,20 @@
 import {OrderItemInfo} from '../baseClass/orderItemInfo';
+import {
+  DeliveryInfoImpl,
+  ItemCalculationDtoImpl,
+  ItemInfoDtoImpl,
+} from '../baseClass/cartItemInfo';
 import {RoundOffObj} from '../baseClass/roundOff';
 import {ChargeApplicableType, ChargeType} from '../enum/billLib.enum';
 import {Platform, RoundOffMasks} from '../enum/common.enum';
 import {FeeObj} from '../interfaces/billResponse.interface';
 import {ChargesInterface} from '../interfaces/charges.interface';
-import {Addons, ItemInfo} from '../interfaces/itemInfo.interface';
+import {
+  Addons,
+  ItemInfo,
+  ItemInfoDto,
+  DeliveryInfo,
+} from '../interfaces/itemInfo.interface';
 
 export const calculateAddonVariantPrice = (itemInfo: ItemInfo): number => {
   let totalPrice = 0;
@@ -38,11 +48,16 @@ export const getRoundOffValue = (
   } else {
     let base = round_off.baseRoundOff;
     const roundUp = round_off.roundUp;
+    const roundDown = round_off.roundDown;
     base = base > 0 ? base : 1;
     // Smaller multiple
     const a = parseInt((Number(value) / base).toString()) * base;
     // Larger multiple
     const b = a + base;
+
+    if (roundDown && !roundUp) {
+      return value - a != base ? a : b;
+    }
     // Return of closest of two
     return value - a >= b - value || (roundUp == true && value - a > 0) ? b : a;
   }
@@ -67,7 +82,7 @@ export function getCartItemInfo(
   orderType: number,
   platform: string,
 ): OrderItemInfo[] {
-  const cartItemInfo: OrderItemInfo[] = [];
+  const cartItemInfo: OrderItemInfo[] = []; // Doubt here to change
   /* Getting the price key from the order type. */
   const priceKey = getPriceKeyByOrderType(orderType, platform);
   if (items && items.length) {
@@ -131,6 +146,49 @@ export function getCartItemInfo(
   return cartItemInfo;
 }
 
+export function getCartItemInfoNew(
+  items: any[],
+  orderType: number,
+  platform: string = 'easyeat',
+  deliveryInfo: any[] | null = null,
+): ItemInfoDto {
+  const cartItemInfo = new ItemInfoDtoImpl();
+
+  if (orderType === 1 && deliveryInfo) {
+    cartItemInfo.deliveryInfo = new DeliveryInfoImpl(
+      deliveryInfo['distance'],
+      deliveryInfo['fee'],
+      0,
+    );
+  }
+
+  const priceKey = getPriceKeyByOrderType(orderType, platform);
+
+  if (items.length > 0) {
+    for (const item of items) {
+      const itemLevelDiscount = [{value: 0, qty: 0}];
+
+      const itemCalculationObj = new ItemCalculationDtoImpl(
+        item['item_id'],
+        item[priceKey],
+        item['quantity'],
+        0,
+        item['cart_item_id'],
+        item['subcategory_id'],
+        item['category_id'],
+        itemLevelDiscount,
+        item[priceKey] * item['quantity'],
+        0,
+      );
+      cartItemInfo.itemInfo.push(itemCalculationObj);
+
+      cartItemInfo.itemTotal += item[priceKey] * item['quantity'];
+    }
+  }
+
+  return cartItemInfo;
+}
+
 export function getOrderItemInfo(items): OrderItemInfo[] {
   const orderItemInfo: OrderItemInfo[] = [];
   if (items && items.length) {
@@ -159,44 +217,79 @@ export function getOrderItemInfo(items): OrderItemInfo[] {
         });
       }
 
-      // setting up variations
-      // if (new_variation && new_variation !== '') {
-      //   const variantsObj = JSON.parse(new_variation);
-      //   if (variantsObj) {
-      //     variantsObj.forEach((group) => {
-      //       if (group.status && group.options) {
-      //         const variants: Variants = {
-      //           groupId: group.group_id,
-      //           options: [],
-      //         };
-      //         group.options.forEach((option) => {
-      //           if (option.selected === true) {
-      //             const optionInfo: Options = {
-      //               optionsId: option.option_id,
-      //               price: option.price,
-      //             };
-      //             variants.options.push(optionInfo);
-      //           }
-      //         });
-      //         orderItemInfoObj.variants.push(variants);
-      //       }
-      //     });
-      //   }
-      // }
       orderItemInfo.push(orderItemInfoObj);
     });
   }
   return orderItemInfo;
 }
 
+export function getOrderItemInfoNew(
+  items: any[],
+  orderType: number,
+  deliveryInfo: any[] | null = null,
+): ItemInfoDto {
+  const orderItemInfo = new ItemInfoDtoImpl();
+
+  if (orderType === 1 && deliveryInfo) {
+    orderItemInfo.deliveryInfo = new DeliveryInfoImpl(
+      deliveryInfo['distance'],
+      deliveryInfo['fee'],
+      0,
+    );
+  }
+
+  if (items.length > 0) {
+    for (const item of items) {
+      const itemLevelDiscount = {value: 0, qty: 0};
+
+      const itemCalculationObj = new ItemCalculationDtoImpl(
+        item['item_id'],
+        item['item_price'],
+        item['item_quantity'],
+        0,
+        item['order_item_id'],
+        item['subcategory_id'],
+        item['category_id'],
+        itemLevelDiscount,
+        item['item_price'] * item['item_quantity'],
+        0,
+      );
+      orderItemInfo.itemInfo.push(itemCalculationObj);
+
+      orderItemInfo.itemTotal += item['item_price'] * item['item_quantity'];
+    }
+  }
+
+  return orderItemInfo;
+}
+
 export function getTransformedRestaurantCharges(
   charges: any[],
   order_type: number,
+  skip_packaging_charge_operation = false,
+  packagingChargeDisabled = false,
+  skip_service_charge_operation = false,
 ): ChargesInterface[] {
   const chargesList: ChargesInterface[] = [];
-  if (charges && charges.length) {
+  if (charges?.length) {
     charges.forEach(charge => {
       const {order_type: applicableOrderType} = charge;
+
+      // Skip packaging charge operation if specified conditions are met
+      if (
+        (skip_packaging_charge_operation || packagingChargeDisabled) &&
+        charge.class === 'packaging_charge'
+      ) {
+        return;
+      }
+      // Skip service charge operation if specified condition is met
+      else if (
+        skip_service_charge_operation &&
+        charge.class === 'service_tax'
+      ) {
+        return;
+      }
+
       if (charge.status && charge.id !== 'delivery') {
         const applicable = applicableOrderType.find(ot => {
           if (ot === order_type) {
@@ -254,7 +347,7 @@ function getApplicableOnInfo(
     };
   } else if (applicableOn[0] === 'order') {
     return {
-      chargeApplicableType: ChargeApplicableType.OVER_ALL,
+      chargeApplicableType: ChargeApplicableType.ORDER,
       applicableList: [],
     };
   }
@@ -325,4 +418,17 @@ export function getPlatformCommission(
     response.fees = fees;
   }
   return response;
+}
+
+export function generateRandomString(length: number = 10): string {
+  const characters =
+    '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const charactersLength = characters.length;
+  let randomString = '';
+  for (let i = 0; i < length; i++) {
+    randomString += characters.charAt(
+      Math.floor(Math.random() * charactersLength),
+    );
+  }
+  return randomString;
 }

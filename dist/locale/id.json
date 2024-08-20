@@ -2,5 +2,9 @@
     "itemTotal": "Total Item",
     "roundOff": "Pembulatan",
     "byRestaurant": "Oleh Restoran",
-    "itemLevel": "Tingkat Barang"
+    "itemLevel": "Tingkat Barang",
+    "deliveryFee": "Biaya Pesan Antar",
+    "discount": "Diskon",
+    "topup": "Top Up",
+    "byRest": "Oleh Restoran"
 }
