@@ -44,7 +44,8 @@ class OrderService {
         itemInfoDto = this.discountService.applyDiscount(itemInfoDto, discountInfo);
         let discountValue = 0;
         for (const item of itemInfoDto.itemInfo) {
-            discountValue += item.discount;
+            discountValue += Number(item.discount.toFixed(2));
+            item.effectivePrice = Number(item.effectivePrice.toFixed(2));
         }
         if (((_a = itemInfoDto.deliveryInfo) === null || _a === void 0 ? void 0 : _a.discount) &&
             itemInfoDto.deliveryInfo.discount > 0) {
@@ -113,6 +114,9 @@ class OrderService {
                     itemInfoDto = this.chargesService.applyIndonesiaChargesOnItems(itemInfoDto, charge);
                 }
             }
+        }
+        for (const item of itemInfoDto.itemInfo) {
+            item.effectivePrice = Number(item.effectivePrice.toFixed(2));
         }
         return itemInfoDto;
     }
@@ -210,7 +214,7 @@ class OrderService {
         let topUpExists = false;
         for (const fee of oldFees) {
             if (fee.id !== 'round_off') {
-                billTotal += fee.value;
+                billTotal += Number(fee.value.toFixed(2));
                 newFees.push(fee);
             }
             if (fee.id === 'item_total') {
@@ -244,6 +248,7 @@ class OrderService {
                 paid += payment.amount;
             }
         }
+        billTotal = Number(billTotal.toFixed(2));
         const roundOffStatus = roundOff.status;
         if (roundOffStatus === 1) {
             const roundValue = (0, common_function_lib_1.getRoundOffValue)(billTotal, roundOff);

@@ -74,7 +74,8 @@ export class OrderService {
 
     let discountValue = 0;
     for (const item of itemInfoDto.itemInfo) {
-      discountValue += item.discount;
+      discountValue += Number(item.discount.toFixed(2));
+      item.effectivePrice = Number(item.effectivePrice.toFixed(2));
     }
 
     if (
@@ -200,6 +201,10 @@ export class OrderService {
           );
         }
       }
+    }
+
+    for (const item of itemInfoDto.itemInfo) {
+      item.effectivePrice = Number(item.effectivePrice.toFixed(2));
     }
 
     return itemInfoDto;
@@ -348,7 +353,7 @@ export class OrderService {
     // Iterate through old fees to calculate bill total and retrieve item total
     for (const fee of oldFees) {
       if (fee.id !== 'round_off') {
-        billTotal += fee.value;
+        billTotal += Number(fee.value.toFixed(2));
         newFees.push(fee);
       }
       if (fee.id === 'item_total') {
@@ -387,6 +392,7 @@ export class OrderService {
       }
     }
 
+    billTotal = Number(billTotal.toFixed(2));
     // Retrieve rounding off status and perform rounding off calculation if enabled
     const roundOffStatus = roundOff.status;
     if (roundOffStatus === 1) {
