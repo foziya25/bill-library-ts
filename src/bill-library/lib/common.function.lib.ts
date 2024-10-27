@@ -240,23 +240,25 @@ export function getOrderItemInfoNew(
 
   if (items.length > 0) {
     for (const item of items) {
-      const itemLevelDiscount = {value: 0, qty: 0};
+      if (item['item_status'] != 5 && item['item_status'] != 6) {
+        const itemLevelDiscount = {value: 0, qty: 0};
 
-      const itemCalculationObj = new ItemCalculationDtoImpl(
-        item['item_id'],
-        item['item_price'],
-        item['item_quantity'],
-        0,
-        item['order_item_id'],
-        item['subcategory_id'],
-        item['category_id'],
-        itemLevelDiscount,
-        item['item_price'] * item['item_quantity'],
-        0,
-      );
-      orderItemInfo.itemInfo.push(itemCalculationObj);
+        const itemCalculationObj = new ItemCalculationDtoImpl(
+          item['item_id'],
+          item['item_price'],
+          item['item_quantity'],
+          0,
+          item['order_item_id'],
+          item['subcategory_id'],
+          item['category_id'],
+          itemLevelDiscount,
+          item['item_price'] * item['item_quantity'],
+          0,
+        );
+        orderItemInfo.itemInfo.push(itemCalculationObj);
 
-      orderItemInfo.itemTotal += item['item_price'] * item['item_quantity'];
+        orderItemInfo.itemTotal += item['item_price'] * item['item_quantity'];
+      }
     }
   }
 
