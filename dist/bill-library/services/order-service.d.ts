@@ -6,7 +6,7 @@ export declare class OrderService {
     private chargesService;
     private discountService;
     constructor(chargesService: ChargesService, discountService: DiscountService);
-    getDeliveryObj(order: any): any;
+    getDeliveryObj(order: any, oldOrderBill: any): any;
     calculateAndAddDeliveryFee(itemInfoDto: ItemInfoDto, customDeliveryFee: number, language: string): any;
     calculateAndApplyDiscount(order: any, couponInfo: any, itemInfoDto: ItemInfoDto, language: string, callingFromGetCart?: boolean): any;
     calculateAndUpdateLoyaltyCashback(order: any, itemInfoDto: ItemInfoDto, oldOrderBill: any): any;
