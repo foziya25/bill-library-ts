@@ -26,7 +26,7 @@ class OrderService {
             (itemInfoDto.deliveryInfo.fee || customDeliveryFee)) {
             deliveryFee = {
                 name: (0, i18n_1.localize)('deliveryFee', language),
-                value: itemInfoDto.deliveryInfo.fee || customDeliveryFee,
+                value: Number((itemInfoDto.deliveryInfo.fee || customDeliveryFee).toFixed(2)),
                 id: 'delivery',
             };
         }
@@ -44,8 +44,8 @@ class OrderService {
         itemInfoDto = this.discountService.applyDiscount(itemInfoDto, discountInfo);
         let discountValue = 0;
         for (const item of itemInfoDto.itemInfo) {
-            discountValue += Number(item.discount.toFixed(2));
-            item.effectivePrice = Number(item.effectivePrice.toFixed(2));
+            discountValue += Number(item.discount.toFixed(4));
+            item.effectivePrice = Number(item.effectivePrice.toFixed(4));
         }
         if (((_a = itemInfoDto.deliveryInfo) === null || _a === void 0 ? void 0 : _a.discount) &&
             itemInfoDto.deliveryInfo.discount > 0) {
@@ -68,7 +68,7 @@ class OrderService {
                 loyaltyFee = {
                     id: 'loyalty_cashback',
                     name: 'Loyalty Cashback',
-                    value: loyaltyObj.value,
+                    value: Number((loyaltyObj.value).toFixed(2)),
                 };
                 const loyaltyAmount = -loyaltyObj.value;
                 this.prorateLoyalty(itemInfoDto, loyaltyAmount);
@@ -284,7 +284,10 @@ class OrderService {
                 itemCal.loyaltyItemAmount =
                     itemCal.effectivePrice * (loyaltyAmount / effectivePriceSum);
                 itemCal.effectivePrice -= itemCal.loyaltyItemAmount;
+                itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
+                itemCal.loyaltyItemAmount = Number((itemCal.loyaltyItemAmount).toFixed(2));
             });
+            loyaltyAmount = Number((loyaltyAmount).toFixed(2));
             itemInfoDto.loyaltyAmount = loyaltyAmount;
         }
         return itemInfoDto;

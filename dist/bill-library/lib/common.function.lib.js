@@ -101,6 +101,7 @@ function getCartItemInfoNew(items, orderType, platform = 'easyeat', deliveryInfo
             cartItemInfo.itemInfo.push(itemCalculationObj);
             cartItemInfo.itemTotal += item[priceKey] * item['quantity'];
         }
+        cartItemInfo.itemTotal = Number((cartItemInfo.itemTotal).toFixed(2));
     }
     return cartItemInfo;
 }
