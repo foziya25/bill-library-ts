@@ -408,6 +408,7 @@ class DiscountService {
                                     itemCal.discount += effectivePrice;
                                     effectivePrice = 0;
                                 }
+                                itemCal.discount = Number((itemCal.discount).toFixed(2));
                                 itemCal.effectivePrice = effectivePrice;
                                 itemInfo[key] = itemCal;
                             }
