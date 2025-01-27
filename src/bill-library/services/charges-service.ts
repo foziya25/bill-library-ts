@@ -20,6 +20,7 @@ export class ChargesService {
       case ChargeApplicableType.SUB_CATEGORY:
         itemInfo.forEach(itemCal => {
           if ((applicableOn as string[]).includes(itemCal.subCatId)) {
+            itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
             totalPrice += itemCal.effectivePrice;
             if (itemCal.effectivePrice > 0) {
               totalQty += itemCal.quantity;
@@ -30,6 +31,7 @@ export class ChargesService {
             } else if (chargeType === ChargeType.FIXED) {
               itemCharge = value * itemCal.quantity;
             }
+            itemCharge = Number((itemCharge).toFixed(2));
             itemCal.itemCharges.push({id: chargeId, value: itemCharge});
           }
         });
@@ -37,6 +39,7 @@ export class ChargesService {
         break;
       case ChargeApplicableType.ORDER:
         itemInfo.forEach(itemCal => {
+          itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
           totalPrice += itemCal.effectivePrice;
           if (itemCal.effectivePrice > 0) {
             totalQty += itemCal.quantity;
@@ -50,6 +53,7 @@ export class ChargesService {
           } else if (chargeType === ChargeType.FIXED) {
             itemCharge = (itemCal.effectivePrice * value) / totalPrice;
           }
+          itemCharge = Number((itemCharge).toFixed(2));
           itemCal.itemCharges.push({id: chargeId, value: itemCharge});
         });
         break;
@@ -58,12 +62,14 @@ export class ChargesService {
     if (totalPrice > 0) {
       switch (chargeType) {
         case ChargeType.FIXED:
+          chargeValue = Number((chargeValue).toFixed(2));
           itemInfoDto.charges.push(
             new ChargesObjImpl(chargeValue, name, charge.id),
           );
           break;
         case ChargeType.PERCENTAGE:
           chargeValue = (value * totalPrice) / 100;
+          chargeValue = Number((chargeValue).toFixed(2));
           itemInfoDto.charges.push(
             new ChargesObjImpl(chargeValue, name, charge.id),
           );
@@ -94,6 +100,7 @@ export class ChargesService {
       case ChargeApplicableType.SUB_CATEGORY:
         itemInfo.forEach(itemCal => {
           if ((applicableOn as string[]).includes(itemCal.subCatId)) {
+            itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
             totalPrice += itemCal.effectivePrice;
             if (itemCal.effectivePrice > 0) {
               totalQty += itemCal.quantity;
@@ -104,6 +111,7 @@ export class ChargesService {
               } else if (chargeType === ChargeType.FIXED) {
                 itemCharge = value * itemCal.quantity;
               }
+              itemCharge = Number((itemCharge).toFixed(2));
               itemCal.itemCharges.push({id: chargeId, value: itemCharge});
               if (chargeId === 'service_tax') {
                 itemCal.serviceCharge = itemCharge;
@@ -121,6 +129,7 @@ export class ChargesService {
         break;
       case ChargeApplicableType.ORDER:
         itemInfo.forEach(itemCal => {
+          itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
           totalPrice += itemCal.effectivePrice;
           if (itemCal.effectivePrice > 0) {
             totalQty += itemCal.quantity;
@@ -137,6 +146,7 @@ export class ChargesService {
           } else if (chargeType === ChargeType.FIXED) {
             itemCharge = (itemCal.effectivePrice * value) / totalPrice;
           }
+          itemCharge = Number((itemCharge).toFixed(2));
           itemCal.itemCharges.push({id: chargeId, value: itemCharge});
           if (chargeId === 'service_tax') {
             itemCal.serviceCharge = itemCharge;
@@ -148,6 +158,7 @@ export class ChargesService {
     if (totalPrice > 0) {
       switch (chargeType) {
         case ChargeType.FIXED:
+          chargeValue = Number((chargeValue).toFixed(2));
           itemInfoDto.charges.push(
             new ChargesObjImpl(chargeValue, name, charge.id),
           );
@@ -157,6 +168,7 @@ export class ChargesService {
             totalPrice += totalServiceChargeForSst;
           }
           chargeValue = (value * totalPrice) / 100;
+          chargeValue = Number((chargeValue).toFixed(2));
           itemInfoDto.charges.push(
             new ChargesObjImpl(chargeValue, name, charge.id),
           );

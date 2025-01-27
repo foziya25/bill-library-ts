@@ -42,7 +42,7 @@ export class OrderService {
     ) {
       deliveryFee = {
         name: localize('deliveryFee', language),
-        value: itemInfoDto.deliveryInfo.fee || customDeliveryFee,
+        value: Number((itemInfoDto.deliveryInfo.fee || customDeliveryFee).toFixed(2)),
         id: 'delivery',
       };
     }
@@ -74,8 +74,8 @@ export class OrderService {
 
     let discountValue = 0;
     for (const item of itemInfoDto.itemInfo) {
-      discountValue += Number(item.discount.toFixed(2));
-      item.effectivePrice = Number(item.effectivePrice.toFixed(2));
+      discountValue += Number(item.discount.toFixed(4));
+      item.effectivePrice = Number(item.effectivePrice.toFixed(4));
     }
 
     if (
@@ -115,7 +115,7 @@ export class OrderService {
         loyaltyFee = {
           id: 'loyalty_cashback',
           name: 'Loyalty Cashback',
-          value: loyaltyObj.value,
+          value: Number((loyaltyObj.value).toFixed(2)),
         };
 
         // Calculate the amount of loyalty cashback to be subtracted from item prices
@@ -446,9 +446,12 @@ export class OrderService {
         itemCal.loyaltyItemAmount =
           itemCal.effectivePrice * (loyaltyAmount / effectivePriceSum);
         itemCal.effectivePrice -= itemCal.loyaltyItemAmount;
+        itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
+        itemCal.loyaltyItemAmount = Number((itemCal.loyaltyItemAmount).toFixed(2));
       });
 
       // Update item information DTO with loyalty cashback amount
+      loyaltyAmount = Number((loyaltyAmount).toFixed(2));
       itemInfoDto.loyaltyAmount = loyaltyAmount;
     }
 
