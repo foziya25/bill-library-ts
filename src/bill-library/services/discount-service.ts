@@ -444,6 +444,7 @@ export class DiscountService {
         itemCal.discount += effectivePrice;
         effectivePrice = 0;
       }
+      
       // Update the effective price of the item
       itemCal.effectivePrice = effectivePrice;
     }
