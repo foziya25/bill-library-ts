@@ -45,11 +45,12 @@ class OrderService {
         let discountValue = 0;
         for (const item of itemInfoDto.itemInfo) {
             discountValue += Number(item.discount.toFixed(4));
-            item.effectivePrice = Number(item.effectivePrice.toFixed(4));
+            item.discount = Number((item.discount).toFixed(2));
         }
         if (((_a = itemInfoDto.deliveryInfo) === null || _a === void 0 ? void 0 : _a.discount) &&
             itemInfoDto.deliveryInfo.discount > 0) {
             discountValue += itemInfoDto.deliveryInfo.discount;
+            itemInfoDto.deliveryInfo.discount = Number((itemInfoDto.deliveryInfo.discount).toFixed(2));
         }
         const discountFee = {
             id: 'coupon_discount',
@@ -267,10 +268,10 @@ class OrderService {
         }
         const balance = billTotal - paid;
         orderBill.fees = newFees;
-        orderBill.paid = paid;
-        orderBill.balance = balance;
-        orderBill.bill_total = billTotal;
-        orderBill.item_total = itemTotal;
+        orderBill.paid = Number((paid).toFixed(2));
+        orderBill.balance = Number((balance).toFixed(2));
+        orderBill.bill_total = Number((billTotal).toFixed(2));
+        orderBill.item_total = Number((itemTotal).toFixed(2));
         return orderBill;
     }
     prorateLoyalty(itemInfoDto, loyaltyAmount) {
@@ -284,7 +285,6 @@ class OrderService {
                 itemCal.loyaltyItemAmount =
                     itemCal.effectivePrice * (loyaltyAmount / effectivePriceSum);
                 itemCal.effectivePrice -= itemCal.loyaltyItemAmount;
-                itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
                 itemCal.loyaltyItemAmount = Number((itemCal.loyaltyItemAmount).toFixed(2));
             });
             loyaltyAmount = Number((loyaltyAmount).toFixed(2));

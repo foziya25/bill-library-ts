@@ -75,7 +75,7 @@ export class OrderService {
     let discountValue = 0;
     for (const item of itemInfoDto.itemInfo) {
       discountValue += Number(item.discount.toFixed(4));
-      item.effectivePrice = Number(item.effectivePrice.toFixed(4));
+      item.discount = Number((item.discount).toFixed(2));
     }
 
     if (
@@ -83,6 +83,7 @@ export class OrderService {
       itemInfoDto.deliveryInfo.discount > 0
     ) {
       discountValue += itemInfoDto.deliveryInfo.discount;
+      itemInfoDto.deliveryInfo.discount = Number((itemInfoDto.deliveryInfo.discount).toFixed(2));
     }
 
     const discountFee = {
@@ -420,10 +421,10 @@ export class OrderService {
 
     // Update order bill with recalculated values
     orderBill.fees = newFees; // discount will be updated in case of discount
-    orderBill.paid = paid;
-    orderBill.balance = balance;
-    orderBill.bill_total = billTotal;
-    orderBill.item_total = itemTotal;
+    orderBill.paid = Number((paid).toFixed(2));
+    orderBill.balance = Number((balance).toFixed(2));
+    orderBill.bill_total = Number((billTotal).toFixed(2));
+    orderBill.item_total = Number((itemTotal).toFixed(2));
 
     // Return the updated order bill
     return orderBill;
@@ -446,7 +447,6 @@ export class OrderService {
         itemCal.loyaltyItemAmount =
           itemCal.effectivePrice * (loyaltyAmount / effectivePriceSum);
         itemCal.effectivePrice -= itemCal.loyaltyItemAmount;
-        itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
         itemCal.loyaltyItemAmount = Number((itemCal.loyaltyItemAmount).toFixed(2));
       });
 

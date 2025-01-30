@@ -444,7 +444,6 @@ export class DiscountService {
         itemCal.discount += effectivePrice;
         effectivePrice = 0;
       }
-      itemCal.discount = Number((itemCal.discount).toFixed(2));
       // Update the effective price of the item
       itemCal.effectivePrice = effectivePrice;
     }
@@ -601,7 +600,6 @@ export class DiscountService {
                   itemCal.discount += effectivePrice;
                   effectivePrice = 0;
                 }
-                itemCal.discount = Number((itemCal.discount).toFixed(2));
                 itemCal.effectivePrice = effectivePrice;
                 itemInfo[key] = itemCal;
               }
@@ -661,7 +659,6 @@ export class DiscountService {
           }
 
           itemCal.discount += discountValue * qty;
-          itemCal.discount = Number((itemCal.discount).toFixed(2));
           itemCal.effectivePrice -= discountValue * qty;
           discountValue = Number((discountValue).toFixed(2));
           itemCal.itemLevelDiscount = {
@@ -733,7 +730,6 @@ export class DiscountService {
 
       // Update discount and effective price for each item
       itemCal.discount += discountValue;
-      itemCal.discount = Number((itemCal.discount).toFixed(2));
       itemCal.effectivePrice -= discountValue;
 
       // Update the item information array

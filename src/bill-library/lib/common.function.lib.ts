@@ -259,6 +259,7 @@ export function getOrderItemInfoNew(
 
       orderItemInfo.itemTotal += item['item_price'] * item['item_quantity'];
     }
+    orderItemInfo.itemTotal = Number((orderItemInfo.itemTotal).toFixed(2));
   }
 
   return orderItemInfo;

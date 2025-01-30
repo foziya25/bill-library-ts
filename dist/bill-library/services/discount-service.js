@@ -301,7 +301,6 @@ class DiscountService {
                 itemCal.discount += effectivePrice;
                 effectivePrice = 0;
             }
-            itemCal.discount = Number((itemCal.discount).toFixed(2));
             itemCal.effectivePrice = effectivePrice;
         }
         return itemCal;
@@ -408,7 +407,6 @@ class DiscountService {
                                     itemCal.discount += effectivePrice;
                                     effectivePrice = 0;
                                 }
-                                itemCal.discount = Number((itemCal.discount).toFixed(2));
                                 itemCal.effectivePrice = effectivePrice;
                                 itemInfo[key] = itemCal;
                             }
@@ -454,7 +452,6 @@ class DiscountService {
                         discountValue = Math.min(value, price);
                     }
                     itemCal.discount += discountValue * qty;
-                    itemCal.discount = Number((itemCal.discount).toFixed(2));
                     itemCal.effectivePrice -= discountValue * qty;
                     discountValue = Number((discountValue).toFixed(2));
                     itemCal.itemLevelDiscount = {
@@ -500,7 +497,6 @@ class DiscountService {
             const effectivePrice = itemCal.effectivePrice;
             const discountValue = (totalDiscount * effectivePrice) / effectiveItemTotal;
             itemCal.discount += discountValue;
-            itemCal.discount = Number((itemCal.discount).toFixed(2));
             itemCal.effectivePrice -= discountValue;
             itemInfo[key] = itemCal;
         });
