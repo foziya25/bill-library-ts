@@ -18,7 +18,6 @@ class ChargesService {
             case "subCategory":
                 itemInfo.forEach(itemCal => {
                     if (applicableOn.includes(itemCal.subCatId)) {
-                        itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
                         totalPrice += itemCal.effectivePrice;
                         if (itemCal.effectivePrice > 0) {
                             totalQty += itemCal.quantity;
@@ -30,7 +29,7 @@ class ChargesService {
                         else if (chargeType === "fixed") {
                             itemCharge = value * itemCal.quantity;
                         }
-                        itemCharge = Number((itemCharge).toFixed(2));
+                        itemCharge = Number((itemCharge).toFixed(4));
                         itemCal.itemCharges.push({ id: chargeId, value: itemCharge });
                     }
                 });
@@ -38,7 +37,6 @@ class ChargesService {
                 break;
             case "order":
                 itemInfo.forEach(itemCal => {
-                    itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
                     totalPrice += itemCal.effectivePrice;
                     if (itemCal.effectivePrice > 0) {
                         totalQty += itemCal.quantity;
@@ -52,7 +50,7 @@ class ChargesService {
                     else if (chargeType === "fixed") {
                         itemCharge = (itemCal.effectivePrice * value) / totalPrice;
                     }
-                    itemCharge = Number((itemCharge).toFixed(2));
+                    itemCharge = Number((itemCharge).toFixed(4));
                     itemCal.itemCharges.push({ id: chargeId, value: itemCharge });
                 });
                 break;
@@ -88,7 +86,6 @@ class ChargesService {
             case "subCategory":
                 itemInfo.forEach(itemCal => {
                     if (applicableOn.includes(itemCal.subCatId)) {
-                        itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
                         totalPrice += itemCal.effectivePrice;
                         if (itemCal.effectivePrice > 0) {
                             totalQty += itemCal.quantity;
@@ -99,7 +96,7 @@ class ChargesService {
                             else if (chargeType === "fixed") {
                                 itemCharge = value * itemCal.quantity;
                             }
-                            itemCharge = Number((itemCharge).toFixed(2));
+                            itemCharge = Number((itemCharge).toFixed(4));
                             itemCal.itemCharges.push({ id: chargeId, value: itemCharge });
                             if (chargeId === 'service_tax') {
                                 itemCal.serviceCharge = itemCharge;
@@ -115,7 +112,6 @@ class ChargesService {
                 break;
             case "order":
                 itemInfo.forEach(itemCal => {
-                    itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
                     totalPrice += itemCal.effectivePrice;
                     if (itemCal.effectivePrice > 0) {
                         totalQty += itemCal.quantity;
@@ -132,7 +128,7 @@ class ChargesService {
                     else if (chargeType === "fixed") {
                         itemCharge = (itemCal.effectivePrice * value) / totalPrice;
                     }
-                    itemCharge = Number((itemCharge).toFixed(2));
+                    itemCharge = Number((itemCharge).toFixed(4));
                     itemCal.itemCharges.push({ id: chargeId, value: itemCharge });
                     if (chargeId === 'service_tax') {
                         itemCal.serviceCharge = itemCharge;

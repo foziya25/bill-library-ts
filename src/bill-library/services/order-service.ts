@@ -74,8 +74,8 @@ export class OrderService {
 
     let discountValue = 0;
     for (const item of itemInfoDto.itemInfo) {
-      discountValue += Number(item.discount.toFixed(4));
-      item.discount = Number((item.discount).toFixed(2));
+      discountValue += item.discount;
+      item.discount = Number((item.discount).toFixed(4));
     }
 
     if (
@@ -447,7 +447,7 @@ export class OrderService {
         itemCal.loyaltyItemAmount =
           itemCal.effectivePrice * (loyaltyAmount / effectivePriceSum);
         itemCal.effectivePrice -= itemCal.loyaltyItemAmount;
-        itemCal.loyaltyItemAmount = Number((itemCal.loyaltyItemAmount).toFixed(2));
+        itemCal.loyaltyItemAmount = Number((itemCal.loyaltyItemAmount).toFixed(4));
       });
 
       // Update item information DTO with loyalty cashback amount

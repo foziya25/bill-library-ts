@@ -44,8 +44,8 @@ class OrderService {
         itemInfoDto = this.discountService.applyDiscount(itemInfoDto, discountInfo);
         let discountValue = 0;
         for (const item of itemInfoDto.itemInfo) {
-            discountValue += Number(item.discount.toFixed(4));
-            item.discount = Number((item.discount).toFixed(2));
+            discountValue += item.discount;
+            item.discount = Number((item.discount).toFixed(4));
         }
         if (((_a = itemInfoDto.deliveryInfo) === null || _a === void 0 ? void 0 : _a.discount) &&
             itemInfoDto.deliveryInfo.discount > 0) {
@@ -285,7 +285,7 @@ class OrderService {
                 itemCal.loyaltyItemAmount =
                     itemCal.effectivePrice * (loyaltyAmount / effectivePriceSum);
                 itemCal.effectivePrice -= itemCal.loyaltyItemAmount;
-                itemCal.loyaltyItemAmount = Number((itemCal.loyaltyItemAmount).toFixed(2));
+                itemCal.loyaltyItemAmount = Number((itemCal.loyaltyItemAmount).toFixed(4));
             });
             loyaltyAmount = Number((loyaltyAmount).toFixed(2));
             itemInfoDto.loyaltyAmount = loyaltyAmount;
