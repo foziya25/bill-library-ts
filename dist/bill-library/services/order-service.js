@@ -117,7 +117,7 @@ class OrderService {
             }
         }
         for (const item of itemInfoDto.itemInfo) {
-            item.effectivePrice = Number(item.effectivePrice.toFixed(2));
+            item.effectivePrice = Number(item.effectivePrice.toFixed(4));
         }
         return itemInfoDto;
     }
