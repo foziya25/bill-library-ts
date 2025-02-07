@@ -1025,7 +1025,7 @@ export class BillLibraryService {
           taxAfterDiscount,
         );
 
-        if (charge.id === 'sst_tax' && serviceCharge) {
+        if (charge.id.includes('sst_tax') && serviceCharge) {
           applicableResponse.itemTotalWithDiscount += serviceCharge.value;
         }
 
