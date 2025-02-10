@@ -131,7 +131,7 @@ function getOrderBill(order, restaurantDetails, language = 'en-US', platform = '
     bill.payments = oldOrderBill ? oldOrderBill['payments'] : [];
     const roundOff = orderService.getRoundOffObject(restaurantDetails, order['order_type']);
     const orderFees = [];
-    const deliveryInfo = orderService.getDeliveryObj(order);
+    const deliveryInfo = orderService.getDeliveryObj(order, oldOrderBill);
     let itemInfoDto = (0, common_function_lib_1.getOrderItemInfoNew)(orderItems, order['order_type'], deliveryInfo);
     const itemTotalFee = {
         name: (0, i18n_1.localize)('itemTotal', language),

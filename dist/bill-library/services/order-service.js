@@ -9,14 +9,18 @@ class OrderService {
         this.chargesService = chargesService;
         this.discountService = discountService;
     }
-    getDeliveryObj(order) {
+    getDeliveryObj(order, oldOrderBill) {
         let deliveryInfo = null;
-        const deliveryOrderInfo = order.delivery_details || null;
-        if (deliveryOrderInfo) {
-            deliveryInfo = {
-                distance: deliveryOrderInfo.delivery_distance,
-                fee: deliveryOrderInfo.delivery_charge,
-            };
+        if (oldOrderBill) {
+            const fees = oldOrderBill.fees;
+            fees.forEach(fee => {
+                if (fee.id == 'delivery' && order.order_type == 1) {
+                    deliveryInfo = {
+                        distance: order.distance,
+                        fee: fee.fee,
+                    };
+                }
+            });
         }
         return deliveryInfo;
     }
