@@ -101,7 +101,7 @@ class ChargesService {
                             if (chargeId === 'service_tax') {
                                 itemCal.serviceCharge = itemCharge;
                             }
-                            if (chargeId === 'sst_tax' &&
+                            if (chargeId.includes('sst_tax') &&
                                 chargeType === "percentage") {
                                 totalServiceChargeForSst += itemCal.serviceCharge;
                             }
@@ -116,7 +116,7 @@ class ChargesService {
                     if (itemCal.effectivePrice > 0) {
                         totalQty += itemCal.quantity;
                     }
-                    if (chargeId === 'sst_tax' && chargeType === "percentage") {
+                    if (chargeId.includes('sst_tax') && chargeType === "percentage") {
                         totalServiceChargeForSst += itemCal.serviceCharge;
                     }
                 });
@@ -143,7 +143,7 @@ class ChargesService {
                     itemInfoDto.charges.push(new cartItemInfo_1.ChargesObjImpl(chargeValue, name, charge.id));
                     break;
                 case "percentage":
-                    if (chargeId === 'sst_tax') {
+                    if (chargeId.includes('sst_tax')) {
                         totalPrice += totalServiceChargeForSst;
                     }
                     chargeValue = (value * totalPrice) / 100;

@@ -183,12 +183,75 @@ class DiscountService {
             return itemInfoDto;
         }
         else {
+            let totalPrice = 0;
+            let requiredEffectiveTotal = 0;
+            const requiredItemData = [];
+            const requiredItemDataInChosen = [];
+            for (const listData of requiredList) {
+                const listKey = this.getAppliedOnKey(listData.type);
+                const listQuantity = listData.qty;
+                let totalPresent = 0;
+                for (const item of itemInfo) {
+                    for (const on of listData.on) {
+                        if (item[listKey] === on) {
+                            requiredEffectiveTotal += item.effectivePrice;
+                            const qty = item.quantity;
+                            let ildQty = item.itemLevelDiscount.qty;
+                            const ildValue = ildQty !== 0 ? item.itemLevelDiscount.value : 0;
+                            for (let i = 0; i < qty; i++) {
+                                let itemY;
+                                if (ildQty > 0) {
+                                    itemY = {
+                                        effectivePrice: item.price - ildValue,
+                                        itemId: item.itemId,
+                                    };
+                                    ildQty--;
+                                }
+                                else {
+                                    itemY = { effectivePrice: item.price, itemId: item.itemId };
+                                }
+                                if (itemY['effectivePrice'] > 0) {
+                                    totalPresent = totalPresent + 1;
+                                    requiredItemData.push(itemY);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (totalPresent < listQuantity) {
+                    itemInfoDto.discountMessage = `Minimum item quantity required for this coupon ${listQuantity}`;
+                    return itemInfoDto;
+                }
+                if (requiredEffectiveTotal === 0) {
+                    itemInfoDto.discountMessage =
+                        'Minimum item total of required items for this coupon must be greater than 0';
+                    return itemInfoDto;
+                }
+                if (requiredItemData.length) {
+                    requiredItemData.sort((b, a) => a.effectivePrice - b.effectivePrice);
+                    let requiredQty = listQuantity;
+                    for (const item of requiredItemData) {
+                        if (requiredQty > 0) {
+                            requiredItemDataInChosen.push(item);
+                            requiredQty--;
+                        }
+                    }
+                }
+            }
+            const appliedItemInfo = itemInfo.map(item => (Object.assign({}, item)));
+            appliedItemInfo.forEach(aItem => {
+                requiredItemDataInChosen.forEach(item => {
+                    if (item.itemId === aItem.itemId) {
+                        aItem.quantity -= 1;
+                        aItem.effectivePrice -= item.effectivePrice;
+                    }
+                });
+            });
             const key = this.getAppliedOnKey(applicableType);
             let appliedItemPresent = false;
             let appliedItemData = [];
             let applicableList = [];
-            let totalPrice = 0;
-            for (const item of itemInfo) {
+            for (const item of appliedItemInfo) {
                 for (const applicable of applicableOn) {
                     if (item[key] === applicable) {
                         appliedItemPresent = true;
@@ -207,7 +270,9 @@ class DiscountService {
                             else {
                                 itemY = { effectivePrice: item.price, itemId: item.itemId };
                             }
-                            applicableList.push(itemY);
+                            if (itemY['effectivePrice'] > 0) {
+                                applicableList.push(itemY);
+                            }
                         }
                     }
                 }
@@ -224,29 +289,6 @@ class DiscountService {
                 }
             }
             if (appliedItemPresent) {
-                let requiredEffectiveTotal = 0;
-                for (const listData of requiredList) {
-                    const listKey = this.getAppliedOnKey(listData.type);
-                    const listQuantity = listData.qty;
-                    let totalPresent = 0;
-                    for (const item of itemInfo) {
-                        for (const on of listData.on) {
-                            if (item[listKey] === on) {
-                                totalPresent += item.quantity;
-                                requiredEffectiveTotal += item.effectivePrice;
-                            }
-                        }
-                    }
-                    if (totalPresent < listQuantity) {
-                        itemInfoDto.discountMessage = `Minimum item quantity required for this coupon ${listQuantity}`;
-                        return itemInfoDto;
-                    }
-                    if (requiredEffectiveTotal === 0) {
-                        itemInfoDto.discountMessage =
-                            'Minimum item total of required items for this coupon must be greater than 0';
-                        return itemInfoDto;
-                    }
-                }
                 if (discountType === 'bxgy') {
                     return this.applyBxGyDiscountType(itemInfoDto, appliedItemData);
                 }

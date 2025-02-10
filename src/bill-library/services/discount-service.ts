@@ -201,7 +201,6 @@ export class DiscountService {
     // Extract the discount type from the coupon data.
     const discountType = couponData.discountType;
 
-
     // Calculate the total price applicable for the discount and the current total discount.
     for (const item of itemInfoDto.itemInfo) {
       currentDiscount += item.discount;
@@ -271,14 +270,91 @@ export class DiscountService {
     if (applicableType === 0) {
       return itemInfoDto;
     } else {
+      let totalPrice = 0;
+      let requiredEffectiveTotal = 0;
+      const requiredItemData = [];
+      const requiredItemDataInChosen = [];
+
+      // Validate required conditions for the coupon
+      for (const listData of requiredList) {
+        const listKey = this.getAppliedOnKey(listData.type);
+        const listQuantity = listData.qty;
+        let totalPresent = 0;
+
+        // Count the total quantity of items based on required conditions
+        for (const item of itemInfo) {
+          for (const on of listData.on) {
+            if (item[listKey] === on) {
+              requiredEffectiveTotal += item.effectivePrice;
+              const qty = item.quantity;
+              let ildQty = item.itemLevelDiscount.qty;
+              const ildValue = ildQty !== 0 ? item.itemLevelDiscount.value : 0;
+
+              // Create applicable items list considering item level discounts
+              for (let i = 0; i < qty; i++) {
+                let itemY;
+                if (ildQty > 0) {
+                  itemY = {
+                    effectivePrice: item.price - ildValue,
+                    itemId: item.itemId,
+                  };
+                  ildQty--;
+                } else {
+                  itemY = {effectivePrice: item.price, itemId: item.itemId};
+                }
+                if (itemY['effectivePrice'] > 0) {
+                  totalPresent = totalPresent + 1;
+                  requiredItemData.push(itemY);
+                }
+              }
+            }
+          }
+        }
+
+        // Check if required quantity is met
+        if (totalPresent < listQuantity) {
+          itemInfoDto.discountMessage = `Minimum item quantity required for this coupon ${listQuantity}`;
+          return itemInfoDto;
+        }
+
+        // Check if required effective total is greater than 0
+        if (requiredEffectiveTotal === 0) {
+          itemInfoDto.discountMessage =
+            'Minimum item total of required items for this coupon must be greater than 0';
+          return itemInfoDto;
+        }
+
+        if (requiredItemData.length) {
+          requiredItemData.sort((b, a) => a.effectivePrice - b.effectivePrice);
+
+          let requiredQty = listQuantity;
+          for (const item of requiredItemData) {
+            if (requiredQty > 0) {
+              requiredItemDataInChosen.push(item);
+              requiredQty--;
+            }
+          }
+        }
+      }
+
+      const appliedItemInfo = itemInfo.map(item => ({...item}));
+
+      appliedItemInfo.forEach(aItem => {
+        requiredItemDataInChosen.forEach(item => {
+          if (item.itemId === aItem.itemId) {
+            aItem.quantity -= 1;
+            aItem.effectivePrice -= item.effectivePrice;
+          }
+        });
+      });
+
       const key = this.getAppliedOnKey(applicableType);
       let appliedItemPresent = false;
       let appliedItemData: any[] = [];
       let applicableList: any[] = [];
-      let totalPrice = 0;
 
       // Iterate through items to find applicable items based on applicableOn condition
-      for (const item of itemInfo) {
+      for (const item of appliedItemInfo) {
         for (const applicable of applicableOn) {
           if (item[key] === applicable) {
             appliedItemPresent = true;
@@ -299,7 +375,9 @@ export class DiscountService {
               } else {
                 itemY = {effectivePrice: item.price, itemId: item.itemId};
               }
-              applicableList.push(itemY);
+              if (itemY['effectivePrice'] > 0) {
+                applicableList.push(itemY);
+              }
             }
           }
         }
@@ -322,38 +400,6 @@ export class DiscountService {
 
       // Check if applied items are present
       if (appliedItemPresent) {
-        let requiredEffectiveTotal = 0;
-
-        // Validate required conditions for the coupon
-        for (const listData of requiredList) {
-          const listKey = this.getAppliedOnKey(listData.type);
-          const listQuantity = listData.qty;
-          let totalPresent = 0;
-
-          // Count the total quantity of items based on required conditions
-          for (const item of itemInfo) {
-            for (const on of listData.on) {
-              if (item[listKey] === on) {
-                totalPresent += item.quantity;
-                requiredEffectiveTotal += item.effectivePrice;
-              }
-            }
-          }
-
-          // Check if required quantity is met
-          if (totalPresent < listQuantity) {
-            itemInfoDto.discountMessage = `Minimum item quantity required for this coupon ${listQuantity}`;
-            return itemInfoDto;
-          }
-
-          // Check if required effective total is greater than 0
-          if (requiredEffectiveTotal === 0) {
-            itemInfoDto.discountMessage =
-              'Minimum item total of required items for this coupon must be greater than 0';
-            return itemInfoDto;
-          }
-        }
-
         // Apply discount based on discount type
         if (discountType === 'bxgy') {
           return this.applyBxGyDiscountType(itemInfoDto, appliedItemData);
@@ -561,17 +607,17 @@ export class DiscountService {
       return itemInfoDto;
     }
 
-      // Determine the coupon value based on the applicable total and specified value ranges.
-      const valueRanges = couponInfoDto.valueRanges;
-      const values = couponInfoDto.values;
-  
-      // Find the appropriate value within the defined ranges.
-      for (let i = 0; i < valueRanges.length; i++) {
-        if (applicableTotal <= valueRanges[i]) {
-          value = values[i];
-          break;
-        }
+    // Determine the coupon value based on the applicable total and specified value ranges.
+    const valueRanges = couponInfoDto.valueRanges;
+    const values = couponInfoDto.values;
+
+    // Find the appropriate value within the defined ranges.
+    for (let i = 0; i < valueRanges.length; i++) {
+      if (applicableTotal <= valueRanges[i]) {
+        value = values[i];
+        break;
       }
+    }
 
     // Apply discount based on the discount type
     let useValue = 0;

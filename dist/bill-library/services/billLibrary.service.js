@@ -721,7 +721,7 @@ class BillLibraryService {
         chargesInfo.forEach(charge => {
             if (charge.id !== 'service_tax') {
                 const applicableResponse = this.findIndonesiaApplicableOrderItemTotal(charge, orderCalculationInfo, discountInfo, taxAfterDiscount);
-                if (charge.id === 'sst_tax' && serviceCharge) {
+                if (charge.id.includes('sst_tax') && serviceCharge) {
                     applicableResponse.itemTotalWithDiscount += serviceCharge.value;
                 }
                 if (applicableResponse.status) {

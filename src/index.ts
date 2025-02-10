@@ -297,7 +297,7 @@ export function getOrderBill(
   const orderFees = [];
 
   // Fetch delivery information
-  const deliveryInfo = orderService.getDeliveryObj(order);
+  const deliveryInfo = orderService.getDeliveryObj(order, oldOrderBill);
 
   // Calculate and add item total fee
   let itemInfoDto = getOrderItemInfoNew(
