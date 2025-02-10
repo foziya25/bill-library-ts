@@ -109,7 +109,7 @@ export class ChargesService {
                 itemCal.serviceCharge = itemCharge;
               }
               if (
-                chargeId === 'sst_tax' &&
+                chargeId.includes('sst_tax') &&
                 chargeType === ChargeType.PERCENTAGE
               ) {
                 totalServiceChargeForSst += itemCal.serviceCharge;
@@ -126,7 +126,7 @@ export class ChargesService {
             totalQty += itemCal.quantity;
           }
 
-          if (chargeId === 'sst_tax' && chargeType === ChargeType.PERCENTAGE) {
+          if (chargeId.includes('sst_tax') && chargeType === ChargeType.PERCENTAGE) {
             totalServiceChargeForSst += itemCal.serviceCharge;
           }
         });
@@ -153,7 +153,7 @@ export class ChargesService {
           );
           break;
         case ChargeType.PERCENTAGE:
-          if (chargeId === 'sst_tax') {
+          if (chargeId.includes('sst_tax')) {
             totalPrice += totalServiceChargeForSst;
           }
           chargeValue = (value * totalPrice) / 100;
