@@ -20,6 +20,7 @@ export class ChargesService {
       case ChargeApplicableType.SUB_CATEGORY:
         itemInfo.forEach(itemCal => {
           if ((applicableOn as string[]).includes(itemCal.subCatId)) {
+            itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
             totalPrice += itemCal.effectivePrice;
             if (itemCal.effectivePrice > 0) {
               totalQty += itemCal.quantity;
@@ -38,6 +39,7 @@ export class ChargesService {
         break;
       case ChargeApplicableType.ORDER:
         itemInfo.forEach(itemCal => {
+          itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
           totalPrice += itemCal.effectivePrice;
           if (itemCal.effectivePrice > 0) {
             totalQty += itemCal.quantity;
@@ -98,6 +100,7 @@ export class ChargesService {
       case ChargeApplicableType.SUB_CATEGORY:
         itemInfo.forEach(itemCal => {
           if ((applicableOn as string[]).includes(itemCal.subCatId)) {
+            itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
             totalPrice += itemCal.effectivePrice;
             if (itemCal.effectivePrice > 0) {
               totalQty += itemCal.quantity;
@@ -126,6 +129,7 @@ export class ChargesService {
         break;
       case ChargeApplicableType.ORDER:
         itemInfo.forEach(itemCal => {
+          itemCal.effectivePrice = Number((itemCal.effectivePrice).toFixed(4));
           totalPrice += itemCal.effectivePrice;
           if (itemCal.effectivePrice > 0) {
             totalQty += itemCal.quantity;

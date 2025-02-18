@@ -120,9 +120,6 @@ class OrderService {
                 }
             }
         }
-        for (const item of itemInfoDto.itemInfo) {
-            item.effectivePrice = Number(item.effectivePrice.toFixed(4));
-        }
         return itemInfoDto;
     }
     calculateAndApplyPlatformChargesAuto(restaurantDetails, platform, itemInfoDto, discountValue, customDeliveryFee, bill) {
