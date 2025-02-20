@@ -30,7 +30,7 @@ class OrderService {
             (itemInfoDto.deliveryInfo.fee || customDeliveryFee)) {
             deliveryFee = {
                 name: (0, i18n_1.localize)('deliveryFee', language),
-                value: Number((itemInfoDto.deliveryInfo.fee || customDeliveryFee).toFixed(2)),
+                value: Math.round((itemInfoDto.deliveryInfo.fee || customDeliveryFee) * 100) / 100,
                 id: 'delivery',
             };
         }
@@ -49,12 +49,12 @@ class OrderService {
         let discountValue = 0;
         for (const item of itemInfoDto.itemInfo) {
             discountValue += item.discount;
-            item.discount = Number((item.discount).toFixed(4));
+            item.discount = Math.round(item.discount * 10000) / 10000;
         }
         if (((_a = itemInfoDto.deliveryInfo) === null || _a === void 0 ? void 0 : _a.discount) &&
             itemInfoDto.deliveryInfo.discount > 0) {
             discountValue += itemInfoDto.deliveryInfo.discount;
-            itemInfoDto.deliveryInfo.discount = Number((itemInfoDto.deliveryInfo.discount).toFixed(2));
+            itemInfoDto.deliveryInfo.discount = Math.round(itemInfoDto.deliveryInfo.discount * 100) / 100;
         }
         const discountFee = {
             id: 'coupon_discount',
@@ -73,7 +73,7 @@ class OrderService {
                 loyaltyFee = {
                     id: 'loyalty_cashback',
                     name: 'Loyalty Cashback',
-                    value: Number((loyaltyObj.value).toFixed(2)),
+                    value: Math.round(loyaltyObj.value * 100) / 100,
                 };
                 const loyaltyAmount = -loyaltyObj.value;
                 this.prorateLoyalty(itemInfoDto, loyaltyAmount);
@@ -269,10 +269,10 @@ class OrderService {
         }
         const balance = billTotal - paid;
         orderBill.fees = newFees;
-        orderBill.paid = Number((paid).toFixed(2));
-        orderBill.balance = Number((balance).toFixed(2));
-        orderBill.bill_total = Number((billTotal).toFixed(2));
-        orderBill.item_total = Number((itemTotal).toFixed(2));
+        orderBill.paid = Math.round(paid * 100) / 100;
+        orderBill.balance = Math.round(balance * 100) / 100;
+        orderBill.bill_total = Math.round(billTotal * 100) / 100;
+        orderBill.item_total = Math.round(itemTotal * 100) / 100;
         return orderBill;
     }
     prorateLoyalty(itemInfoDto, loyaltyAmount) {
@@ -286,9 +286,9 @@ class OrderService {
                 itemCal.loyaltyItemAmount =
                     itemCal.effectivePrice * (loyaltyAmount / effectivePriceSum);
                 itemCal.effectivePrice -= itemCal.loyaltyItemAmount;
-                itemCal.loyaltyItemAmount = Number((itemCal.loyaltyItemAmount).toFixed(4));
+                itemCal.loyaltyItemAmount = Math.round(itemCal.loyaltyItemAmount * 10000) / 10000;
             });
-            loyaltyAmount = Number((loyaltyAmount).toFixed(2));
+            loyaltyAmount = Math.round(loyaltyAmount * 100) / 100;
             itemInfoDto.loyaltyAmount = loyaltyAmount;
         }
         return itemInfoDto;

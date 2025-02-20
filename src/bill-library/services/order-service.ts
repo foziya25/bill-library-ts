@@ -47,7 +47,7 @@ export class OrderService {
     ) {
       deliveryFee = {
         name: localize('deliveryFee', language),
-        value: Number((itemInfoDto.deliveryInfo.fee || customDeliveryFee).toFixed(2)),
+        value: Math.round((itemInfoDto.deliveryInfo.fee || customDeliveryFee) * 100) / 100,
         id: 'delivery',
       };
     }
@@ -80,7 +80,7 @@ export class OrderService {
     let discountValue = 0;
     for (const item of itemInfoDto.itemInfo) {
       discountValue += item.discount;
-      item.discount = Number((item.discount).toFixed(4));
+      item.discount = Math.round(item.discount * 10000) / 10000;
     }
 
     if (
@@ -88,7 +88,7 @@ export class OrderService {
       itemInfoDto.deliveryInfo.discount > 0
     ) {
       discountValue += itemInfoDto.deliveryInfo.discount;
-      itemInfoDto.deliveryInfo.discount = Number((itemInfoDto.deliveryInfo.discount).toFixed(2));
+      itemInfoDto.deliveryInfo.discount = Math.round(itemInfoDto.deliveryInfo.discount * 100) / 100;
     }
 
     const discountFee = {
@@ -121,7 +121,7 @@ export class OrderService {
         loyaltyFee = {
           id: 'loyalty_cashback',
           name: 'Loyalty Cashback',
-          value: Number((loyaltyObj.value).toFixed(2)),
+          value: Math.round(loyaltyObj.value * 100) / 100,
         };
 
         // Calculate the amount of loyalty cashback to be subtracted from item prices
@@ -422,10 +422,10 @@ export class OrderService {
 
     // Update order bill with recalculated values
     orderBill.fees = newFees; // discount will be updated in case of discount
-    orderBill.paid = Number((paid).toFixed(2));
-    orderBill.balance = Number((balance).toFixed(2));
-    orderBill.bill_total = Number((billTotal).toFixed(2));
-    orderBill.item_total = Number((itemTotal).toFixed(2));
+    orderBill.paid = Math.round(paid * 100) / 100;
+    orderBill.balance = Math.round(balance * 100) / 100;
+    orderBill.bill_total = Math.round(billTotal * 100) / 100;
+    orderBill.item_total = Math.round(itemTotal * 100) / 100;
 
     // Return the updated order bill
     return orderBill;
@@ -448,11 +448,11 @@ export class OrderService {
         itemCal.loyaltyItemAmount =
           itemCal.effectivePrice * (loyaltyAmount / effectivePriceSum);
         itemCal.effectivePrice -= itemCal.loyaltyItemAmount;
-        itemCal.loyaltyItemAmount = Number((itemCal.loyaltyItemAmount).toFixed(4));
+        itemCal.loyaltyItemAmount = Math.round(itemCal.loyaltyItemAmount * 10000) / 10000;
       });
 
       // Update item information DTO with loyalty cashback amount
-      loyaltyAmount = Number((loyaltyAmount).toFixed(2));
+      loyaltyAmount = Math.round(loyaltyAmount * 100) / 100;
       itemInfoDto.loyaltyAmount = loyaltyAmount;
     }
 

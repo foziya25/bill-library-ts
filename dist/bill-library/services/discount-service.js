@@ -153,7 +153,7 @@ class DiscountService {
             newDiscount += itemInfoDto.deliveryInfo.discount;
         }
         itemInfoDto.couponDiscount = newDiscount - currentDiscount;
-        itemInfoDto.couponDiscount = Number((itemInfoDto.couponDiscount).toFixed(2));
+        itemInfoDto.couponDiscount = Math.round(itemInfoDto.couponDiscount * 100) / 100;
         if (itemInfoDto.couponDiscount > 0) {
             itemInfoDto.isCouponDiscountApplied = true;
             itemInfoDto.discountName = itemInfoDto.discountName
@@ -495,7 +495,7 @@ class DiscountService {
                     }
                     itemCal.discount += discountValue * qty;
                     itemCal.effectivePrice -= discountValue * qty;
-                    discountValue = Number((discountValue).toFixed(2));
+                    discountValue = Math.round(discountValue * 100) / 100;
                     itemCal.itemLevelDiscount = {
                         value: discountValue,
                         qty: qty,

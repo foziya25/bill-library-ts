@@ -377,7 +377,7 @@ export function getOrderBill(
 
   // Update bill with calculated fees and subtotal
   bill.fees = orderFees;
-  if (subtotal) bill.subtotal = Number((subtotal).toFixed(2));
+  if (subtotal) bill.subtotal = Math.round(subtotal * 100) / 100;
 
   // Convert bill object to array and recalculate
   const orderBill = orderService.reCalculateAndUpdateBill(

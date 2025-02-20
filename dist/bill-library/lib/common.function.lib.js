@@ -104,7 +104,7 @@ function getCartItemInfoNew(items, orderType, platform = 'easyeat', deliveryInfo
             cartItemInfo.itemInfo.push(itemCalculationObj);
             cartItemInfo.itemTotal += item[priceKey] * item['quantity'];
         }
-        cartItemInfo.itemTotal = Number((cartItemInfo.itemTotal).toFixed(2));
+        cartItemInfo.itemTotal = Math.round(cartItemInfo.itemTotal * 100) / 100;
     }
     return cartItemInfo;
 }
@@ -154,7 +154,7 @@ function getOrderItemInfoNew(items, orderType, deliveryInfo = null) {
                 orderItemInfo.itemTotal += item['item_price'] * item['item_quantity'];
             }
         }
-        orderItemInfo.itemTotal = Number((orderItemInfo.itemTotal).toFixed(2));
+        orderItemInfo.itemTotal = Math.round(orderItemInfo.itemTotal * 100) / 100;
     }
     return orderItemInfo;
 }
