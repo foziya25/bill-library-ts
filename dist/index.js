@@ -167,7 +167,7 @@ function getOrderBill(order, restaurantDetails, language = 'en-US', platform = '
         orderFees.push(topUpFee['fee']);
     bill.fees = orderFees;
     if (subtotal)
-        bill.subtotal = subtotal;
+        bill.subtotal = Math.round(subtotal * 100) / 100;
     const orderBill = orderService.reCalculateAndUpdateBill(bill, roundOff, language);
     return { orderBill, itemInfo: itemInfoDto.itemInfo };
 }

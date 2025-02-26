@@ -187,6 +187,7 @@ export function getCartItemInfoNew(
 
       cartItemInfo.itemTotal += item[priceKey] * item['quantity'];
     }
+    cartItemInfo.itemTotal = Math.round(cartItemInfo.itemTotal * 100) / 100;
   }
 
   return cartItemInfo;
@@ -263,6 +264,7 @@ export function getOrderItemInfoNew(
         orderItemInfo.itemTotal += item['item_price'] * item['item_quantity'];
       }
     }
+    orderItemInfo.itemTotal = Math.round(orderItemInfo.itemTotal * 100) / 100;
   }
 
   return orderItemInfo;

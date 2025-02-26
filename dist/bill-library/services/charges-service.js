@@ -18,6 +18,7 @@ class ChargesService {
             case "subCategory":
                 itemInfo.forEach(itemCal => {
                     if (applicableOn.includes(itemCal.subCatId)) {
+                        itemCal.effectivePrice = Math.round(itemCal.effectivePrice * 10000) / 10000;
                         totalPrice += itemCal.effectivePrice;
                         if (itemCal.effectivePrice > 0) {
                             totalQty += itemCal.quantity;
@@ -29,6 +30,7 @@ class ChargesService {
                         else if (chargeType === "fixed") {
                             itemCharge = value * itemCal.quantity;
                         }
+                        itemCharge = Math.round(itemCharge * 10000) / 10000;
                         itemCal.itemCharges.push({ id: chargeId, value: itemCharge });
                     }
                 });
@@ -36,6 +38,7 @@ class ChargesService {
                 break;
             case "order":
                 itemInfo.forEach(itemCal => {
+                    itemCal.effectivePrice = Math.round(itemCal.effectivePrice * 10000) / 10000;
                     totalPrice += itemCal.effectivePrice;
                     if (itemCal.effectivePrice > 0) {
                         totalQty += itemCal.quantity;
@@ -49,6 +52,7 @@ class ChargesService {
                     else if (chargeType === "fixed") {
                         itemCharge = (itemCal.effectivePrice * value) / totalPrice;
                     }
+                    itemCharge = Math.round(itemCharge * 10000) / 10000;
                     itemCal.itemCharges.push({ id: chargeId, value: itemCharge });
                 });
                 break;
@@ -56,10 +60,12 @@ class ChargesService {
         if (totalPrice > 0) {
             switch (chargeType) {
                 case "fixed":
+                    chargeValue = Math.round(chargeValue * 100) / 100;
                     itemInfoDto.charges.push(new cartItemInfo_1.ChargesObjImpl(chargeValue, name, charge.id));
                     break;
                 case "percentage":
                     chargeValue = (value * totalPrice) / 100;
+                    chargeValue = Math.round(chargeValue * 100) / 100;
                     itemInfoDto.charges.push(new cartItemInfo_1.ChargesObjImpl(chargeValue, name, charge.id));
                     break;
             }
@@ -82,6 +88,7 @@ class ChargesService {
             case "subCategory":
                 itemInfo.forEach(itemCal => {
                     if (applicableOn.includes(itemCal.subCatId)) {
+                        itemCal.effectivePrice = Math.round(itemCal.effectivePrice * 10000) / 10000;
                         totalPrice += itemCal.effectivePrice;
                         if (itemCal.effectivePrice > 0) {
                             totalQty += itemCal.quantity;
@@ -92,6 +99,7 @@ class ChargesService {
                             else if (chargeType === "fixed") {
                                 itemCharge = value * itemCal.quantity;
                             }
+                            itemCharge = Math.round(itemCharge * 10000) / 10000;
                             itemCal.itemCharges.push({ id: chargeId, value: itemCharge });
                             if (chargeId === 'service_tax') {
                                 itemCal.serviceCharge = itemCharge;
@@ -107,6 +115,7 @@ class ChargesService {
                 break;
             case "order":
                 itemInfo.forEach(itemCal => {
+                    itemCal.effectivePrice = Math.round(itemCal.effectivePrice * 10000) / 10000;
                     totalPrice += itemCal.effectivePrice;
                     if (itemCal.effectivePrice > 0) {
                         totalQty += itemCal.quantity;
@@ -123,6 +132,7 @@ class ChargesService {
                     else if (chargeType === "fixed") {
                         itemCharge = (itemCal.effectivePrice * value) / totalPrice;
                     }
+                    itemCharge = Math.round(itemCharge * 10000) / 10000;
                     itemCal.itemCharges.push({ id: chargeId, value: itemCharge });
                     if (chargeId === 'service_tax') {
                         itemCal.serviceCharge = itemCharge;
@@ -133,6 +143,7 @@ class ChargesService {
         if (totalPrice > 0) {
             switch (chargeType) {
                 case "fixed":
+                    chargeValue = Math.round(chargeValue * 100) / 100;
                     itemInfoDto.charges.push(new cartItemInfo_1.ChargesObjImpl(chargeValue, name, charge.id));
                     break;
                 case "percentage":
@@ -140,6 +151,7 @@ class ChargesService {
                         totalPrice += totalServiceChargeForSst;
                     }
                     chargeValue = (value * totalPrice) / 100;
+                    chargeValue = Math.round(chargeValue * 100) / 100;
                     itemInfoDto.charges.push(new cartItemInfo_1.ChargesObjImpl(chargeValue, name, charge.id));
                     break;
             }

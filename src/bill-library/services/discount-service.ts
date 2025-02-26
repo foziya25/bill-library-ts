@@ -233,7 +233,7 @@ export class DiscountService {
 
     // Update the total coupon discount applied.
     itemInfoDto.couponDiscount = newDiscount - currentDiscount;
-
+    itemInfoDto.couponDiscount = Math.round(itemInfoDto.couponDiscount * 100) / 100;
     // Flag the coupon discount as applied if there's a positive discount amount.
     if (itemInfoDto.couponDiscount > 0) {
       itemInfoDto.isCouponDiscountApplied = true;
@@ -707,6 +707,7 @@ export class DiscountService {
 
           itemCal.discount += discountValue * qty;
           itemCal.effectivePrice -= discountValue * qty;
+          discountValue = Math.round(discountValue * 100) / 100;
           itemCal.itemLevelDiscount = {
             value: discountValue,
             qty: qty,
